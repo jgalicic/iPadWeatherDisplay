@@ -1,0 +1,19 @@
+----------Day---------
+<i class="fas fa-cloud-sun"></i>
+<i class="fas fa-sun"></i>
+<i class="fas fa-cloud-sun-rain"></i>
+
+---------Night---------
+<i class="fas fa-cloud-moon-rain"></i>
+<i class="fas fa-cloud-moon"></i>
+<i class="fas fa-moon"></i>
+
+
+-----Day or night------
+<i class="fas fa-cloud-rain"></i>
+<i class="fas fa-cloud-showers-heavy"></i>
+<i class="fas fa-cloud"></i>
+<i class="fas fa-smog"></i>
+<i class="fas fa-snowflake"></i>
+<i class="fas fa-bolt"></i>
+<i class="fas fa-wind"></i>

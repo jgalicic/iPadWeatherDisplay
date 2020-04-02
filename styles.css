@@ -68,11 +68,11 @@ body {
   padding-left: 20px;
 }
 
-#forecast i,
+#weatherIcon,
 #todayDate {
   padding-right: 20px;
 }
 #currentTemp,
-#forecast i {
+#weatherIcon {
   font-size: 120px;
 }
