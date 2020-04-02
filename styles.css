@@ -45,11 +45,12 @@ body {
   padding-left: 20px;
 }
 
-#dateContainer p {
-  font-size: 65px;
+#dayOfWeek {
+  font-size: 55px;
 }
 
 #todaysDate {
+  font-size: 80px;
   position: relative;
   bottom: 20px;
 }
@@ -69,12 +70,12 @@ body {
 
 #medForecast {
   font-family: verdana;
-  font-size: 20px;
+  font-size: 22px;
 }
 
 #smallForecast {
   font-family: verdana;
-  font-size: 16px;
+  font-size: 20px;
 }
 
 #timeContainer {
@@ -82,7 +83,7 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 50%;
+  height: 45%;
 }
 
 #time {
@@ -118,4 +119,19 @@ body {
 
 #weatherIcon {
   font-size: 140px;
+}
+
+#solarContainer {
+  display: flex;
+  height: 4%;
+  width: 100%;
+  align-items: center;
+  justify-content: space-around;
+}
+
+#solarContainer p {
+  position: relative;
+  bottom: 10px;
+  font-size: 24px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
