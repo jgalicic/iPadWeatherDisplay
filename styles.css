@@ -4,10 +4,14 @@
   font-family: "Righteous", sans-serif;
   color: white;
   font-size: 50px;
+  text-shadow: 5px 5px 8px black;
 }
 
 body {
   background-color: black;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
 }
 
 #container {
@@ -41,9 +45,9 @@ body {
 }
 
 #time {
-  color: rgb(255, 217, 0);
-  font-family: "Bevan", sans-serif;
-  font-size: 300px;
+  color: white;
+  font-family: "Londrina Outline", cursive;
+  font-size: 350px;
 }
 
 #weatherContainer {
