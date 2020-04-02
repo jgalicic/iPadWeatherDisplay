@@ -20,16 +20,23 @@ const time = document.getElementById("time")
 // const currentCond = document.getElementById("currentCond")
 // const forecast = document.getElementById("forecast")
 
-setInterval(function() {
-  let date = new Date()
-  dayOfWeek.innerText = dayNames[date.getDay()]
-  todaysDate.innerText = `${
-    monthNames[date.getMonth()]
-  } ${date.getDate()}, ${date.getFullYear()}`
-  time.innerText = date.toLocaleTimeString().match(/[0-9]+[:][0-9]+/g)
-}, 500)
+// setInterval(function() {
+//   let date = new Date()
+//   dayOfWeek.innerText = dayNames[date.getDay()]
+//   todaysDate.innerText = `${
+//     monthNames[date.getMonth()]
+//   } ${date.getDate()}, ${date.getFullYear()}`
+//   time.innerText = date.toLocaleTimeString().match(/[0-9]+[:][0-9]+/g)
+// }, 500)
 
 let date2 = new Date()
 
 console.log(date2.getHours())
 document.getElementById("currentCond").innerText = date2.getHours()
+
+let date = new Date()
+dayOfWeek.innerText = dayNames[date.getDay()]
+todaysDate.innerText = `${
+  monthNames[date.getMonth()]
+} ${date.getDate()}, ${date.getFullYear()}`
+time.innerText = date.toLocaleTimeString().match(/[0-9]+[:][0-9]+/g)
