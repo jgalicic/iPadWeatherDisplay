@@ -207,14 +207,15 @@ $(document).ready(function() {
     smallForecast.innerText = ""
     var splitForecast = dataObj.detailedForecast.split(".")
     splitForecast.pop()
-    splitForecast.forEach((d, i) => {
+
+    for (var i = 0; i < splitForecast.length; i++) {
       if (i === 0) {
-        bigForecast.innerText = `${d}.`
+        bigForecast.innerText = `${splitForecast[i]}.`
       } else if (i === 1) {
-        medForecast.innerText = `${d}.`
+        medForecast.innerText = `${splitForecast[i]}.`
       } else {
-        smallForecast.innerText += `${d}.`
+        smallForecast.innerText += `${splitForecast[i]}.`
       }
-    })
+    }
   }
 }) // end jQuery
