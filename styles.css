@@ -3,7 +3,7 @@
   padding: 0;
   font-family: "Righteous", sans-serif;
   color: white;
-  font-size: 30px;
+  font-size: 40px;
   text-shadow: 2px 2px 18px black;
 }
 
@@ -23,17 +23,30 @@ body {
   height: 100vh;
 }
 
-#dateContainer {
+#headerContainer {
   display: flex;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: space-between;
   width: 100%;
   height: 25%;
 }
 
+#dateContainer {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+#detailedForecast {
+  padding-top: 20px;
+  font-family: verdana;
+  font-size: 20px;
+}
+
 #dayOfWeek,
-#todayDate {
-  font-size: 50px;
+#todaysDate {
+  font-size: 60px;
 }
 
 #timeContainer {
@@ -59,7 +72,7 @@ body {
 }
 
 #dayOfWeek,
-#todayDate {
+#todaysDate {
   padding-top: 20px;
 }
 
@@ -69,7 +82,7 @@ body {
 }
 
 #weatherIcon,
-#todayDate {
+#todaysDate {
   padding-right: 20px;
 }
 #currentTemp,

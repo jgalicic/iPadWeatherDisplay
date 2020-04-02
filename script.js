@@ -15,11 +15,11 @@ $(document).ready(function() {
   ]
   const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
   const dayOfWeek = document.getElementById("dayOfWeek")
-  const todaysDate = document.getElementById("todayDate")
+  const todaysDate = document.getElementById("todaysDate")
   const time = document.getElementById("time")
   const currentTemp = document.getElementById("currentTemp")
-  // const currentCond = document.getElementById("currentCond")
   const weatherIcon = document.getElementById("weatherIcon")
+  const detailedForecast = document.getElementById("detailedForecast")
 
   var dataObj = {}
 
@@ -41,7 +41,7 @@ $(document).ready(function() {
       },
       complete: function() {
         // Schedule the next request when the current one's complete
-        setTimeout(getWeatherData, 600000)
+        setTimeout(getWeatherData, 2000000)
       }
     })
   }
@@ -116,14 +116,27 @@ $(document).ready(function() {
   getWeatherData()
   getWeatherForecast()
 
+  let testing = true
+
   setInterval(function() {
+    if (testing) console.log(dataObj)
+    testing = false
     const date = new Date()
     dayOfWeek.innerText = dayNames[date.getDay()]
-    todaysDate.innerText = `${
-      monthNames[date.getMonth()]
-    } ${date.getDate()}, ${date.getFullYear()}`
+    todaysDate.innerText = `${monthNames[date.getMonth()]} ${date.getDate()}`
     time.innerText = date.toLocaleTimeString().match(/[0-9]+[:][0-9]+/g)
     currentTemp.innerText = `${dataObj.currentTemp}°`
+
+    var forecastTempString = ""
+
+    if (dataObj.isDaytime) {
+      forecastTempString = `Tonight's low is ${dataObj.tonightLow}°`
+    }
+    if (!dataObj.isDaytime) {
+      forecastTempString = `Tomorrow's high is ${dataObj.tomorrowHigh}°`
+    }
+
+    detailedForecast.innerText = `${dataObj.detailedForecast} ${forecastTempString}.`
 
     $(weatherIcon).addClass(getCurrentIcon())
 
