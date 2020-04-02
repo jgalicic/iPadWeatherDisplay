@@ -116,11 +116,11 @@ $(document).ready(function() {
   getWeatherData()
   getWeatherForecast()
 
-  let testing = true
+  // var testing = true
 
   setInterval(function() {
-    if (testing) console.log(dataObj)
-    testing = false
+    // if (testing) console.log(dataObj)
+    // testing = false
     const date = new Date()
     dayOfWeek.innerText = dayNames[date.getDay()]
     todaysDate.innerText = `${monthNames[date.getMonth()]} ${date.getDate()}`
