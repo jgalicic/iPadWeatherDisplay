@@ -61,5 +61,7 @@ setInterval(function() {
   if (date.getMinutes() >= 56 && date.getMinutes() < 58) img = "img-5"
   if (date.getMinutes() >= 58 && date.getMinutes() < 61) img = "img-6"
 
+  console.log(img)
+
   document.body.style.backgroundImage = `url("img/${img}.jpg")`
 }, 500)

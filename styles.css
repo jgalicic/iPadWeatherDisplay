@@ -3,8 +3,8 @@
   padding: 0;
   font-family: "Righteous", sans-serif;
   color: white;
-  font-size: 50px;
-  text-shadow: 5px 5px 8px black;
+  font-size: 30px;
+  text-shadow: 2px 2px 18px black;
 }
 
 body {
@@ -33,7 +33,7 @@ body {
 
 #dayOfWeek,
 #todayDate {
-  font-size: 80px;
+  font-size: 50px;
 }
 
 #timeContainer {
