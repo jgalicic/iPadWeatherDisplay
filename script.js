@@ -141,8 +141,8 @@ $(document).ready(function() {
     const date = new Date()
 
     if (loadPageOneTime) {
-      console.log(dataObj)
-      console.log(date.getHours())
+      // console.log(dataObj)
+      // console.log(date.getHours())
       populateDetailedForecast(dataObj)
       loadPageOneTime = false
     }
@@ -208,9 +208,11 @@ $(document).ready(function() {
     var splitForecast = dataObj.detailedForecast.split(".")
     splitForecast.pop()
     splitForecast.forEach((d, i) => {
-      if (i === 0) bigForecast.innerText = `${d}.`
-      if (i === 1) medForecast.innerText = `${d}.`
-      if (i > 1) {
+      if (i === 0) {
+        bigForecast.innerText = `${d}.`
+      } else if (i === 1) {
+        medForecast.innerText = `${d}.`
+      } else {
         smallForecast.innerText += `${d}.`
       }
     })
