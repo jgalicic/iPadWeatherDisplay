@@ -13,7 +13,15 @@ $(document).ready(function() {
     "Nov",
     "Dec"
   ]
-  const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+  const dayNames = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday"
+  ]
   const dayOfWeek = document.getElementById("dayOfWeek")
   const todaysDate = document.getElementById("todaysDate")
   const time = document.getElementById("time")
@@ -90,6 +98,8 @@ $(document).ready(function() {
 
     // daytime
     if (dataObj.isDaytime) {
+      if (dataObj.shortForecast.toLowerCase().includes("chance light rain"))
+        return "fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase().includes("light rain"))
         return "fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase().includes("showers"))
@@ -111,17 +121,24 @@ $(document).ready(function() {
         return "fa-moon"
       return "fa-cloud-moon"
     }
+    return "fa-rainbow"
   }
 
   getWeatherData()
   getWeatherForecast()
 
-  // var testing = true
+  var testing = true
 
   setInterval(function() {
-    // if (testing) console.log(dataObj)
-    // testing = false
     const date = new Date()
+
+    if (testing) {
+      console.log(dataObj)
+      console.log(date.getHours())
+      console.log
+    }
+    testing = false
+
     dayOfWeek.innerText = dayNames[date.getDay()]
     todaysDate.innerText = `${monthNames[date.getMonth()]} ${date.getDate()}`
     time.innerText = date.toLocaleTimeString().match(/[0-9]+[:][0-9]+/g)
@@ -129,14 +146,11 @@ $(document).ready(function() {
 
     var forecastTempString = ""
 
-    if (dataObj.isDaytime) {
-      forecastTempString = `Tonight's low is ${dataObj.tonightLow}°`
-    }
-    if (!dataObj.isDaytime) {
-      forecastTempString = `Tomorrow's high is ${dataObj.tomorrowHigh}°`
+    if (date.getHours() >= 16 && date.getHours() < 23) {
+      forecastTempString = `Tonight's low will be ${dataObj.tonightLow}°.`
     }
 
-    detailedForecast.innerText = `${dataObj.detailedForecast} ${forecastTempString}.`
+    detailedForecast.innerText = `${dataObj.detailedForecast} ${forecastTempString}`
 
     $(weatherIcon).addClass(getCurrentIcon())
 

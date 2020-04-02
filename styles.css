@@ -34,19 +34,23 @@ body {
 #dateContainer {
   display: flex;
   width: 100%;
-  flex-direction: row;
-  flex-wrap: nowrap;
+  flex-direction: column;
+  align-items: center;
+}
+
+#dateContainer p {
+  font-size: 80px;
+}
+
+#todaysDate {
+  position: relative;
+  bottom: 20px;
 }
 
 #detailedForecast {
   padding-top: 20px;
   font-family: verdana;
   font-size: 20px;
-}
-
-#dayOfWeek,
-#todaysDate {
-  font-size: 60px;
 }
 
 #timeContainer {
@@ -71,21 +75,17 @@ body {
   height: 25%;
 }
 
-#dayOfWeek,
-#todaysDate {
-  padding-top: 20px;
-}
-
-#currentTemp,
-#dayOfWeek {
+#currentTemp {
   padding-left: 20px;
 }
 
-#weatherIcon,
-#todaysDate {
+#weatherIcon {
   padding-right: 20px;
 }
-#currentTemp,
-#weatherIcon {
+#currentTemp {
   font-size: 120px;
+}
+
+#weatherIcon {
+  font-size: 140px;
 }
