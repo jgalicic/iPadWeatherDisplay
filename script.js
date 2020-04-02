@@ -29,7 +29,7 @@ setInterval(function() {
   time.innerText = date.toLocaleTimeString().match(/[0-9]+[:][0-9]+/g)
 
   // Background images
-  const img = "img-1"
+  var img = "img-1"
   if (date.getMinutes() >= 0 && date.getMinutes() < 10) img = "img-1"
   if (date.getMinutes() >= 10 && date.getMinutes() < 20) img = "img-2"
   if (date.getMinutes() >= 20 && date.getMinutes() < 30) img = "img-3"
