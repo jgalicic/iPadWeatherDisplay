@@ -28,3 +28,8 @@ setInterval(function() {
   } ${date.getDate()}, ${date.getFullYear()}`
   time.innerText = date.toLocaleTimeString().match(/[0-9]+[:][0-9]+/g)
 }, 500)
+
+let date2 = new Date()
+
+console.log(date2.getHours())
+document.getElementById("currentCond").innerText = date2.getHours()
