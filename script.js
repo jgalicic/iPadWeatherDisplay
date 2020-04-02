@@ -27,9 +27,13 @@ $(document).ready(function() {
   const time = document.getElementById("time")
   const currentTemp = document.getElementById("currentTemp")
   const weatherIcon = document.getElementById("weatherIcon")
-  const detailedForecast = document.getElementById("detailedForecast")
+  const bigForecast = document.getElementById("bigForecast")
+  const medForecast = document.getElementById("medForecast")
+  const smallForecast = document.getElementById("smallForecast")
 
   var dataObj = {}
+  var loadPageOneTime = true
+  var forecastTempString = ""
 
   function getWeatherData() {
     $.ajax({
@@ -73,6 +77,7 @@ $(document).ready(function() {
         if (data.properties.periods[1].isDaytime === false) {
           dataObj.tomorrowLow = data.properties.periods[1].temperature
         }
+        populateDetailedForecast(dataObj)
       },
       error: function(data, status, error) {
         console.log(data)
@@ -80,48 +85,10 @@ $(document).ready(function() {
         console.log(error)
       },
       complete: function() {
-        // Schedule the next request when the current one's complete
-        setTimeout(getWeatherForecast, 600000)
+        // Schedule the next request every 30 minutes
+        setTimeout(getWeatherForecast, 1800000)
       }
     })
-  }
-
-  function getCurrentIcon() {
-    // day or night
-    if (dataObj.shortForecast.toLowerCase().includes("snow"))
-      return "fa-snowflake"
-    if (dataObj.shortForecast.toLowerCase().includes("thunder"))
-      return "fa-bolt"
-    if (dataObj.shortForecast.toLowerCase().includes("smoke")) return "fa-smog"
-    if (dataObj.shortForecast.toLowerCase().includes("snow"))
-      return "fa-snowflake"
-
-    // daytime
-    if (dataObj.isDaytime) {
-      if (dataObj.shortForecast.toLowerCase().includes("chance light rain"))
-        return "fa-cloud-sun-rain"
-      if (dataObj.shortForecast.toLowerCase().includes("light rain"))
-        return "fa-cloud-sun-rain"
-      if (dataObj.shortForecast.toLowerCase().includes("showers"))
-        return "fa-cloud-rain"
-      if (dataObj.shortForecast.toLowerCase().includes("rain"))
-        return "fa-cloud-showers-heavy"
-      if (dataObj.shortForecast.toLowerCase().includes("clear")) return "fa-sun"
-      return "fa-cloud-sun"
-    }
-    // nighttime
-    if (!dataObj.isDaytime) {
-      if (dataObj.shortForecast.toLowerCase().includes("light rain"))
-        return "fa-cloud-moon-rain"
-      if (dataObj.shortForecast.toLowerCase().includes("showers"))
-        return "fa-cloud-rain"
-      if (dataObj.shortForecast.toLowerCase().includes("heavy rain"))
-        return "fa-cloud-showers-heavy"
-      if (dataObj.shortForecast.toLowerCase().includes("clear"))
-        return "fa-moon"
-      return "fa-cloud-moon"
-    }
-    return "fa-rainbow"
   }
 
   getWeatherData()
@@ -170,30 +137,26 @@ $(document).ready(function() {
     if (date.getMinutes() >= 58 && date.getMinutes() < 61) return "img-6"
   }
 
-  var testing = true
-
   setInterval(function() {
     const date = new Date()
 
-    if (testing) {
+    if (loadPageOneTime) {
       console.log(dataObj)
       console.log(date.getHours())
-      console.log
+      populateDetailedForecast(dataObj)
+      loadPageOneTime = false
     }
-    testing = false
 
     dayOfWeek.innerText = dayNames[date.getDay()]
     todaysDate.innerText = `${monthNames[date.getMonth()]} ${date.getDate()}`
     time.innerText = date.toLocaleTimeString().match(/[0-9]+[:][0-9]+/g)
     currentTemp.innerText = `${dataObj.currentTemp}°`
 
-    var forecastTempString = ""
-
     if (date.getHours() >= 16 && date.getHours() < 23) {
       forecastTempString = `Tonight's low will be ${dataObj.tonightLow}°.`
     }
 
-    detailedForecast.innerText = `${dataObj.detailedForecast} ${forecastTempString}`
+    // ${forecastTempString}
 
     $(weatherIcon).addClass(getCurrentIcon())
 
@@ -201,4 +164,55 @@ $(document).ready(function() {
 
     document.body.style.backgroundImage = `url("img/bg/${getBgImg(date)}.jpg")`
   }, 2000)
+
+  function getCurrentIcon() {
+    // day or night
+    if (dataObj.shortForecast.toLowerCase().includes("snow"))
+      return "fa-snowflake"
+    if (dataObj.shortForecast.toLowerCase().includes("thunder"))
+      return "fa-bolt"
+    if (dataObj.shortForecast.toLowerCase().includes("smoke")) return "fa-smog"
+    if (dataObj.shortForecast.toLowerCase().includes("snow"))
+      return "fa-snowflake"
+
+    // daytime
+    if (dataObj.isDaytime) {
+      if (dataObj.shortForecast.toLowerCase().includes("chance light rain"))
+        return "fa-cloud-sun-rain"
+      if (dataObj.shortForecast.toLowerCase().includes("light rain"))
+        return "fa-cloud-sun-rain"
+      if (dataObj.shortForecast.toLowerCase().includes("showers"))
+        return "fa-cloud-rain"
+      if (dataObj.shortForecast.toLowerCase().includes("rain"))
+        return "fa-cloud-showers-heavy"
+      if (dataObj.shortForecast.toLowerCase().includes("clear")) return "fa-sun"
+      return "fa-cloud-sun"
+    }
+    // nighttime
+    if (!dataObj.isDaytime) {
+      if (dataObj.shortForecast.toLowerCase().includes("light rain"))
+        return "fa-cloud-moon-rain"
+      if (dataObj.shortForecast.toLowerCase().includes("showers"))
+        return "fa-cloud-rain"
+      if (dataObj.shortForecast.toLowerCase().includes("heavy rain"))
+        return "fa-cloud-showers-heavy"
+      if (dataObj.shortForecast.toLowerCase().includes("clear"))
+        return "fa-moon"
+      return "fa-cloud-moon"
+    }
+    return "fa-rainbow"
+  }
+
+  function populateDetailedForecast(dataObj) {
+    smallForecast.innerText = ""
+    var splitForecast = dataObj.detailedForecast.split(".")
+    splitForecast.pop()
+    splitForecast.forEach((d, i) => {
+      if (i === 0) bigForecast.innerText = `${d}.`
+      if (i === 1) medForecast.innerText = `${d}.`
+      if (i > 1) {
+        smallForecast.innerText += `${d}.`
+      }
+    })
+  }
 }) // end jQuery
