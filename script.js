@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
   const monthNames = [
     "Jan",
     "Feb",
@@ -11,17 +11,9 @@ $(document).ready(function() {
     "Sept",
     "Oct",
     "Nov",
-    "Dec"
+    "Dec",
   ]
-  const dayNames = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday"
-  ]
+  const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
   const dayOfWeek = document.getElementById("dayOfWeek")
   const todaysDate = document.getElementById("todaysDate")
   const time = document.getElementById("time")
@@ -33,29 +25,59 @@ $(document).ready(function() {
   const solarStats = document.getElementById("solarStats")
 
   var dataObj = {
-    aqi: 0,
-    currentConditions: "",
-    currentConditions: 0,
-    detailedForecast: "",
-    humitidy: "",
+    astronomical: {
+      moon: {
+        age: "",
+        moonrise: "",
+        moonset: "",
+        phase: "",
+      },
+      astronomical_twilight_begin: "",
+      astronomical_twilight_end: "",
+      civil_twilight_begin: "",
+      civil_twilight_end: "",
+      day_length: "",
+      nautical_twilight_begin: "",
+      nautical_twilight_end: "",
+      solar_noon: "",
+      sunrise: "",
+      sunset: "",
+    },
+    aqi: 28,
+    chancePrecipitation: 10,
+    chanceThunder: 0,
+    currentConditions: "Chance Rain Showers",
+    currentTemp: 43,
+    dayLength: "",
+    detailedForecast: "Partly cloudy. Normal conditions expected. Enjoy the day.",
+    bestDayToGetOutside: "",
+    humitidy: 66,
     isDaytime: true,
-    shortForecast: "",
-    sunrise: "",
-    sunset: "",
-    todayHigh: 0,
-    tomorrowLow: 0,
-    uvIndex: "",
+    pressure: 30.09,
+    pressureDirection: "falling",
+    shortForecast: "Chance Rain Showers",
+    snow: {
+      chanceSnow: 0,
+      snowAccumInchesMax: 0,
+      snowAccumInchesMin: 0,
+    },
+    todayHigh: 46,
+    todayLow: 36,
+    tomorrowHigh: 48,
+    tomorrowLow: 38,
+    uvIndex: 1,
     windDirection: "",
-    windSpeed: ""
+    windSpeed: "",
+    visibilityMiles: 10,
   }
   var loadPageOneTime = true
   var date = new Date()
 
-  getWeatherData()
+  getCurrentWeather()
   getWeatherForecast()
   getSolarData()
 
-  setInterval(function() {
+  setInterval(function () {
     date = new Date()
 
     if (loadPageOneTime) {
@@ -72,9 +94,9 @@ $(document).ready(function() {
 
     // Weather
     if (dataObj.currentTemp) {
-      currentTemp.innerText = `${dataObj.currentTemp}°`
+      currentTemp.innerText = `${dataObj.currentTemp + 1}°`
     }
-    $(weatherIcon).addClass(getCurrentIcon())
+    $(weatherIcon).addClass(getWeatherIcon())
 
     // Solar
     $(solarStats).text(getSolarStats())
@@ -88,30 +110,18 @@ $(document).ready(function() {
       url: "https://api.weather.gov/gridpoints/SEW/125,67/forecast",
 
       dataType: "json",
-      success: function(data) {
+      success: function (data) {
         console.log("!", data)
         dataObj.shortForecast = data.properties.periods[0].shortForecast
         dataObj.detailedForecast = data.properties.periods[0].detailedForecast
-        if (data.properties.periods[0].isDaytime === true) {
-          dataObj.todayHigh = data.properties.periods[0].temperature
-        }
-        if (data.properties.periods[0].isDaytime === false) {
-          dataObj.tonightLow = data.properties.periods[0].temperature
-        }
-        if (data.properties.periods[1].isDaytime === true) {
-          dataObj.tomorrowHigh = data.properties.periods[1].temperature
-        }
-        if (data.properties.periods[1].isDaytime === false) {
-          dataObj.tomorrowLow = data.properties.periods[1].temperature
-        }
         populateDetailedForecast(dataObj)
       },
-      error: function(data, status, error) {
+      error: function (data, status, error) {
         console.log(data)
         console.log(status)
         console.log(error)
       },
-      complete: function() {
+      complete: function () {
         if (date.getHours() > 7 && date.getHours() < 22) {
           // Schedule the next request every 30 minutes
           console.log("weather updating every 30 minutes")
@@ -121,19 +131,45 @@ $(document).ready(function() {
           // Schedule the next request every 3 hours
           setTimeout(getWeatherForecast, 10800000)
         }
-      }
+      },
+    })
+  }
+
+  function getCurrentWeather() {
+    $.ajax({
+      url: "https://api.weather.gov/gridpoints/SEW/125,67/forecast/hourly",
+      dataType: "json",
+      success: function (data) {
+        dataObj.isDaytime = data.properties.periods[0].isDaytime
+        dataObj.currentTemp = data.properties.periods[0].temperature
+        dataObj.windSpeed = data.properties.periods[0].windSpeed
+        dataObj.windDirection = data.properties.periods[0].windDirection
+        dataObj.currentConditions = data.properties.periods[0].shortForecast
+      },
+      error: function (data, status, error) {
+        console.log(data)
+        console.log(status)
+        console.log(error)
+      },
+      complete: function () {
+        // Schedule the next request when the current one's complete
+        if (date.getHours() > 7 && date.getHours() < 22) {
+          // Schedule the next request every 30 minutes
+          console.log("weather updating every 30 minutes")
+          setTimeout(getCurrentWeather, 1800000)
+        } else {
+          console.log("weather updating every 3 hours")
+          // Schedule the next request every 3 hours
+          setTimeout(getCurrentWeather, 10800000)
+        }
+      },
     })
   }
 
   function getBgImg(date) {
     // If Victor's not home
-    if (
-      date.getHours() > 7 &&
-      date.getHours() < 17 &&
-      date.getDay() !== 0 &&
-      date.getDay() !== 6
-    ) {
-      if (dataObj.isDaytime) return "summer-day-mostlycloudy"
+    if (date.getHours() > 7 && date.getHours() < 17 && date.getDay() !== 0 && date.getDay() !== 6) {
+      if (dataObj.isDaytime) return "summer-mostlyclear-day"
     }
     // Victor's mom's pics
     {
@@ -174,31 +210,21 @@ $(document).ready(function() {
     $.ajax({
       url: "https://api.sunrise-sunset.org/json?lat=47.6&lng=-122.3",
       dataType: "json",
-      success: function(data) {
+      success: function (data) {
         var d = new Date()
-
-        var sunrise = new Date(
-          `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${
-            data.results.sunrise
-          } UTC`
-        )
-        var sunset = new Date(
-          `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${
-            data.results.sunset
-          } UTC`
-        )
-        date.toString()
-        dataObj.sunrise = sunrise.toTimeString().match(/[0-9]+[:][0-9]+/g)[0]
-        dataObj.sunset = sunset.toTimeString().match(/[0-9]+[:][0-9]+/g)[0]
-
-        console.log("x", data)
+        for (var key in data.results) {
+          var myDate = new Date(
+            `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${data.results[key]} UTC`
+          )
+          dataObj.astronomical[key] = myDate.toTimeString().match(/[0-9]+[:][0-9]+/g)[0]
+        }
       },
-      error: function(data, status, error) {
+      error: function (data, status, error) {
         console.log(data)
         console.log(status)
         console.log(error)
       },
-      complete: function() {
+      complete: function () {
         if (date.getHours() > 6 && date.getHours() < 22) {
           // Schedule the next request every 30 minutes
           console.log("solar data updating every 30 minutes")
@@ -208,47 +234,16 @@ $(document).ready(function() {
           // Schedule the next request every 3 hours
           setTimeout(getSolarData, 10800000)
         }
-      }
-    })
-  }
-
-  function getWeatherData() {
-    $.ajax({
-      url: "https://api.weather.gov/gridpoints/SEW/125,67/forecast/hourly",
-      dataType: "json",
-      success: function(data) {
-        dataObj.isDaytime = data.properties.periods[0].isDaytime
-        dataObj.currentTemp = data.properties.periods[0].temperature
-        dataObj.windSpeed = data.properties.periods[0].windSpeed
-        dataObj.windDirection = data.properties.periods[0].windDirection
-        dataObj.currentConditions = data.properties.periods[0].shortForecast
       },
-      error: function(data, status, error) {
-        console.log(data)
-        console.log(status)
-        console.log(error)
-      },
-      complete: function() {
-        // Schedule the next request when the current one's complete
-        if (date.getHours() > 7 && date.getHours() < 22) {
-          // Schedule the next request every 30 minutes
-          console.log("weather updating every 30 minutes")
-          setTimeout(getWeatherData, 1800000)
-        } else {
-          console.log("weather updating every 3 hours")
-          // Schedule the next request every 3 hours
-          setTimeout(getWeatherData, 10800000)
-        }
-      }
     })
   }
 
   function getSolarStats() {
-    var sr = dataObj.sunrise
-    var ss = dataObj.sunset
+    var sr = dataObj.astronomical.sunrise
+    var ss = dataObj.astronomical.sunset
 
     if (sr[0] === "0") sr = sr.substr(1)
-    // This will break if sunset is after midnight or before noon
+    // Note: This may break if sunset is after midnight
     ss = ss.substr(1)
     var num = ss[0]
     num = num - 2
@@ -257,40 +252,31 @@ $(document).ready(function() {
     return `Sunrise: ${sr}am Sunset: ${ss}pm`
   }
 
-  function getCurrentIcon() {
-    if (dataObj.shortForecast === "") return ""
+  function getWeatherIcon() {
     // day or night
-    if (dataObj.shortForecast.toLowerCase().includes("snow"))
-      return "fa-snowflake"
-    if (dataObj.shortForecast.toLowerCase().includes("thunder"))
-      return "fa-bolt"
+    if (dataObj.shortForecast === "") return ""
+    if (dataObj.shortForecast.toLowerCase().includes("snow")) return "fa-snowflake"
+    if (dataObj.shortForecast.toLowerCase().includes("thunder")) return "fa-bolt"
     if (dataObj.shortForecast.toLowerCase().includes("smoke")) return "fa-smog"
-    if (dataObj.shortForecast.toLowerCase().includes("snow"))
-      return "fa-snowflake"
+    if (dataObj.shortForecast.toLowerCase().includes("snow")) return "fa-snowflake"
 
     // daytime
     if (dataObj.isDaytime) {
-      if (dataObj.shortForecast.toLowerCase().includes("chance light rain"))
-        return "fa-cloud-sun-rain"
-      if (dataObj.shortForecast.toLowerCase().includes("light rain"))
-        return "fa-cloud-sun-rain"
-      if (dataObj.shortForecast.toLowerCase().includes("showers"))
-        return "fa-cloud-rain"
-      if (dataObj.shortForecast.toLowerCase().includes("rain"))
-        return "fa-cloud-showers-heavy"
+      if (dataObj.shortForecast.toLowerCase() === "chance rain showers") return "fa-cloud-sun-rain"
+      if (dataObj.shortForecast.toLowerCase() === "mostly sunny") return "fa-sun"
+      if (dataObj.shortForecast.toLowerCase().includes("light rain")) return "fa-cloud-sun-rain"
+      if (dataObj.shortForecast.toLowerCase().includes("showers")) return "fa-cloud-rain"
+      if (dataObj.shortForecast.toLowerCase().includes("rain")) return "fa-cloud-showers-heavy"
       if (dataObj.shortForecast.toLowerCase().includes("clear")) return "fa-sun"
       return "fa-cloud-sun"
     }
     // nighttime
     if (!dataObj.isDaytime) {
-      if (dataObj.shortForecast.toLowerCase().includes("light rain"))
-        return "fa-cloud-moon-rain"
-      if (dataObj.shortForecast.toLowerCase().includes("showers"))
-        return "fa-cloud-rain"
+      if (dataObj.shortForecast.toLowerCase().includes("light rain")) return "fa-cloud-moon-rain"
+      if (dataObj.shortForecast.toLowerCase().includes("showers")) return "fa-cloud-rain"
       if (dataObj.shortForecast.toLowerCase().includes("heavy rain"))
         return "fa-cloud-showers-heavy"
-      if (dataObj.shortForecast.toLowerCase().includes("clear"))
-        return "fa-moon"
+      if (dataObj.shortForecast.toLowerCase().includes("clear")) return "fa-moon"
       return "fa-cloud-moon"
     }
     return "fa-rainbow"
