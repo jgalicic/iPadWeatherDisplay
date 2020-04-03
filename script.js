@@ -33,51 +33,55 @@ $(document).ready(function() {
   const solarStats = document.getElementById("solarStats")
 
   var dataObj = {
+    aqi: 0,
     currentConditions: "",
     currentConditions: 0,
     detailedForecast: "",
+    humitidy: "",
     isDaytime: true,
     shortForecast: "",
     sunrise: "",
     sunset: "",
     todayHigh: 0,
     tomorrowLow: 0,
+    uvIndex: "",
     windDirection: "",
     windSpeed: ""
   }
   var loadPageOneTime = true
   var date = new Date()
 
-  function getWeatherData() {
-    $.ajax({
-      url: "https://api.weather.gov/gridpoints/SEW/125,67/forecast/hourly",
-      dataType: "json",
-      success: function(data) {
-        dataObj.isDaytime = data.properties.periods[0].isDaytime
-        dataObj.currentTemp = data.properties.periods[0].temperature
-        dataObj.windSpeed = data.properties.periods[0].windSpeed
-        dataObj.windDirection = data.properties.periods[0].windDirection
-        dataObj.currentConditions = data.properties.periods[0].shortForecast
-      },
-      error: function(data, status, error) {
-        console.log(data)
-        console.log(status)
-        console.log(error)
-      },
-      complete: function() {
-        // Schedule the next request when the current one's complete
-        if (date.getHours() > 7 && date.getHours() < 22) {
-          // Schedule the next request every 30 minutes
-          console.log("weather updating every 30 minutes")
-          setTimeout(getWeatherData, 1800000)
-        } else {
-          console.log("weather updating every 3 hours")
-          // Schedule the next request every 3 hours
-          setTimeout(getWeatherData, 10800000)
-        }
-      }
-    })
-  }
+  getWeatherData()
+  getWeatherForecast()
+  getSolarData()
+
+  setInterval(function() {
+    date = new Date()
+
+    if (loadPageOneTime) {
+      console.log(dataObj)
+      // console.log(date.getHours())
+      populateDetailedForecast(dataObj)
+      loadPageOneTime = false
+    }
+
+    // Date
+    dayOfWeek.innerText = dayNames[date.getDay()]
+    todaysDate.innerText = `${monthNames[date.getMonth()]} ${date.getDate()}`
+    time.innerText = date.toLocaleTimeString().match(/[0-9]+[:][0-9]+/g)
+
+    // Weather
+    if (dataObj.currentTemp) {
+      currentTemp.innerText = `${dataObj.currentTemp}°`
+    }
+    $(weatherIcon).addClass(getCurrentIcon())
+
+    // Solar
+    $(solarStats).text(getSolarStats())
+
+    // Background images
+    document.body.style.backgroundImage = `url("img/bg/${getBgImg(date)}.jpg")`
+  }, 2000)
 
   function getWeatherForecast() {
     $.ajax({
@@ -120,52 +124,6 @@ $(document).ready(function() {
       }
     })
   }
-
-  function getSolarData() {
-    $.ajax({
-      url: "https://api.sunrise-sunset.org/json?lat=47.6&lng=-122.3",
-      dataType: "json",
-      success: function(data) {
-        var d = new Date()
-
-        var sunrise = new Date(
-          `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${
-            data.results.sunrise
-          } UTC`
-        )
-        var sunset = new Date(
-          `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${
-            data.results.sunset
-          } UTC`
-        )
-        date.toString()
-        dataObj.sunrise = sunrise.toTimeString().match(/[0-9]+[:][0-9]+/g)[0]
-        dataObj.sunset = sunset.toTimeString().match(/[0-9]+[:][0-9]+/g)[0]
-
-        console.log("x", data)
-      },
-      error: function(data, status, error) {
-        console.log(data)
-        console.log(status)
-        console.log(error)
-      },
-      complete: function() {
-        if (date.getHours() > 6 && date.getHours() < 22) {
-          // Schedule the next request every 30 minutes
-          console.log("solar data updating every 30 minutes")
-          setTimeout(getSolarData, 1800000)
-        } else {
-          console.log("solar data updating every 3 hours")
-          // Schedule the next request every 3 hours
-          setTimeout(getSolarData, 10800000)
-        }
-      }
-    })
-  }
-
-  getWeatherData()
-  getWeatherForecast()
-  getSolarData()
 
   function getBgImg(date) {
     // If Victor's not home
@@ -212,33 +170,78 @@ $(document).ready(function() {
     }
   }
 
-  setInterval(function() {
-    date = new Date()
+  function getSolarData() {
+    $.ajax({
+      url: "https://api.sunrise-sunset.org/json?lat=47.6&lng=-122.3",
+      dataType: "json",
+      success: function(data) {
+        var d = new Date()
 
-    if (loadPageOneTime) {
-      console.log(dataObj)
-      // console.log(date.getHours())
-      populateDetailedForecast(dataObj)
-      loadPageOneTime = false
-    }
+        var sunrise = new Date(
+          `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${
+            data.results.sunrise
+          } UTC`
+        )
+        var sunset = new Date(
+          `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${
+            data.results.sunset
+          } UTC`
+        )
+        date.toString()
+        dataObj.sunrise = sunrise.toTimeString().match(/[0-9]+[:][0-9]+/g)[0]
+        dataObj.sunset = sunset.toTimeString().match(/[0-9]+[:][0-9]+/g)[0]
 
-    // Date
-    dayOfWeek.innerText = dayNames[date.getDay()]
-    todaysDate.innerText = `${monthNames[date.getMonth()]} ${date.getDate()}`
-    time.innerText = date.toLocaleTimeString().match(/[0-9]+[:][0-9]+/g)
+        console.log("x", data)
+      },
+      error: function(data, status, error) {
+        console.log(data)
+        console.log(status)
+        console.log(error)
+      },
+      complete: function() {
+        if (date.getHours() > 6 && date.getHours() < 22) {
+          // Schedule the next request every 30 minutes
+          console.log("solar data updating every 30 minutes")
+          setTimeout(getSolarData, 1800000)
+        } else {
+          console.log("solar data updating every 3 hours")
+          // Schedule the next request every 3 hours
+          setTimeout(getSolarData, 10800000)
+        }
+      }
+    })
+  }
 
-    // Weather
-    if (dataObj.currentTemp) {
-      currentTemp.innerText = `${dataObj.currentTemp}°`
-    }
-    $(weatherIcon).addClass(getCurrentIcon())
-
-    // Solar
-    $(solarStats).text(getSolarStats())
-
-    // Background images
-    document.body.style.backgroundImage = `url("img/bg/${getBgImg(date)}.jpg")`
-  }, 2000)
+  function getWeatherData() {
+    $.ajax({
+      url: "https://api.weather.gov/gridpoints/SEW/125,67/forecast/hourly",
+      dataType: "json",
+      success: function(data) {
+        dataObj.isDaytime = data.properties.periods[0].isDaytime
+        dataObj.currentTemp = data.properties.periods[0].temperature
+        dataObj.windSpeed = data.properties.periods[0].windSpeed
+        dataObj.windDirection = data.properties.periods[0].windDirection
+        dataObj.currentConditions = data.properties.periods[0].shortForecast
+      },
+      error: function(data, status, error) {
+        console.log(data)
+        console.log(status)
+        console.log(error)
+      },
+      complete: function() {
+        // Schedule the next request when the current one's complete
+        if (date.getHours() > 7 && date.getHours() < 22) {
+          // Schedule the next request every 30 minutes
+          console.log("weather updating every 30 minutes")
+          setTimeout(getWeatherData, 1800000)
+        } else {
+          console.log("weather updating every 3 hours")
+          // Schedule the next request every 3 hours
+          setTimeout(getWeatherData, 10800000)
+        }
+      }
+    })
+  }
 
   function getSolarStats() {
     var sr = dataObj.sunrise
