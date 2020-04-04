@@ -139,10 +139,6 @@ $(document).ready(function () {
           dataObj.tomorrowHigh = data.properties.periods[1].temperature
           dataObj.tomorrowLow = data.properties.periods[2].temperature
         }
-
-        data.properties.periods.forEach((x, i) => {
-          console.log(i, x.temperature)
-        })
       },
       error: function (data, status, error) {
         console.log(data)
