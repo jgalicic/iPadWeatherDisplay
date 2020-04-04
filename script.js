@@ -68,7 +68,7 @@ $(document).ready(function () {
     windSpeed: "15 mph",
   }
 
-  var todayHigh
+  var todayHigh = 0
 
   getCurrentWeather()
   getWeatherForecast()
@@ -140,7 +140,7 @@ $(document).ready(function () {
           dataObj.tomorrowHigh = data.properties.periods[2].temperature
           dataObj.tomorrowLow = data.properties.periods[3].temperature
         } else {
-          if (todayHigh) {
+          if (todayHigh > 1) {
             dataObj.todayHigh = todayHigh
           } else {
             dataObj.todayHigh = dataObj.todayHigh
