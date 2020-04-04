@@ -68,6 +68,8 @@ $(document).ready(function () {
     windSpeed: "15 mph",
   }
 
+  var todayHigh
+
   getCurrentWeather()
   getWeatherForecast()
   getSolarData()
@@ -138,10 +140,14 @@ $(document).ready(function () {
           dataObj.tomorrowHigh = data.properties.periods[2].temperature
           dataObj.tomorrowLow = data.properties.periods[3].temperature
         } else {
-          dataObj.todayHigh = dataObj.currentTemp
-          dataObj.todayLow = data.properties.periods[0].temperature
-          dataObj.tomorrowHigh = data.properties.periods[1].temperature
-          dataObj.tomorrowLow = data.properties.periods[2].temperature
+          if (todayHigh) {
+            dataObj.todayHigh = todayHigh
+          } else {
+            dataObj.todayHigh = dataObj.todayHigh
+            dataObj.todayLow = data.properties.periods[0].temperature
+            dataObj.tomorrowHigh = data.properties.periods[1].temperature
+            dataObj.tomorrowLow = data.properties.periods[2].temperature
+          }
         }
       },
       error: function (data, status, error) {
@@ -166,12 +172,15 @@ $(document).ready(function () {
       url: "https://api.weather.gov/gridpoints/SEW/125,67/forecast/hourly",
       dataType: "json",
       success: function (data) {
-        console.log("Current weather: ", data)
         dataObj.isDaytime = data.properties.periods[0].isDaytime
         dataObj.currentTemp = data.properties.periods[0].temperature
         dataObj.windSpeed = data.properties.periods[0].windSpeed
         dataObj.windDirection = data.properties.periods[0].windDirection
         dataObj.currentConditions = data.properties.periods[0].shortForecast
+
+        if (data.properties.periods[0].isDaytime) {
+          todayHigh = data.properties.periods[0].temperature
+        }
       },
       error: function (data, status, error) {
         console.log(data)
