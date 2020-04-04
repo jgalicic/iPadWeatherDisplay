@@ -48,7 +48,7 @@ $(document).ready(function () {
     chancePrecipitation: 10,
     chanceThunder: 0,
     currentConditions: "Chance Rain Showers",
-    currentTemp: 50,
+    currentTemp: 38,
     dayLength: "",
     detailedForecast:
       "A chance of rain showers. Mostly cloudy, with a high near 46. West northwest wind 10 to 15 mph, with gusts as high as 21 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible.",
@@ -58,8 +58,8 @@ $(document).ready(function () {
     pressureDirection: "falling",
     shortForecast: "Chance Rain Showers",
     snow: { chanceSnow: 0, snowAccumInchesMax: 0, snowAccumInchesMin: 0 },
-    todayHigh: 50,
-    todayLow: 50,
+    todayHigh: 52,
+    todayLow: 36,
     tomorrowHigh: 48,
     tomorrowLow: 38,
     uvIndex: 1,
@@ -115,7 +115,7 @@ $(document).ready(function () {
     $(weatherIcon).addClass(getWeatherIcon())
 
     // Solar
-    $(solarStats).text(getSolarStats())
+    $(solarStats).html(getSolarStats())
 
     // Background images
     document.body.style.backgroundImage = `url("img/bg/${getBgImg(date)}.jpg")`
@@ -454,44 +454,45 @@ $(document).ready(function () {
   }
 
   function getBgImg(date) {
-    // If Victor's not home
-    if (date.getHours() > 7 && date.getHours() < 20 && date.getDay() !== 0 && date.getDay() !== 6) {
-      if (dataObj.isDaytime) return "summer-mostlyclear-day"
-      return "summer-mostlyclear-day"
-    }
-    // Victor's mom's pics
-    else {
-      if (date.getMinutes() >= 0 && date.getMinutes() < 2) return "img-1"
-      if (date.getMinutes() >= 2 && date.getMinutes() < 4) return "img-2"
-      if (date.getMinutes() >= 4 && date.getMinutes() < 6) return "img-3"
-      if (date.getMinutes() >= 6 && date.getMinutes() < 8) return "img-4"
-      if (date.getMinutes() >= 8 && date.getMinutes() < 10) return "img-5"
-      if (date.getMinutes() >= 10 && date.getMinutes() < 12) return "img-6"
-      if (date.getMinutes() >= 12 && date.getMinutes() < 14) return "img-1"
-      if (date.getMinutes() >= 14 && date.getMinutes() < 16) return "img-2"
-      if (date.getMinutes() >= 16 && date.getMinutes() < 18) return "img-3"
-      if (date.getMinutes() >= 18 && date.getMinutes() < 20) return "img-4"
-      if (date.getMinutes() >= 20 && date.getMinutes() < 22) return "img-5"
-      if (date.getMinutes() >= 22 && date.getMinutes() < 24) return "img-6"
-      if (date.getMinutes() >= 24 && date.getMinutes() < 26) return "img-1"
-      if (date.getMinutes() >= 26 && date.getMinutes() < 28) return "img-2"
-      if (date.getMinutes() >= 28 && date.getMinutes() < 30) return "img-3"
-      if (date.getMinutes() >= 30 && date.getMinutes() < 32) return "img-4"
-      if (date.getMinutes() >= 32 && date.getMinutes() < 34) return "img-5"
-      if (date.getMinutes() >= 34 && date.getMinutes() < 36) return "img-6"
-      if (date.getMinutes() >= 36 && date.getMinutes() < 38) return "img-1"
-      if (date.getMinutes() >= 38 && date.getMinutes() < 40) return "img-2"
-      if (date.getMinutes() >= 40 && date.getMinutes() < 42) return "img-3"
-      if (date.getMinutes() >= 42 && date.getMinutes() < 44) return "img-4"
-      if (date.getMinutes() >= 44 && date.getMinutes() < 46) return "img-5"
-      if (date.getMinutes() >= 46 && date.getMinutes() < 48) return "img-6"
-      if (date.getMinutes() >= 48 && date.getMinutes() < 50) return "img-1"
-      if (date.getMinutes() >= 50 && date.getMinutes() < 52) return "img-2"
-      if (date.getMinutes() >= 52 && date.getMinutes() < 54) return "img-3"
-      if (date.getMinutes() >= 54 && date.getMinutes() < 56) return "img-4"
-      if (date.getMinutes() >= 56 && date.getMinutes() < 58) return "img-5"
-      if (date.getMinutes() >= 58 && date.getMinutes() < 61) return "img-6"
-    }
+    return "summer-mostlyclear-day"
+    // // If Victor's not home
+    // if (date.getHours() > 7 && date.getHours() < 20 && date.getDay() !== 0 && date.getDay() !== 6) {
+    //   if (dataObj.isDaytime) return "summer-mostlyclear-day"
+    //   return "summer-mostlyclear-day"
+    // }
+    // // Victor's mom's pics
+    // else {
+    //   if (date.getMinutes() >= 0 && date.getMinutes() < 2) return "img-1"
+    //   if (date.getMinutes() >= 2 && date.getMinutes() < 4) return "img-2"
+    //   if (date.getMinutes() >= 4 && date.getMinutes() < 6) return "img-3"
+    //   if (date.getMinutes() >= 6 && date.getMinutes() < 8) return "img-4"
+    //   if (date.getMinutes() >= 8 && date.getMinutes() < 10) return "img-5"
+    //   if (date.getMinutes() >= 10 && date.getMinutes() < 12) return "img-6"
+    //   if (date.getMinutes() >= 12 && date.getMinutes() < 14) return "img-1"
+    //   if (date.getMinutes() >= 14 && date.getMinutes() < 16) return "img-2"
+    //   if (date.getMinutes() >= 16 && date.getMinutes() < 18) return "img-3"
+    //   if (date.getMinutes() >= 18 && date.getMinutes() < 20) return "img-4"
+    //   if (date.getMinutes() >= 20 && date.getMinutes() < 22) return "img-5"
+    //   if (date.getMinutes() >= 22 && date.getMinutes() < 24) return "img-6"
+    //   if (date.getMinutes() >= 24 && date.getMinutes() < 26) return "img-1"
+    //   if (date.getMinutes() >= 26 && date.getMinutes() < 28) return "img-2"
+    //   if (date.getMinutes() >= 28 && date.getMinutes() < 30) return "img-3"
+    //   if (date.getMinutes() >= 30 && date.getMinutes() < 32) return "img-4"
+    //   if (date.getMinutes() >= 32 && date.getMinutes() < 34) return "img-5"
+    //   if (date.getMinutes() >= 34 && date.getMinutes() < 36) return "img-6"
+    //   if (date.getMinutes() >= 36 && date.getMinutes() < 38) return "img-1"
+    //   if (date.getMinutes() >= 38 && date.getMinutes() < 40) return "img-2"
+    //   if (date.getMinutes() >= 40 && date.getMinutes() < 42) return "img-3"
+    //   if (date.getMinutes() >= 42 && date.getMinutes() < 44) return "img-4"
+    //   if (date.getMinutes() >= 44 && date.getMinutes() < 46) return "img-5"
+    //   if (date.getMinutes() >= 46 && date.getMinutes() < 48) return "img-6"
+    //   if (date.getMinutes() >= 48 && date.getMinutes() < 50) return "img-1"
+    //   if (date.getMinutes() >= 50 && date.getMinutes() < 52) return "img-2"
+    //   if (date.getMinutes() >= 52 && date.getMinutes() < 54) return "img-3"
+    //   if (date.getMinutes() >= 54 && date.getMinutes() < 56) return "img-4"
+    //   if (date.getMinutes() >= 56 && date.getMinutes() < 58) return "img-5"
+    //   if (date.getMinutes() >= 58 && date.getMinutes() < 61) return "img-6"
+    // }
   }
 
   function getSolarData() {
@@ -531,7 +532,19 @@ $(document).ready(function () {
     num = num - 2
     ss = num + ss.substr(1)
 
-    return `Sunrise: ${sr}am Sunset: ${ss}pm`
+    return `
+    <div class="sunriseContainer">
+      <div class="sunriseIcons">
+        <i id="arrowUp" class="fas fa-chevron-up"></i>
+        <i id="sunUp" class="fas fa-sun"></i>
+      </div>
+      ${sr}am &nbsp;&nbsp;&nbsp;&nbsp;
+      <div class="sunriseIcons">
+        <i id="sunDown" class="fas fa-sun"></i>
+        <i id="arrowDown" class="fas fa-chevron-down"></i>
+      </div>
+      ${ss}pm
+    </div>`
   }
 
   function getWeatherIcon() {
