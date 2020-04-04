@@ -100,11 +100,14 @@ $(document).ready(function () {
       $(highTemp).css("color", `rgb(${getRGB(dataObj.todayHigh)})`)
       // Gradient bar
       $(tempRangeBar).css({
-        background: `linear-gradient(to right, rgb(${getRGB(dataObj.todayLow)}), rgb(${getRGB(
-          dataObj.todayHigh
-        )})`,
+        background: `-webkit-linear-gradient(-45deg, rgb(${getRGB(
+          dataObj.todayLow
+        )}) 0%, rgb(${getRGB(dataObj.todayHigh)}) 100%`,
       })
     }
+
+    // background: -webkit-linear-gradient(-45deg,
+    // rgba(238,238,238,1) 0%,rgba(238,238,238,1) 100%); /* Chrome10+,Safari5.1+ */
 
     $(weatherIcon).addClass(getWeatherIcon())
 
