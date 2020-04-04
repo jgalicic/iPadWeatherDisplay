@@ -48,7 +48,7 @@ $(document).ready(function () {
     chancePrecipitation: 10,
     chanceThunder: 0,
     currentConditions: "Chance Rain Showers",
-    currentTemp: 66,
+    currentTemp: 50,
     dayLength: "",
     detailedForecast:
       "A chance of rain showers. Mostly cloudy, with a high near 46. West northwest wind 10 to 15 mph, with gusts as high as 21 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible.",
@@ -58,8 +58,8 @@ $(document).ready(function () {
     pressureDirection: "falling",
     shortForecast: "Chance Rain Showers",
     snow: { chanceSnow: 0, snowAccumInchesMax: 0, snowAccumInchesMin: 0 },
-    todayHigh: 78,
-    todayLow: 57,
+    todayHigh: 50,
+    todayLow: 50,
     tomorrowHigh: 48,
     tomorrowLow: 38,
     uvIndex: 1,
@@ -89,25 +89,26 @@ $(document).ready(function () {
     todaysDate.innerText = `${monthNames[date.getMonth()]} ${date.getDate()}`
     time.innerText = date.toLocaleTimeString().match(/[0-9]+[:][0-9]+/g)
 
-    // Weather
-    if (dataObj.currentTemp) {
-      currentTemp.innerText = `${dataObj.currentTemp}°`
-    }
-    if (dataObj.todayHigh && dataObj.todayLow) {
-      lowTemp.innerText = `${dataObj.todayLow}°`
-      $(lowTemp).css("color", `rgb(${getRGB(dataObj.todayLow)})`)
-      highTemp.innerText = `${dataObj.todayHigh}°`
-      $(highTemp).css("color", `rgb(${getRGB(dataObj.todayHigh)})`)
-      // Gradient bar
-      $(tempRangeBar).css({
-        background: `-webkit-linear-gradient(-45deg, rgb(${getRGB(
-          dataObj.todayLow
-        )}) 0%, rgb(${getRGB(dataObj.todayHigh)}) 100%`,
-      })
-    }
+    setTimeout(() => {
+      // Weather
+      if (dataObj.currentTemp) {
+        currentTemp.innerText = `${dataObj.currentTemp}°`
+      }
+      if (dataObj.todayHigh && dataObj.todayLow) {
+        lowTemp.innerText = `${dataObj.todayLow}°`
+        $(lowTemp).css("color", `rgb(${getRGB(dataObj.todayLow)})`)
+        highTemp.innerText = `${dataObj.todayHigh}°`
+        $(highTemp).css("color", `rgb(${getRGB(dataObj.todayHigh)})`)
+        // Gradient bar
+        $(tempRangeBar).css({
+          background: `-webkit-linear-gradient(left, rgb(${getRGB(dataObj.todayLow)}), rgb(${getRGB(
+            dataObj.todayHigh
+          )})`,
+        })
+      }
+    }, 2000)
 
-    // background: -webkit-linear-gradient(-45deg,
-    // rgba(238,238,238,1) 0%,rgba(238,238,238,1) 100%); /* Chrome10+,Safari5.1+ */
+    // background: -webkit-linear-gradient(left, black, white);
 
     $(weatherIcon).addClass(getWeatherIcon())
 
