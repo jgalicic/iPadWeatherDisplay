@@ -26,10 +26,10 @@ $(document).ready(function () {
   const medForecast = document.getElementById("medForecast")
   const smallForecast = document.getElementById("smallForecast")
   const solarStats = document.getElementById("solarStats")
-  const loadPageOneTime = true // for testing purposes
-  const date = new Date()
+  var loadPageOneTime = true // for testing purposes
+  var date = new Date()
 
-  const dataObj = {
+  var dataObj = {
     aqi: 28,
     astronomical: {
       astronomical_twilight_begin: "04:51",
@@ -68,7 +68,7 @@ $(document).ready(function () {
     windSpeed: "15 mph",
   }
 
-  const todayHigh = 0
+  var todayHigh = 0
 
   getCurrentWeather()
   getWeatherForecast()
