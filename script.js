@@ -70,8 +70,8 @@ $(document).ready(function () {
 
   var todayHigh = 0
 
-  getCurrentWeather()
-  getWeatherForecast()
+  // getCurrentWeather()
+  // getWeatherForecast()
   getSolarData()
   renderInfoToScreen()
 
@@ -102,15 +102,15 @@ $(document).ready(function () {
         highTemp.innerText = `${dataObj.todayHigh}°`
         $(highTemp).css("color", `rgb(${getRGB(dataObj.todayHigh)})`)
         // Gradient bar
+        $(tempRangeBar).css("background-image", "linear-gradient(red, blue)")
+
         $(tempRangeBar).css({
-          background: `-webkit-linear-gradient(left, rgb(${getRGB(dataObj.todayLow)}), rgb(${getRGB(
+          background: `linear-gradient(left, rgb(${getRGB(dataObj.todayLow)}), rgb(${getRGB(
             dataObj.todayHigh
           )})`,
         })
       }
     }, 2000)
-
-    // background: -webkit-linear-gradient(left, black, white);
 
     $(weatherIcon).addClass(getWeatherIcon())
 
