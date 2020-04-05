@@ -52,12 +52,12 @@ $(document).ready(function () {
     currentTemp: 38,
     dayLength: "",
     detailedForecast:
-      "A chance of rain showers. Mostly cloudy, with a high near 46. West northwest wind 10 to 15 mph, with gusts as high as 21 mph. Chance of precipitation is 50%. New rainfall amounts less than a tenth of an inch possible.",
+      "A chance of rain showers. New rainfall amounts less than a tenth of an inch possible.",
     humitidy: 66,
     isDaytime: true,
     pressure: 30.09,
     pressureDirection: "falling",
-    shortForecast: "Chance Rain Showers",
+    shortForecast: "Mostly clear",
     snow: { chanceSnow: 0, snowAccumInchesMax: 0, snowAccumInchesMin: 0 },
     todayHigh: 52,
     todayLow: 36,
@@ -539,7 +539,7 @@ $(document).ready(function () {
         <i id="arrowUp" class="fas fa-chevron-up"></i>
         <i id="sunUp" class="fas fa-sun"></i>
       </div>
-      ${sr}am &nbsp;&nbsp;&nbsp;&nbsp;
+      ${sr}am &nbsp;&nbsp;&nbsp;
       <div class="sunriseIcons">
         <i id="sunDown" class="fas fa-sun"></i>
         <i id="arrowDown" class="fas fa-chevron-down"></i>

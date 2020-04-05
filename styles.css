@@ -3,7 +3,7 @@
   padding: 0;
   font-family: "Righteous", sans-serif;
   color: white;
-  font-size: 40px;
+  font-size: 4vw;
   text-shadow: 2px 2px 12px black;
 }
 
@@ -25,7 +25,6 @@ body {
 
 #headerContainer {
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
   width: 100%;
   height: 25%;
@@ -39,23 +38,24 @@ body {
 
 #dateContainer {
   display: flex;
-  width: 100%;
+  width: 40vw;
   flex-direction: column;
   align-items: center;
   padding-left: 20px;
 }
 
 #dayOfWeek {
-  font-size: 55px;
+  font-size: 5vw;
 }
 
 #todaysDate {
-  font-size: 80px;
+  font-size: 7vw;
   position: relative;
   bottom: 20px;
 }
 
 #detailedForecast {
+  width: 60vw;
   padding-top: 20px;
   padding-right: 20px;
   padding-left: 20px;
@@ -89,16 +89,13 @@ body {
 #time {
   color: white;
   /* font-family: "Londrina Outline", cursive; */
-  font-size: 200px;
-  position: relative;
-  right: 10px;
-  bottom: 20px;
+  font-size: 18vw;
 }
 
 #weatherContainer {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   width: 100%;
   height: 25%;
   background: linear-gradient(
@@ -114,11 +111,18 @@ body {
   flex-direction: column;
   align-items: center;
   position: relative;
-  top: 20px;
+  top: 5px;
+  left: 40px;
+}
+
+#tempContainer,
+#weatherIconContainer {
+  width: 20%;
 }
 
 #currentTemp {
-  font-size: 120px;
+  z-index: 3;
+  font-size: 12vw;
   position: relative;
   top: 20px;
 }
@@ -133,14 +137,14 @@ body {
 #lowTemp,
 #highTemp {
   z-index: 2;
-  font-size: 32px;
-  text-shadow: -1px 1px 1px #999;
+  font-size: 3.2vw;
+  text-shadow: -1px 1px 1px #ccc;
 }
 
 #tempRangeBar {
   z-index: 2;
-  height: 20px;
-  width: 100px;
+  height: 2vw;
+  width: 10vw;
   background-color: white;
   border-radius: 15px;
   margin: 0 4px;
@@ -162,17 +166,11 @@ body {
 #solarContainer {
   display: flex;
   height: 5%;
+  padding-bottom: 10px;
   width: 100%;
   align-items: center;
   justify-content: space-around;
   background-color: rgba(0, 0, 0, 0.65);
-}
-
-#solarContainer p {
-  position: relative;
-  bottom: 10px;
-  font-size: 24px;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .sunriseContainer {
@@ -194,7 +192,7 @@ body {
 }
 
 #arrowUp {
-  font-size: 30px;
+  font-size: 3.5vw;
 }
 
 #sunDown {
@@ -205,25 +203,27 @@ body {
 #arrowDown {
   position: relative;
   bottom: 1px;
-  font-size: 28px;
+  font-size: 3.5vw;
 }
 
 #weatherIcon {
-  font-size: 140px;
+  font-size: 13vw;
 }
 
 #weatherIconContainer {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: relative;
+  right: 40px;
 }
 
 #weatherIconContainer i {
   text-align: center;
 }
 
-#weatherIconContainer p {
+#shortForecastDisplay {
   margin-top: 10px;
-  font-size: 22px;
   text-align: center;
+  font-size: 3vw;
 }
