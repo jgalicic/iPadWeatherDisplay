@@ -562,6 +562,8 @@ $(document).ready(function () {
         return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase() === "mostly sunny") return "fas fa-sun"
       if (dataObj.shortForecast.toLowerCase() === "partly sunny") return "fas fa-cloud-sun"
+      if (dataObj.shortForecast.toLowerCase() === "mostly cloudy") return "fas fa-cloud-sun"
+      if (dataObj.shortForecast.toLowerCase() === "cloudy") return "fas fa-cloud"
       if (dataObj.shortForecast.toLowerCase().includes("light rain")) return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase().includes("showers")) return "fas fa-cloud-rain"
       if (dataObj.shortForecast.toLowerCase().includes("rain")) return "fas fa-cloud-showers-heavy"
