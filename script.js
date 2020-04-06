@@ -49,7 +49,8 @@ $(document).ready(function () {
     chancePrecipitation: 10,
     chanceThunder: 0,
     currentConditions: "Chance Rain Showers",
-    currentTemp: 38,
+    currentTime: "",
+    currentTemp: 52,
     dayLength: "",
     detailedForecast:
       "A chance of rain showers. New rainfall amounts less than a tenth of an inch possible.",
@@ -57,12 +58,13 @@ $(document).ready(function () {
     isDaytime: true,
     pressure: 30.09,
     pressureDirection: "falling",
+    season: "Spring",
     shortForecast: "Mostly clear",
     snow: { chanceSnow: 0, snowAccumInchesMax: 0, snowAccumInchesMin: 0 },
-    todayHigh: 52,
-    todayLow: 36,
-    tomorrowHigh: 48,
-    tomorrowLow: 38,
+    todayHigh: 59,
+    todayLow: 46,
+    tomorrowHigh: 62,
+    tomorrowLow: 48,
     uvIndex: 1,
     visibilityMiles: 10,
     windDirection: "WSW",
@@ -92,6 +94,8 @@ $(document).ready(function () {
     todaysDate.innerText = `${monthNames[date.getMonth()]} ${date.getDate()}`
     time.innerText = date.toLocaleTimeString().match(/[0-9]+[:][0-9]+/g)
 
+    dataObj.currentTime = `${date.getHours()}:${date.getMinutes()}`
+
     setTimeout(function () {
       // Weather
       if (dataObj.currentTemp) {
@@ -119,7 +123,7 @@ $(document).ready(function () {
     $(solarStats).html(getSolarStats())
 
     // Background images
-    document.body.style.backgroundImage = `url("img/bg/${getBgImg(date)}.jpg")`
+    document.body.style.backgroundImage = `url("img/bg/${getBgImg()}.jpg")`
     setTimeout(renderInfoToScreen, 2000)
   }
 
@@ -130,6 +134,7 @@ $(document).ready(function () {
       dataType: "json",
       success: function (data) {
         console.log("!", data)
+        dataObj.season = getSeason()
         dataObj.shortForecast = data.properties.periods[0].shortForecast
         dataObj.detailedForecast = data.properties.periods[0].detailedForecast
         populateDetailedForecast(dataObj)
@@ -454,46 +459,11 @@ $(document).ready(function () {
     }
   }
 
-  function getBgImg(date) {
-    return "summer-mostlyclear-day"
-    // // If Victor's not home
-    // if (date.getHours() > 7 && date.getHours() < 20 && date.getDay() !== 0 && date.getDay() !== 6) {
-    //   if (dataObj.isDaytime) return "summer-mostlyclear-day"
-    //   return "summer-mostlyclear-day"
-    // }
-    // // Victor's mom's pics
-    // else {
-    //   if (date.getMinutes() >= 0 && date.getMinutes() < 2) return "img-1"
-    //   if (date.getMinutes() >= 2 && date.getMinutes() < 4) return "img-2"
-    //   if (date.getMinutes() >= 4 && date.getMinutes() < 6) return "img-3"
-    //   if (date.getMinutes() >= 6 && date.getMinutes() < 8) return "img-4"
-    //   if (date.getMinutes() >= 8 && date.getMinutes() < 10) return "img-5"
-    //   if (date.getMinutes() >= 10 && date.getMinutes() < 12) return "img-6"
-    //   if (date.getMinutes() >= 12 && date.getMinutes() < 14) return "img-1"
-    //   if (date.getMinutes() >= 14 && date.getMinutes() < 16) return "img-2"
-    //   if (date.getMinutes() >= 16 && date.getMinutes() < 18) return "img-3"
-    //   if (date.getMinutes() >= 18 && date.getMinutes() < 20) return "img-4"
-    //   if (date.getMinutes() >= 20 && date.getMinutes() < 22) return "img-5"
-    //   if (date.getMinutes() >= 22 && date.getMinutes() < 24) return "img-6"
-    //   if (date.getMinutes() >= 24 && date.getMinutes() < 26) return "img-1"
-    //   if (date.getMinutes() >= 26 && date.getMinutes() < 28) return "img-2"
-    //   if (date.getMinutes() >= 28 && date.getMinutes() < 30) return "img-3"
-    //   if (date.getMinutes() >= 30 && date.getMinutes() < 32) return "img-4"
-    //   if (date.getMinutes() >= 32 && date.getMinutes() < 34) return "img-5"
-    //   if (date.getMinutes() >= 34 && date.getMinutes() < 36) return "img-6"
-    //   if (date.getMinutes() >= 36 && date.getMinutes() < 38) return "img-1"
-    //   if (date.getMinutes() >= 38 && date.getMinutes() < 40) return "img-2"
-    //   if (date.getMinutes() >= 40 && date.getMinutes() < 42) return "img-3"
-    //   if (date.getMinutes() >= 42 && date.getMinutes() < 44) return "img-4"
-    //   if (date.getMinutes() >= 44 && date.getMinutes() < 46) return "img-5"
-    //   if (date.getMinutes() >= 46 && date.getMinutes() < 48) return "img-6"
-    //   if (date.getMinutes() >= 48 && date.getMinutes() < 50) return "img-1"
-    //   if (date.getMinutes() >= 50 && date.getMinutes() < 52) return "img-2"
-    //   if (date.getMinutes() >= 52 && date.getMinutes() < 54) return "img-3"
-    //   if (date.getMinutes() >= 54 && date.getMinutes() < 56) return "img-4"
-    //   if (date.getMinutes() >= 56 && date.getMinutes() < 58) return "img-5"
-    //   if (date.getMinutes() >= 58 && date.getMinutes() < 61) return "img-6"
-    // }
+  function getBgImg() {
+    var season = dataObj.season.toLowerCase()
+    var conditions = dataObj.shortForecast.replace(/\s/g, "").toLowerCase()
+    console.log(`${season}-${conditions}-${getTimePeriodOfDay()}`)
+    return `${season}-${conditions}-${getTimePeriodOfDay()}`
   }
 
   function getSolarData() {
@@ -558,11 +528,11 @@ $(document).ready(function () {
 
     // daytime
     if (dataObj.isDaytime) {
+      if (dataObj.shortForecast.toLowerCase() === "sunny") return "fas fa-sun"
+      if (dataObj.shortForecast.toLowerCase() === "mostly sunny") return "fas fa-sun"
+      if (dataObj.shortForecast.toLowerCase() === "partly sunny") return "fas fa-cloud-sun"
       if (dataObj.shortForecast.toLowerCase() === "chance rain showers")
         return "fas fa-cloud-sun-rain"
-      if (dataObj.shortForecast.toLowerCase() === "mostly sunny") return "fas fa-sun"
-      if (dataObj.shortForecast.toLowerCase() === "sunny") return "fas fa-sun"
-      if (dataObj.shortForecast.toLowerCase() === "partly sunny") return "fas fa-cloud-sun"
       if (dataObj.shortForecast.toLowerCase() === "mostly cloudy") return "fas fa-cloud-sun"
       if (dataObj.shortForecast.toLowerCase() === "cloudy") return "fas fa-cloud"
       if (dataObj.shortForecast.toLowerCase().includes("light rain")) return "fas fa-cloud-sun-rain"
@@ -598,5 +568,40 @@ $(document).ready(function () {
         smallForecast.innerText += `${splitForecast[i]}.`
       }
     }
+  }
+
+  function getSeason() {
+    var time = Date.now()
+    if (time < 1592636400000) return "Spring"
+    if (time < 1600758000000) return "Summer"
+    if (time < 1608537600000) return "Fall"
+    if (time < 1616223600000) return "Winter"
+
+    if (time < 1624172400000) return "Spring"
+    if (time < 1632294000000) return "Summer"
+    if (time < 1640073600000) return "Fall"
+    if (time < 1647759600000) return "Winter"
+
+    if (time < 1655794800000) return "Spring"
+    if (time < 1663830000000) return "Summer"
+    if (time < 1671609600000) return "Fall"
+    if (time < 1679295600000) return "Winter"
+  }
+  // > is later than
+  function getTimePeriodOfDay() {
+    if (dataObj.currentTime < dataObj.astronomical.astronomical_twilight_begin) return "znight"
+    if (dataObj.currentTime < dataObj.astronomical.nautical_twilight_begin) return "znight"
+    if (dataObj.currentTime < dataObj.astronomical.civil_twilight_begin) return "_beforesunrise"
+    if (dataObj.currentTime < dataObj.astronomical.sunrise) return "_sunrise"
+    if (dataObj.currentTime < "10:30") return "am"
+    if (dataObj.currentTime < "4:00") return "day"
+    if (dataObj.currentTime < dataObj.astronomical.sunset) return "evening"
+    if (dataObj.currentTime < dataObj.astronomical.civil_twilight_end) return "sunset"
+    if (dataObj.currentTime < dataObj.astronomical.nautical_twilight_end) return "twilight"
+    if (dataObj.currentTime < dataObj.astronomical.astronomical_twilight_end) return "zdusk"
+    if (dataObj.currentTime > dataObj.astronomical.civil_twilight_end) return "znight"
+
+    // Fallback
+    return "summer-clear-twilight"
   }
 }) // end jQuery
