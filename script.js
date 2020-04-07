@@ -40,6 +40,8 @@ $(document).ready(function () {
   const medForecast = document.getElementById("medForecast")
   const smallForecast = document.getElementById("smallForecast")
   const solarStats = document.getElementById("solarStats")
+  const sunriseTime = document.getElementById("sunriseTime")
+  const sunsetTime = document.getElementById("sunsetTime")
   const shortForecastDisplay = document.getElementById("shortForecastDisplay")
   var date = new Date()
   var timeString = date.toTimeString().substring(0, 5)
@@ -100,7 +102,7 @@ $(document).ready(function () {
     windSpeed: "",
   }
 
-  // ///////// For testing /////////
+  // ///////// For development /////////
   // dataObj = {
   //   aqi: null,
   //   astronomical: {
@@ -302,7 +304,7 @@ $(document).ready(function () {
       url: "https://api.weather.gov/gridpoints/SEW/125,67/forecast/hourly",
       dataType: "json",
       success: function (data) {
-        console.log("Current weather:", data)
+        // console.log("Current weather:", data)
         dataObj.currentTemp = data.properties.periods[0].temperature
         dataObj.windSpeed = data.properties.periods[0].windSpeed
         dataObj.windDirection = data.properties.periods[0].windDirection
@@ -336,7 +338,7 @@ $(document).ready(function () {
 
       dataType: "json",
       success: function (data) {
-        console.log("Weather forecast: ", data)
+        // console.log("Weather forecast: ", data)
         dataObj.shortForecast = data.properties.periods[0].shortForecast
         dataObj.detailedForecast = data.properties.periods[0].detailedForecast
 
@@ -435,9 +437,10 @@ $(document).ready(function () {
     $(shortForecastDisplay).text(`${dataObj.shortForecast}`)
 
     // Solar
-    $(solarStats).html(getSolarStats())
+    getSunriseAndSunsetDisplay()
 
     // Background
+    console.log(getBgImg())
     document.body.style.backgroundImage = `url("img/bg/${getBgImg()}.jpg")`
 
     // Change color and night to warmer tones
@@ -771,35 +774,24 @@ $(document).ready(function () {
     }
   }
 
-  function getSolarStats() {
-    var sr = dataObj.astronomical.sunrise
-    var ss = dataObj.astronomical.sunset
-
-    if (sr[0] === "0") sr = sr.substr(1)
-    // Note: This may break if sunset is after midnight
-    ss = ss.substr(1)
-    var num = ss[0]
-    num = num - 2
-    ss = num + ss.substr(1)
-
-    return `
-    <div class="sunriseContainer">
-      <div class="sunriseIcons">
-        <i id="arrowUp" class="fas fa-chevron-up"></i>
-        <i id="sunUp" class="fas fa-sun"></i>
-      </div>
-      ${sr}am &nbsp;&nbsp;&nbsp;
-      <div class="sunriseIcons">
-        <i id="sunDown" class="fas fa-sun"></i>
-        <i id="arrowDown" class="fas fa-chevron-down"></i>
-      </div>
-      ${ss}pm
-    </div>`
-  }
-
   function getBgImg() {
     var conditions = dataObj.shortForecast.replace(/\s/g, "").toLowerCase()
     var string = `${dataObj.date.season}-${conditions}-${dataObj.date.currentTimePeriod}`.toLowerCase()
     return string
+  }
+
+  function getSunriseAndSunsetDisplay() {
+    var sunriseDisplay = dataObj.astronomical.sunrise
+    var sunsetDisplay = dataObj.astronomical.sunset
+
+    if (sunriseDisplay[0] === "0") sunriseDisplay = sunriseDisplay.substr(1)
+    // Note: This may break if sunset is after midnight
+    sunsetDisplay = sunsetDisplay.substr(1)
+    var num = sunsetDisplay[0]
+    num = num - 2
+    sunsetDisplay = num + sunsetDisplay.substr(1)
+
+    sunriseTime.innerHTML = `${sunriseDisplay}am &nbsp;`
+    sunsetTime.innerHTML = `${sunsetDisplay}pm`
   }
 }) // end jQuery

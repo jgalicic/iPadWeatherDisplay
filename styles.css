@@ -1,3 +1,7 @@
+/* 
+Anicons based on "https://dribbble.com/shots/2097042-Widget-Weather" by kylor
+*/
+
 * {
   margin: 0;
   padding: 0;
@@ -8,7 +12,7 @@
 }
 
 body {
-  background-color: black;
+  color: #fff;
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
@@ -89,8 +93,6 @@ body {
 #time {
   color: white;
   font-size: 22vw;
-  position: relative;
-  bottom: 30px;
 }
 
 #weatherContainer {
@@ -108,6 +110,7 @@ body {
 }
 
 #tempContainer {
+  width: 20%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -116,16 +119,11 @@ body {
   left: 40px;
 }
 
-#tempContainer,
-#weatherIconContainer {
-  width: 20%;
-}
-
 #currentTemp {
   z-index: 3;
-  font-size: 12vw;
+  font-size: 15vw;
   position: relative;
-  top: 20px;
+  top: 25px;
 }
 #tempRangeContainer {
   display: flex;
@@ -163,18 +161,15 @@ body {
   right: 15px;
 }
 
-#solarContainer {
-  display: flex;
-  height: 5%;
-  padding-bottom: 10px;
-  width: 100%;
-  align-items: center;
-  justify-content: space-around;
-  background-color: rgba(0, 0, 0, 0.65);
-}
-
 .sunriseContainer {
   display: flex;
+  position: relative;
+  bottom: 12px;
+}
+
+.sunriseContainer p {
+  font-size: 5vw;
+  line-height: 1;
 }
 
 .sunriseIcons {
@@ -187,8 +182,12 @@ body {
 }
 
 #solarStats {
-  position: relative;
-  bottom: 10px;
+  display: flex;
+  height: 5%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.65);
 }
 
 #sunUp {
@@ -211,24 +210,20 @@ body {
   font-size: 3.5vw;
 }
 
-#weatherIcon {
-  font-size: 13vw;
-}
-
 #weatherIconContainer {
+  width: 20%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
   position: relative;
   right: 40px;
 }
 
-#weatherIconContainer i {
-  text-align: center;
+#weatherIcon {
+  font-size: 15vw;
 }
 
 #shortForecastDisplay {
-  margin-top: 10px;
   text-align: center;
   font-size: 3vw;
 }

@@ -9,8 +9,8 @@
       rel="stylesheet"
     />
     <link href="./fontawesome/css/all.css" rel="stylesheet" />
-
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="weatherAnicons.css" />
     <script
       src="https://code.jquery.com/jquery-3.4.1.min.js"
       integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -48,13 +48,29 @@
         <!--Time-->
         <p id="time"></p>
         <div id="weatherIconContainer">
+          <!-- <div id="innerWeatherIconContainer">
+            
+          </div> -->
           <i id="weatherIcon"></i>
           <p id="shortForecastDisplay"></p>
         </div>
       </div>
-      <!--solarContainer-->
-      <div id="solarContainer">
-        <p id="solarStats"></p>
+      <!--solarStats-->
+      <div id="solarStats">
+        <div class="sunriseContainer">
+          <div class="sunriseIcons">
+            <i id="arrowUp" class="fas fa-chevron-up"></i>
+            <i id="sunUp" class="fas fa-sun"></i>
+          </div>
+          <p id="sunriseTime"></p>
+        </div>
+        <div class="sunriseContainer">
+          <div class="sunriseIcons">
+            <i id="sunDown" class="fas fa-sun"></i>
+            <i id="arrowDown" class="fas fa-chevron-down"></i>
+          </div>
+          <p id="sunsetTime"></p>
+        </div>
       </div>
     </div>
 
