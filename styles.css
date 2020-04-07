@@ -88,8 +88,9 @@ body {
 
 #time {
   color: white;
-  /* font-family: "Londrina Outline", cursive; */
-  font-size: 18vw;
+  font-size: 22vw;
+  position: relative;
+  bottom: 20px;
 }
 
 #weatherContainer {
@@ -184,6 +185,11 @@ body {
   position: relative;
   bottom: 10px;
   right: 2px;
+}
+
+#solarStats {
+  position: relative;
+  bottom: 20px;
 }
 
 #sunUp {
