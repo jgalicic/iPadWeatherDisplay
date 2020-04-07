@@ -73,9 +73,9 @@ $(document).ready(function () {
 
   var todayHigh = 0
 
-  getCurrentWeather()
-  getWeatherForecast()
-  getSolarData()
+  // getCurrentWeather()
+  // getWeatherForecast()
+  // getSolarData()
   renderInfoToScreen()
 
   function renderInfoToScreen() {
@@ -126,6 +126,22 @@ $(document).ready(function () {
     // Background
     document.body.style.backgroundImage = `url("img/bg/${getBgImg()}.jpg")`
     setTimeout(renderInfoToScreen, 2000)
+
+    // Change color and night to warmer tones
+
+    var warmDisplayColor = "rgb(255, 231, 190)"
+
+    $(todaysDate).css("color", warmDisplayColor)
+    $(dayOfWeek).css("color", warmDisplayColor)
+    $(bigForecast).css("color", warmDisplayColor)
+    $(medForecast).css("color", warmDisplayColor)
+    $(currentTemp).css("color", warmDisplayColor)
+    $(smallForecast).css("color", warmDisplayColor)
+    $(solarStats).children().css("color", warmDisplayColor)
+    $(solarStats).children().children().children().css("color", warmDisplayColor)
+    $(time).css("color", warmDisplayColor)
+    $(shortForecastDisplay).css("color", warmDisplayColor)
+    $(weatherIcon).css("color", warmDisplayColor)
   }
 
   function getWeatherForecast() {

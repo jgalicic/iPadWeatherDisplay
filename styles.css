@@ -90,7 +90,7 @@ body {
   color: white;
   font-size: 22vw;
   position: relative;
-  bottom: 20px;
+  bottom: 30px;
 }
 
 #weatherContainer {
@@ -189,7 +189,7 @@ body {
 
 #solarStats {
   position: relative;
-  bottom: 20px;
+  bottom: 10px;
 }
 
 #sunUp {
