@@ -527,10 +527,14 @@ $(document).ready(function () {
     if (dataObj.shortForecast.toLowerCase().includes("smog")) return "fas fa-smog"
 
     // daytime
-    if (dataObj.isDaytime) {
+    if (
+      dataObj.currentTime > dataObj.astronomical.sunrise &&
+      dataObj.currentTime < dataObj.astronomical.sunset
+    ) {
       if (dataObj.shortForecast.toLowerCase() === "sunny") return "fas fa-sun"
       if (dataObj.shortForecast.toLowerCase() === "mostly sunny") return "fas fa-sun"
       if (dataObj.shortForecast.toLowerCase() === "partly sunny") return "fas fa-cloud-sun"
+      if (dataObj.shortForecast.toLowerCase() === "partly cloudy") return "fas fa-cloud-sun"
       if (dataObj.shortForecast.toLowerCase() === "chance rain showers")
         return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase() === "mostly cloudy") return "fas fa-cloud-sun"
@@ -539,18 +543,17 @@ $(document).ready(function () {
       if (dataObj.shortForecast.toLowerCase().includes("showers")) return "fas fa-cloud-rain"
       if (dataObj.shortForecast.toLowerCase().includes("rain")) return "fas fa-cloud-showers-heavy"
       if (dataObj.shortForecast.toLowerCase().includes("clear")) return "fas fa-sun"
-      return "fa-cloud-sun"
-    }
-    // nighttime
-    if (!dataObj.isDaytime) {
+      return "fas fa-cloud-sun"
+    } else {
+      // nighttime
       if (dataObj.shortForecast.toLowerCase().includes("light rain"))
         return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase().includes("showers")) return "fas fa-cloud-rain"
       if (dataObj.shortForecast.toLowerCase().includes("heavy rain"))
         return "fas fa-cloud-showers-heavy"
       if (dataObj.shortForecast.toLowerCase().includes("clear")) return "fas fa-moon"
-      return "fas fa-cloud-moon"
     }
+
     return "fas fa-rainbow"
   }
 
@@ -587,7 +590,7 @@ $(document).ready(function () {
     if (time < 1671609600000) return "Fall"
     if (time < 1679295600000) return "Winter"
   }
-  // > is later than
+
   function getTimePeriodOfDay() {
     if (dataObj.currentTime < dataObj.astronomical.astronomical_twilight_begin) return "znight"
     if (dataObj.currentTime < dataObj.astronomical.nautical_twilight_begin) return "znight"
