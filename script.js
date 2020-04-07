@@ -100,80 +100,80 @@ $(document).ready(function () {
     windSpeed: "",
   }
 
-  ///////// For testing /////////
-  dataObj = {
-    aqi: null,
-    astronomical: {
-      astronomical_twilight_begin: "04:42",
-      astronomical_twilight_end: "21:39",
-      civil_twilight_begin: "06:01",
-      civil_twilight_end: "20:20",
-      day_length: "06:15",
-      moon: {
-        age: "",
-        moonrise: "",
-        moonset: "",
-        phase: "",
-      },
-      nautical_twilight_begin: "05:23",
-      nautical_twilight_end: "20:58",
-      solar_noon: "13:10",
-      sunrise: "06:32",
-      sunset: "19:48",
-    },
-    bestDayToGetOutside: "",
-    chanceHail: null,
-    chancePrecipitation: null,
-    chanceRain: null,
-    chanceThunder: null,
-    currentConditions: "Mostly Sunny",
-    currentTemp: 51,
-    date: {
-      currentTime: "13:27",
-      currentTimePeriod: "day",
-      dayOfWeek: "Tuesday",
-      displayTime: "1:27",
-      isDaytime: "true",
-      month: "April",
-      season: "Spring",
-      todaysDate: 7,
-      year: 2020,
-    },
-    detailedForecast: "Mostly sunny, with a high near 56. Northwest wind 1 to 5 mph.",
-    humitidy: null,
-    pollen: {
-      grass: null,
-      overall: null,
-      tree: null,
-      ragweed: null,
-    },
-    pressure: null,
-    pressureDirection: "",
-    season: "",
-    shortForecast: "Mostly Sunny",
-    snow: {
-      chanceSnow: null,
-      snowAccumInchesMax: null,
-      snowAccumInchesMin: null,
-    },
-    todayHigh: 56,
-    todayLow: 39,
-    tomorrowHigh: 60,
-    tomorrowLow: 42,
-    uvIndex: null,
-    visibilityMiles: null,
-    windDirection: "WSW",
-    windSpeed: "1 mph",
-  }
-  renderInfoToScreen()
+  // ///////// For testing /////////
+  // dataObj = {
+  //   aqi: null,
+  //   astronomical: {
+  //     astronomical_twilight_begin: "04:42",
+  //     astronomical_twilight_end: "21:39",
+  //     civil_twilight_begin: "06:01",
+  //     civil_twilight_end: "20:20",
+  //     day_length: "06:15",
+  //     moon: {
+  //       age: "",
+  //       moonrise: "",
+  //       moonset: "",
+  //       phase: "",
+  //     },
+  //     nautical_twilight_begin: "05:23",
+  //     nautical_twilight_end: "20:58",
+  //     solar_noon: "13:10",
+  //     sunrise: "06:32",
+  //     sunset: "19:48",
+  //   },
+  //   bestDayToGetOutside: "",
+  //   chanceHail: null,
+  //   chancePrecipitation: null,
+  //   chanceRain: null,
+  //   chanceThunder: null,
+  //   currentConditions: "Mostly Sunny",
+  //   currentTemp: 51,
+  //   date: {
+  //     currentTime: "13:27",
+  //     currentTimePeriod: "day",
+  //     dayOfWeek: "Tuesday",
+  //     displayTime: "1:27",
+  //     isDaytime: "true",
+  //     month: "April",
+  //     season: "Spring",
+  //     todaysDate: 7,
+  //     year: 2020,
+  //   },
+  //   detailedForecast: "Mostly sunny, with a high near 56. Northwest wind 1 to 5 mph.",
+  //   humitidy: null,
+  //   pollen: {
+  //     grass: null,
+  //     overall: null,
+  //     tree: null,
+  //     ragweed: null,
+  //   },
+  //   pressure: null,
+  //   pressureDirection: "",
+  //   season: "",
+  //   shortForecast: "Mostly Sunny",
+  //   snow: {
+  //     chanceSnow: null,
+  //     snowAccumInchesMax: null,
+  //     snowAccumInchesMin: null,
+  //   },
+  //   todayHigh: 56,
+  //   todayLow: 39,
+  //   tomorrowHigh: 60,
+  //   tomorrowLow: 42,
+  //   uvIndex: null,
+  //   visibilityMiles: null,
+  //   windDirection: "WSW",
+  //   windSpeed: "1 mph",
+  // }
+  // renderInfoToScreen()
 
-  setTimeout(() => {
-    console.log(dataObj)
-  }, 3000)
-  ///////////////////////////////
+  // setTimeout(() => {
+  //   console.log(dataObj)
+  // }, 3000)
+  // ///////////////////////////////
 
   getDateInfo()
-  // getSolarData()
+  getSolarData()
 
   function getDateInfo() {
     date = new Date()
@@ -209,9 +209,8 @@ $(document).ready(function () {
       getSolarData()
     }
 
-    setTimeout(function () {
-      getDateInfo()
-    }, 5000)
+    // Recursively call getDateInfo
+    setTimeout(getDateInfo, 5000)
   }
 
   function getSeason() {
@@ -439,7 +438,6 @@ $(document).ready(function () {
     $(solarStats).html(getSolarStats())
 
     // Background
-    console.log(`url("img/bg/${getBgImg()}.jpg")`)
     document.body.style.backgroundImage = `url("img/bg/${getBgImg()}.jpg")`
 
     // Change color and night to warmer tones
