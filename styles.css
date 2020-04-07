@@ -93,6 +93,8 @@ body {
 #time {
   color: white;
   font-size: 22vw;
+  position: relative;
+  bottom: 30px;
 }
 
 #weatherContainer {
