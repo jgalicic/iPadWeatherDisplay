@@ -116,13 +116,14 @@ $(document).ready(function () {
       }
     }, 2000)
 
+    // Weather
     $(weatherIcon).removeClass().addClass(getWeatherIcon())
     $(shortForecastDisplay).text(`${dataObj.shortForecast}`)
 
     // Solar
     $(solarStats).html(getSolarStats())
 
-    // Background images
+    // Background
     document.body.style.backgroundImage = `url("img/bg/${getBgImg()}.jpg")`
     setTimeout(renderInfoToScreen, 2000)
   }
@@ -546,12 +547,17 @@ $(document).ready(function () {
       return "fas fa-cloud-sun"
     } else {
       // nighttime
+      if (dataObj.shortForecast.toLowerCase() === "clear") return "fas fa-moon"
+      if (dataObj.shortForecast.toLowerCase() === "mostly clear") return "fas fa-moon"
+      if (dataObj.shortForecast.toLowerCase() === "partly clear") return "fas fa-cloud-moon"
+      if (dataObj.shortForecast.toLowerCase() === "partly cloudy") return "fas fa-cloud-moon"
+      if (dataObj.shortForecast.toLowerCase() === "chance rain showers")
+        return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase().includes("light rain"))
         return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase().includes("showers")) return "fas fa-cloud-rain"
       if (dataObj.shortForecast.toLowerCase().includes("heavy rain"))
         return "fas fa-cloud-showers-heavy"
-      if (dataObj.shortForecast.toLowerCase().includes("clear")) return "fas fa-moon"
     }
 
     return "fas fa-rainbow"
@@ -597,12 +603,12 @@ $(document).ready(function () {
     if (dataObj.currentTime < dataObj.astronomical.civil_twilight_begin) return "_beforesunrise"
     if (dataObj.currentTime < dataObj.astronomical.sunrise) return "_sunrise"
     if (dataObj.currentTime < "10:30") return "am"
-    if (dataObj.currentTime < "4:00") return "day"
+    if (dataObj.currentTime < "16:00") return "day"
     if (dataObj.currentTime < dataObj.astronomical.sunset) return "evening"
     if (dataObj.currentTime < dataObj.astronomical.civil_twilight_end) return "sunset"
     if (dataObj.currentTime < dataObj.astronomical.nautical_twilight_end) return "twilight"
     if (dataObj.currentTime < dataObj.astronomical.astronomical_twilight_end) return "zdusk"
-    if (dataObj.currentTime > dataObj.astronomical.civil_twilight_end) return "znight"
+    if (dataObj.currentTime > dataObj.astronomical.astronomical_twilight_end) return "znight"
 
     // Fallback
     return "summer-clear-twilight"
