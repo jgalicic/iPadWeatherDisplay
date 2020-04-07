@@ -36,10 +36,6 @@ body {
   );
 }
 
-nothing {
-  color: rgb(228, 201, 170);
-}
-
 #dateContainer {
   display: flex;
   width: 40vw;

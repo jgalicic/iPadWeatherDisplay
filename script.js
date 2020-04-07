@@ -86,7 +86,7 @@ $(document).ready(function () {
     if (loadPageOneTime) {
       console.log(dataObj)
       // console.log(date.getHours())
-      populateDetailedForecast(dataObj)
+      populateDetailedForecast()
       loadPageOneTime = false
     }
 
@@ -97,25 +97,23 @@ $(document).ready(function () {
 
     dataObj.currentTime = `${date.getHours()}:${date.getMinutes()}`
 
-    setTimeout(function () {
-      // Weather
-      if (dataObj.currentTemp) {
-        currentTemp.innerText = `${dataObj.currentTemp}°`
-      }
-      if (dataObj.todayHigh && dataObj.todayLow) {
-        lowTemp.innerText = `${dataObj.todayLow}°`
-        $(lowTemp).css("color", `rgb(${getRGB(dataObj.todayLow)})`)
-        highTemp.innerText = `${dataObj.todayHigh}°`
-        $(highTemp).css("color", `rgb(${getRGB(dataObj.todayHigh)})`)
-        // Gradient bar
-        $(tempRangeBar).css(
-          "background-image",
-          `linear-gradient(to right, rgb(${getRGB(dataObj.todayLow)}), rgb(${getRGB(
-            dataObj.todayHigh
-          )}))`
-        )
-      }
-    }, 2000)
+    // Weather
+    if (dataObj.currentTemp) {
+      currentTemp.innerText = `${dataObj.currentTemp}°`
+    }
+    if (dataObj.todayHigh && dataObj.todayLow) {
+      lowTemp.innerText = `${dataObj.todayLow}°`
+      $(lowTemp).css("color", `rgb(${getRGB(dataObj.todayLow)})`)
+      highTemp.innerText = `${dataObj.todayHigh}°`
+      $(highTemp).css("color", `rgb(${getRGB(dataObj.todayHigh)})`)
+      // Gradient bar
+      $(tempRangeBar).css(
+        "background-image",
+        `linear-gradient(to right, rgb(${getRGB(dataObj.todayLow)}), rgb(${getRGB(
+          dataObj.todayHigh
+        )}))`
+      )
+    }
 
     // Weather
     $(weatherIcon).removeClass().addClass(getWeatherIcon())
@@ -126,11 +124,11 @@ $(document).ready(function () {
 
     // Background
     document.body.style.backgroundImage = `url("img/bg/${getBgImg()}.jpg")`
-    setTimeout(renderInfoToScreen, 2000)
+    setTimeout(renderInfoToScreen, 1200)
 
     // Change color and night to warmer tones
 
-    var warmDisplayColor = "rgb(255, 231, 190)"
+    var warmDisplayColor = "rgb(255, 235, 190)"
 
     $(todaysDate).css("color", warmDisplayColor)
     $(dayOfWeek).css("color", warmDisplayColor)
@@ -143,6 +141,24 @@ $(document).ready(function () {
     $(time).css("color", warmDisplayColor)
     $(shortForecastDisplay).css("color", warmDisplayColor)
     $(weatherIcon).css("color", warmDisplayColor)
+
+    // Check for certain events
+
+    if (dataObj.currentTime === dataObj.astronomical.sunrise && date.getSeconds() === 2) {
+      getCurrentWeather()
+      getWeatherForecast()
+      getSolarData()
+    }
+    if (dataObj.currentTime === dataObj.astronomical.sunset && date.getSeconds() === 2) {
+      getCurrentWeather()
+      getWeatherForecast()
+      getSolarData()
+    }
+    if (dataObj.currentTime === "00:00" && date.getSeconds() === 2) {
+      getCurrentWeather()
+      getWeatherForecast()
+      getSolarData()
+    }
   }
 
   function getWeatherForecast() {
@@ -151,11 +167,11 @@ $(document).ready(function () {
 
       dataType: "json",
       success: function (data) {
-        console.log("!", data)
+        console.log("Weather forecast: ", data)
         dataObj.season = getSeason()
         dataObj.shortForecast = data.properties.periods[0].shortForecast
         dataObj.detailedForecast = data.properties.periods[0].detailedForecast
-        populateDetailedForecast(dataObj)
+        populateDetailedForecast()
 
         // Check if it's daytime
         if (data.properties.periods[0].isDaytime) {
@@ -480,7 +496,6 @@ $(document).ready(function () {
   function getBgImg() {
     var season = dataObj.season.toLowerCase()
     var conditions = dataObj.shortForecast.replace(/\s/g, "").toLowerCase()
-    console.log(`${season}-${conditions}-${getTimePeriodOfDay()}`)
     return `${season}-${conditions}-${getTimePeriodOfDay()}`
   }
 
@@ -580,11 +595,27 @@ $(document).ready(function () {
     return "fas fa-rainbow"
   }
 
-  function populateDetailedForecast(dataObj) {
+  function populateDetailedForecast() {
     smallForecast.innerText = ""
     var splitForecast = dataObj.detailedForecast.split(".")
-    splitForecast.pop()
+    splitForecast.pop() // last element is empty
 
+    if (splitForecast.length === 1) {
+      bigForecast.innerText = `${splitForecast[0]}.`
+      $(bigForecast).css("font-size", "4vw")
+      $(bigForecast).css("line-height", "1.1")
+    }
+
+    if (splitForecast.length === 2) {
+      bigForecast.innerText = `${splitForecast[0]}.`
+      $(bigForecast).css("font-size", "3.8vw")
+      $(bigForecast).css("line-height", "1.1")
+      medForecast.innerText = `${splitForecast[1]}.`
+      $(medForecast).css("font-size", "3.2vw")
+      $(medForecast).css("line-height", "1.1")
+    }
+
+    // if splitForecast is bigger than 2
     for (var i = 0; i < splitForecast.length; i++) {
       if (i === 0) {
         bigForecast.innerText = `${splitForecast[i]}.`
