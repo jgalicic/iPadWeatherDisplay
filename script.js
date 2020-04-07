@@ -13,6 +13,7 @@ $(document).ready(function () {
     "Nov",
     "Dec",
   ]
+
   const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
   const dayOfWeek = document.getElementById("dayOfWeek")
   const todaysDate = document.getElementById("todaysDate")
@@ -73,9 +74,9 @@ $(document).ready(function () {
 
   var todayHigh = 0
 
-  // getCurrentWeather()
-  // getWeatherForecast()
-  // getSolarData()
+  getCurrentWeather()
+  getWeatherForecast()
+  getSolarData()
   renderInfoToScreen()
 
   function renderInfoToScreen() {
