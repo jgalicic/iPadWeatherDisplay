@@ -73,7 +73,7 @@ $(document).ready(function () {
       currentTimePeriod: "",
       dayOfWeek: "",
       displayTime: "",
-      isDaytime: true,
+      isDaytime: "",
       month: "",
       season: "",
       todaysDate: "",
@@ -129,7 +129,7 @@ $(document).ready(function () {
   //   chanceRain: null,
   //   chanceThunder: null,
   //   currentConditions: "Mostly Sunny",
-  //   currentTemp: 51,
+  //   currentTemp: 55,
   //   date: {
   //     currentTime: "13:27",
   //     currentTimePeriod: "day",
@@ -167,12 +167,14 @@ $(document).ready(function () {
   //   windDirection: "WSW",
   //   windSpeed: "1 mph",
   // }
+
   // renderInfoToScreen()
+
+  //   ///////////////////////////////
 
   // setTimeout(() => {
   //   console.log(dataObj)
   // }, 3000)
-  // ///////////////////////////////
 
   getDateInfo()
   getSolarData()
@@ -309,10 +311,6 @@ $(document).ready(function () {
         dataObj.windSpeed = data.properties.periods[0].windSpeed
         dataObj.windDirection = data.properties.periods[0].windDirection
         dataObj.currentConditions = data.properties.periods[0].shortForecast
-
-        if (dataObj.date.isDaytime) {
-          dataObj.todayHigh = data.properties.periods[0].temperature
-        }
       },
       error: function (data, status, error) {
         console.log(data)
@@ -321,7 +319,7 @@ $(document).ready(function () {
       },
       complete: function () {
         // Schedule the next request when the current one's complete
-        if (dataObj.date.isDaytime) {
+        if (dataObj.date.isDaytime === "true") {
           console.log("weather updating every 30 minutes")
           setTimeout(getCurrentWeather, 60000 * 30)
         } else {
@@ -342,16 +340,21 @@ $(document).ready(function () {
         dataObj.shortForecast = data.properties.periods[0].shortForecast
         dataObj.detailedForecast = data.properties.periods[0].detailedForecast
 
-        if (dataObj.date.isDaytime) {
-          console.log("It is daytime")
+        if (data.properties.periods[0].name === "Tonight") {
+          // console.log("It is nighttime")
+          dataObj.todayLow = data.properties.periods[0].temperature
+          dataObj.tomorrowHigh = data.properties.periods[1].temperature
+          dataObj.tomorrowLow = data.properties.periods[2].temperature
+        } else {
+          // console.log("It is daytime")
           dataObj.todayHigh = data.properties.periods[0].temperature
           dataObj.todayLow = data.properties.periods[1].temperature
           dataObj.tomorrowHigh = data.properties.periods[2].temperature
           dataObj.tomorrowLow = data.properties.periods[3].temperature
-        } else {
-          dataObj.todayLow = data.properties.periods[0].temperature
-          dataObj.tomorrowHigh = data.properties.periods[1].temperature
-          dataObj.tomorrowLow = data.properties.periods[2].temperature
+        }
+
+        if (dataObj.todayHigh === null) {
+          getPseudoHigh()
         }
       },
       error: function (data, status, error) {
@@ -370,6 +373,23 @@ $(document).ready(function () {
         }
       },
     })
+  }
+
+  function getPseudoHigh() {
+    /* Why pseudoHigh? Because the current API does not serve up the day's high temperature afte 6pm
+    This is only a concern when the program is started or refreshed between 6pm and midnight. Once it's 
+    running it will keep track of the high for the day and the pseudoHigh will not be used */
+    var pseudoHigh = dataObj.currentTemp
+    if (dataObj.date.currentTimePeriod === "evening") pseudoHigh += 5
+    if (dataObj.date.currentTimePeriod === "sunset") pseudoHigh += 6
+    if (dataObj.date.currentTimePeriod === "twilight") pseudoHigh += 7
+    if (dataObj.date.currentTimePeriod === "zdusk") pseudoHigh += 8
+    if (dataObj.date.currentTimePeriod === "znight") pseudoHigh += 9
+    if (dataObj.date.season.toLowerCase() === "spring") pseudoHigh += 1
+    if (dataObj.date.season.toLowerCase() === "summer") pseudoHigh += 1
+    if (dataObj.shortForecast.includes("clear")) pseudoHigh += 2
+    if (dataObj.shortForecast.includes("rain")) pseudoHigh -= 2
+    dataObj.todayHigh = pseudoHigh
   }
 
   function populateDetailedForecast() {
@@ -415,8 +435,8 @@ $(document).ready(function () {
     todaysDate.innerText = `${dataObj.date.month} ${dataObj.date.todaysDate}`
     time.innerText = dataObj.date.displayTime
 
-    // Temperatures
-    currentTemp.innerText = `${dataObj.currentTemp}°`
+    // Temperatures =
+    $(currentTemp).html(`${dataObj.currentTemp}<span id="degreeSymbol">°</span>`)
     lowTemp.innerText = `${dataObj.todayLow}°`
     $(lowTemp).css("color", `rgb(${getRGB(dataObj.todayLow)})`)
     highTemp.innerText = `${dataObj.todayHigh}°`
@@ -440,12 +460,12 @@ $(document).ready(function () {
     getSunriseAndSunsetDisplay()
 
     // Background
-    console.log(getBgImg())
+    // console.log(getBgImg())
     document.body.style.backgroundImage = `url("img/bg/${getBgImg()}.jpg")`
 
     // Change color and night to warmer tones
-    if (!dataObj.date.isDaytime) {
-      console.log("It's nighttime")
+    if (dataObj.date.isDaytime === "false") {
+      // console.log("It's nighttime")
       var warmDisplayColor = "rgb(255, 235, 190)"
 
       $(todaysDate).css("color", warmDisplayColor)
@@ -453,8 +473,9 @@ $(document).ready(function () {
       $(bigForecast).css("color", warmDisplayColor)
       $(medForecast).css("color", warmDisplayColor)
       $(currentTemp).css("color", warmDisplayColor)
+      $(degreeSymbol).css("color", warmDisplayColor)
       $(smallForecast).css("color", warmDisplayColor)
-      $(solarStats).children().css("color", warmDisplayColor)
+      $(solarStats).children().children().css("color", warmDisplayColor)
       $(solarStats).children().children().children().css("color", warmDisplayColor)
       $(time).css("color", warmDisplayColor)
       $(shortForecastDisplay).css("color", warmDisplayColor)
@@ -742,7 +763,7 @@ $(document).ready(function () {
     if (dataObj.shortForecast.toLowerCase().includes("smog")) return "fas fa-smog"
 
     // daytime
-    if (dataObj.date.isDaytime) {
+    if (dataObj.date.isDaytime === "true") {
       if (dataObj.shortForecast.toLowerCase() === "sunny") return "fas fa-sun"
       if (dataObj.shortForecast.toLowerCase() === "mostly sunny") return "fas fa-sun"
       if (dataObj.shortForecast.toLowerCase() === "partly sunny") return "fas fa-cloud-sun"
@@ -756,7 +777,7 @@ $(document).ready(function () {
       if (dataObj.shortForecast.toLowerCase().includes("rain")) return "fas fa-cloud-showers-heavy"
       if (dataObj.shortForecast.toLowerCase().includes("clear")) return "fas fa-sun"
       return "fas fa-cloud-sun"
-    } else if (!dataObj.date.isDaytime) {
+    } else if (dataObj.date.isDaytime === "false") {
       // nighttime
       if (dataObj.shortForecast.toLowerCase() === "clear") return "fas fa-moon"
       if (dataObj.shortForecast.toLowerCase() === "mostly clear") return "fas fa-moon"

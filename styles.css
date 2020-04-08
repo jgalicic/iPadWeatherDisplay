@@ -59,7 +59,7 @@ body {
 }
 
 #detailedForecast {
-  width: 60vw;
+  width: 50vw;
   padding-top: 20px;
   padding-right: 20px;
   padding-left: 20px;
@@ -92,7 +92,7 @@ body {
 
 #time {
   color: white;
-  font-size: 22vw;
+  font-size: 20vw;
   position: relative;
   bottom: 30px;
 }
@@ -116,16 +116,24 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 15px;
   position: relative;
   top: 5px;
   left: 40px;
 }
 
 #currentTemp {
+  display: flex;
   z-index: 3;
   font-size: 15vw;
   position: relative;
-  top: 25px;
+  top: 22px;
+}
+
+#currentTemp span {
+  font-size: 6vw;
+  position: relative;
+  top: 10px;
 }
 #tempRangeContainer {
   display: flex;
@@ -145,7 +153,7 @@ body {
 #tempRangeBar {
   z-index: 2;
   height: 2vw;
-  width: 10vw;
+  width: 12vw;
   border-radius: 15px;
   margin: 0 4px;
   box-shadow: 2px 2px 10px black;
@@ -155,7 +163,7 @@ body {
   z-index: 1;
   height: 40px;
   width: 220px;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   border-radius: 20px;
   filter: blur(15px);
   position: relative;
@@ -222,7 +230,8 @@ body {
 }
 
 #weatherIcon {
-  font-size: 15vw;
+  font-size: 13vw;
+  padding-bottom: 15px;
 }
 
 #shortForecastDisplay {
