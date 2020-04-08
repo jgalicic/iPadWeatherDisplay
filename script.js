@@ -460,7 +460,7 @@ $(document).ready(function () {
     getSunriseAndSunsetDisplay()
 
     // Background
-    // console.log(getBgImg())
+    console.log(getBgImg())
     document.body.style.backgroundImage = `url("img/bg/${getBgImg()}.jpg")`
 
     // Change color and night to warmer tones
