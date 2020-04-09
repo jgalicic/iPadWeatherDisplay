@@ -172,9 +172,9 @@ $(document).ready(function () {
 
   //   ///////////////////////////////
 
-  // setTimeout(() => {
-  //   console.log(dataObj)
-  // }, 3000)
+  setTimeout(() => {
+    console.log(dataObj)
+  }, 3000)
 
   getDateInfo()
   getSolarData()
@@ -483,7 +483,8 @@ $(document).ready(function () {
 
   function renderBackground() {
     console.log("Got bg image string")
-    document.body.style.backgroundImage = `url("img/bg/${getBgImg()}.jpg")`
+    var bgImage = `url("img/bg/${getBgImg()}.jpg")`
+    document.body.style.backgroundImage = bgImage
   }
 
   function hideIfEmpty() {
@@ -812,9 +813,11 @@ $(document).ready(function () {
   }
 
   function getBgImg() {
-    console.log("Got bg image")
+    console.log("!", dataObj.shortForecast)
     var conditions = dataObj.shortForecast.replace(/\s/g, "").toLowerCase()
+    console.log("!!", conditions)
     var string = `${dataObj.date.season}-${conditions}-${dataObj.date.currentTimePeriod}`.toLowerCase()
+    console.log("!!!", string)
     return string
   }
 
