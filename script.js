@@ -168,7 +168,7 @@ $(document).ready(function () {
   //   windSpeed: "1 mph",
   // }
 
-  // renderInfoToScreen()
+  // renderTimeInfoToScreen()
 
   //   ///////////////////////////////
 
@@ -194,19 +194,19 @@ $(document).ready(function () {
 
     // Check for certain events
 
-    if (dataObj.date.currentTime === dataObj.astronomical.sunrise && date.getSeconds() === 2) {
+    if (dataObj.date.currentTime === dataObj.astronomical.sunrise && date.getSeconds() === 15) {
       console.log("SUNRISE!")
       getCurrentWeather()
       getWeatherForecast()
       getSolarData()
     }
-    if (dataObj.date.currentTime === dataObj.astronomical.sunset && date.getSeconds() === 2) {
+    if (dataObj.date.currentTime === dataObj.astronomical.sunset && date.getSeconds() === 15) {
       console.log("SUNSET!")
       getCurrentWeather()
       getWeatherForecast()
       getSolarData()
     }
-    if (dataObj.date.currentTime === "00:00" && date.getSeconds() === 2) {
+    if (dataObj.date.currentTime === "00:00" && date.getSeconds() === 15) {
       console.log("MIDNIGHT!")
       getCurrentWeather()
       getWeatherForecast()
@@ -214,10 +214,11 @@ $(document).ready(function () {
     }
 
     // Recursively call getDateInfo
-    setTimeout(getDateInfo, 5000)
+    setTimeout(getDateInfo, 10000)
   }
 
   function getSeason() {
+    // console.log("Got season")
     var time = Date.now()
     // 2020
     if (time < 1592636400000) return "Spring"
@@ -265,8 +266,17 @@ $(document).ready(function () {
       },
       complete: function () {
         dataObj.date.currentTimePeriod = getCurrentTimePeriod()
+        getSunriseAndSunsetDisplay()
+
         getCurrentWeather()
         getWeatherForecast()
+        if (dataObj.date.isDaytime === "true") {
+          console.log("Data updating every 30 minutes")
+          setTimeout(getSolarData, 60000 * 30)
+        } else {
+          console.log("Data updating every 3 hours")
+          setTimeout(getSolarData, 3600000 * 3)
+        }
       },
     })
   }
@@ -318,14 +328,15 @@ $(document).ready(function () {
         console.log(error)
       },
       complete: function () {
-        // Schedule the next request when the current one's complete
-        if (dataObj.date.isDaytime === "true") {
-          console.log("weather updating every 30 minutes")
-          setTimeout(getCurrentWeather, 60000 * 30)
-        } else {
-          console.log("weather updating every 3 hours")
-          setTimeout(getCurrentWeather, 3600000 * 3)
-        }
+        console.log("Got Current Weather")
+        // // Schedule the next request when the current one's complete
+        // if (dataObj.date.isDaytime === "true") {
+        //   console.log("weather updating every 30 minutes")
+        //   setTimeout(getCurrentWeather, 60000 * 30)
+        // } else {
+        //   console.log("weather updating every 3 hours")
+        //   setTimeout(getCurrentWeather, 3600000 * 3)
+        // }
       },
     })
   }
@@ -363,19 +374,27 @@ $(document).ready(function () {
         console.log(error)
       },
       complete: function () {
-        renderInfoToScreen()
-        if (date.getHours() > 6 && date.getHours() < 23) {
-          console.log("weather updating every 30 minutes")
-          setTimeout(getWeatherForecast, 60000 * 30)
-        } else {
-          console.log("weather updating every 3 hours")
-          setTimeout(getWeatherForecast, 3600000 * 3)
-        }
+        console.log("Got weather Forecast")
+        // Weather
+        $(weatherIcon).removeClass().addClass(getWeatherIcon())
+        $(shortForecastDisplay).text(`${dataObj.shortForecast}`)
+        populateDetailedForecast()
+        renderTimeInfoToScreen()
+        renderSolarAndWeatherDataToScreen()
+        renderBackground()
+        // if (date.getHours() > 6 && date.getHours() < 23) {
+        //   console.log("weather updating every 30 minutes")
+        //   setTimeout(getWeatherForecast, 60000 * 30)
+        // } else {
+        //   console.log("weather updating every 3 hours")
+        //   setTimeout(getWeatherForecast, 3600000 * 3)
+        // }
       },
     })
   }
 
   function getPseudoHigh() {
+    console.log("Got pseudohigh")
     /* Why pseudoHigh? Because the current API does not serve up the day's high temperature afte 6pm
     This is only a concern when the program is started or refreshed between 6pm and midnight. Once it's 
     running it will keep track of the high for the day and the pseudoHigh will not be used */
@@ -390,9 +409,11 @@ $(document).ready(function () {
     if (dataObj.shortForecast.includes("clear")) pseudoHigh += 2
     if (dataObj.shortForecast.includes("rain")) pseudoHigh -= 2
     dataObj.todayHigh = pseudoHigh
+    console.log(dataObj)
   }
 
   function populateDetailedForecast() {
+    console.log("PopulatedDetailedForecast")
     smallForecast.innerText = ""
     var splitForecast = dataObj.detailedForecast.split(".")
     splitForecast.pop() // last element is empty so remove it
@@ -426,7 +447,8 @@ $(document).ready(function () {
     }
   }
 
-  function renderInfoToScreen() {
+  function renderTimeInfoToScreen() {
+    console.log("Rendered time info to screen")
     // Set elements to empty if data does not exist
     hideIfEmpty()
 
@@ -435,13 +457,21 @@ $(document).ready(function () {
     todaysDate.innerText = `${dataObj.date.month} ${dataObj.date.todaysDate}`
     time.innerText = dataObj.date.displayTime
 
-    // Temperatures =
+    // Recursive call
+    setTimeout(renderTimeInfoToScreen, 1000)
+  }
+
+  function renderSolarAndWeatherDataToScreen() {
+    // Temperatures
     $(currentTemp).html(`${dataObj.currentTemp}<span id="degreeSymbol">°</span>`)
     lowTemp.innerText = `${dataObj.todayLow}°`
     $(lowTemp).css("color", `rgb(${getRGB(dataObj.todayLow)})`)
     highTemp.innerText = `${dataObj.todayHigh}°`
     $(highTemp).css("color", `rgb(${getRGB(dataObj.todayHigh)})`)
-
+    // Change color and night to warmer tones
+    if (dataObj.date.isDaytime === "false") {
+      renderNightTimeMode()
+    }
     // Gradient bar
     $(tempRangeBar).css(
       "background-image",
@@ -449,44 +479,28 @@ $(document).ready(function () {
         dataObj.todayHigh
       )}))`
     )
+  }
 
-    // Weather
-    populateDetailedForecast()
-
-    $(weatherIcon).removeClass().addClass(getWeatherIcon())
-    $(shortForecastDisplay).text(`${dataObj.shortForecast}`)
-
-    // Solar
-    getSunriseAndSunsetDisplay()
-
-    // Background
-    console.log(getBgImg())
+  function renderBackground() {
+    console.log("Got bg image string")
     document.body.style.backgroundImage = `url("img/bg/${getBgImg()}.jpg")`
-
-    // Change color and night to warmer tones
-    if (dataObj.date.isDaytime === "false") {
-      // console.log("It's nighttime")
-      var warmDisplayColor = "rgb(255, 235, 190)"
-
-      $(todaysDate).css("color", warmDisplayColor)
-      $(dayOfWeek).css("color", warmDisplayColor)
-      $(bigForecast).css("color", warmDisplayColor)
-      $(medForecast).css("color", warmDisplayColor)
-      $(currentTemp).css("color", warmDisplayColor)
-      $(degreeSymbol).css("color", warmDisplayColor)
-      $(smallForecast).css("color", warmDisplayColor)
-      $(solarStats).children().children().css("color", warmDisplayColor)
-      $(solarStats).children().children().children().css("color", warmDisplayColor)
-      $(time).css("color", warmDisplayColor)
-      $(shortForecastDisplay).css("color", warmDisplayColor)
-      $(weatherIcon).css("color", warmDisplayColor)
-    }
-
-    // Recursive call
-    setTimeout(renderInfoToScreen, 2000)
   }
 
   function hideIfEmpty() {
+    // console.log("Checking for empty elements")
+    // if (dataObj.date.dayOfWeek === "") console.log(1)
+    // if (dataObj.date.displayTime === "") console.log(2)
+    // if (dataObj.date.month === "" || dataObj.date.todaysDate === "") console.log(3)
+    // if (dataObj.date.dayOfWeek === "") console.log(4)
+    // if (dataObj.date.detailedForecast === "") console.log(5)
+    // if (dataObj.currentTemp === "") console.log(6)
+    // if (dataObj.todayHigh === "") console.log(7)
+    // if (dataObj.todayLow === "") console.log(8)
+    // if (dataObj.date.displayTime === "") console.log(9)
+    // if (dataObj.astronomical.sunrise === "") console.log(10)
+    // if (dataObj.astronomical.sunset === "") console.log(11)
+    // if (dataObj.shortForecast === "") console.log(12)
+
     if (dataObj.date.dayOfWeek === "") $(dayOfWeek).hide()
     if (dataObj.date.displayTime === "") $(time).hide()
     if (dataObj.date.month === "" || dataObj.date.todaysDate === "") $(todaysDate).hide()
@@ -502,6 +516,7 @@ $(document).ready(function () {
   }
 
   function getRGB(temperature) {
+    console.log("Getting RGB for temps")
     switch (temperature) {
       case -1:
         return "252,252,255"
@@ -755,6 +770,7 @@ $(document).ready(function () {
   }
 
   function getWeatherIcon() {
+    console.log("Got weather icon")
     // day or night
     if (dataObj.shortForecast === "") return ""
     if (dataObj.shortForecast.toLowerCase().includes("snow")) return "fas fa-snowflake"
@@ -796,12 +812,14 @@ $(document).ready(function () {
   }
 
   function getBgImg() {
+    console.log("Got bg image")
     var conditions = dataObj.shortForecast.replace(/\s/g, "").toLowerCase()
     var string = `${dataObj.date.season}-${conditions}-${dataObj.date.currentTimePeriod}`.toLowerCase()
     return string
   }
 
   function getSunriseAndSunsetDisplay() {
+    console.log("Getting Sunrise and Sunset Display")
     var sunriseDisplay = dataObj.astronomical.sunrise
     var sunsetDisplay = dataObj.astronomical.sunset
 
@@ -814,5 +832,23 @@ $(document).ready(function () {
 
     sunriseTime.innerHTML = `${sunriseDisplay}am &nbsp;`
     sunsetTime.innerHTML = `${sunsetDisplay}pm`
+  }
+
+  function renderNightTimeMode() {
+    console.log("Rendering NightTime Mode")
+    var warmDisplayColor = "rgb(255, 235, 190)"
+
+    $(todaysDate).css("color", warmDisplayColor)
+    $(dayOfWeek).css("color", warmDisplayColor)
+    $(bigForecast).css("color", warmDisplayColor)
+    $(medForecast).css("color", warmDisplayColor)
+    $(currentTemp).css("color", warmDisplayColor)
+    $(degreeSymbol).css("color", warmDisplayColor)
+    $(smallForecast).css("color", warmDisplayColor)
+    $(solarStats).children().children().css("color", warmDisplayColor)
+    $(solarStats).children().children().children().css("color", warmDisplayColor)
+    $(time).css("color", warmDisplayColor)
+    $(shortForecastDisplay).css("color", warmDisplayColor)
+    $(weatherIcon).css("color", warmDisplayColor)
   }
 }) // end jQuery
