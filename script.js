@@ -478,13 +478,18 @@ $(document).ready(function () {
   }
 
   function checkForQualifyingEventToRequestInfo() {
-    // // Check for certain events
-
     var d = new Date()
     var h = d.getHours()
     var m = d.getMinutes()
     var s = d.getSeconds()
     var ms = d.getMilliseconds()
+
+    timeString = d.toTimeString().substring(0, 5)
+
+    // Populate dataObj with date & time data
+    dataObj.date.currentTime = timeString
+    dataObj.date.displayTime = d.toLocaleTimeString().match(/[0-9]+[:][0-9]+/g)[0]
+    time.innerText = dataObj.date.displayTime
 
     // console.log("Checking for qualifying event...", `${h}:${m}:${s}`)
 
