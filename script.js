@@ -103,73 +103,76 @@ $(document).ready(function () {
     windSpeed: "",
   }
 
+  ///////////////////////////////////
+  ///////////////////////////////////
   ///////// For development /////////
-  dataObj = {
-    aqi: null,
-    astronomical: {
-      astronomical_twilight_begin: "04:42",
-      astronomical_twilight_end: "21:39",
-      civil_twilight_begin: "06:01",
-      civil_twilight_end: "20:20",
-      day_length: "06:15",
-      moon: {
-        age: "",
-        moonrise: "",
-        moonset: "",
-        phase: "",
-      },
-      nautical_twilight_begin: "05:23",
-      nautical_twilight_end: "20:58",
-      solar_noon: "13:10",
-      sunrise: "06:32",
-      sunset: "19:48",
-    },
-    bestDayToGetOutside: "",
-    chanceHail: null,
-    chancePrecipitation: null,
-    chanceRain: null,
-    chanceThunder: null,
-    currentConditions: "Mostly Sunny",
-    currentTemp: 55,
-    date: {
-      currentTime: "13:27",
-      currentTimePeriod: "day",
-      dayOfWeek: "Tuesday",
-      displayTime: "1:27",
-      isDaytime: "true",
-      month: "April",
-      season: "Spring",
-      todaysDate: 7,
-      year: 2020,
-    },
-    detailedForecast: "Mostly sunny, with a high near 56. Northwest wind 1 to 5 mph.",
-    humitidy: null,
-    pollen: {
-      grass: null,
-      overall: null,
-      tree: null,
-      ragweed: null,
-    },
-    pressure: null,
-    pressureDirection: "",
-    season: "",
-    shortForecast: "Mostly Sunny",
-    snow: {
-      chanceSnow: null,
-      snowAccumInchesMax: null,
-      snowAccumInchesMin: null,
-    },
-    todayHigh: 56,
-    todayLow: 39,
-    tomorrowHigh: 60,
-    tomorrowLow: 42,
-    uvIndex: null,
-    visibilityMiles: null,
-    windDirection: "WSW",
-    windSpeed: "1 mph",
-  }
+  ///////////////////////////////////
+  ///////////////////////////////////
 
-  ///////////////////////////////
+  // dataObj = {
+  //   aqi: null,
+  //   astronomical: {
+  //     astronomical_twilight_begin: "04:42",
+  //     astronomical_twilight_end: "21:39",
+  //     civil_twilight_begin: "06:01",
+  //     civil_twilight_end: "20:20",
+  //     day_length: "06:15",
+  //     moon: {
+  //       age: "",
+  //       moonrise: "",
+  //       moonset: "",
+  //       phase: "",
+  //     },
+  //     nautical_twilight_begin: "05:23",
+  //     nautical_twilight_end: "20:58",
+  //     solar_noon: "13:10",
+  //     sunrise: "06:32",
+  //     sunset: "19:48",
+  //   },
+  //   bestDayToGetOutside: "",
+  //   chanceHail: null,
+  //   chancePrecipitation: null,
+  //   chanceRain: null,
+  //   chanceThunder: null,
+  //   currentConditions: "Mostly Sunny",
+  //   currentTemp: 55,
+  //   date: {
+  //     currentTime: "13:27",
+  //     currentTimePeriod: "day",
+  //     dayOfWeek: "Tuesday",
+  //     displayTime: "1:27",
+  //     isDaytime: "true",
+  //     month: "April",
+  //     season: "Spring",
+  //     todaysDate: 7,
+  //     year: 2020,
+  //   },
+  //   detailedForecast: "Mostly sunny, with a high near 56. Northwest wind 1 to 5 mph.",
+  //   humitidy: null,
+  //   pollen: {
+  //     grass: null,
+  //     overall: null,
+  //     tree: null,
+  //     ragweed: null,
+  //   },
+  //   pressure: null,
+  //   pressureDirection: "",
+  //   season: "",
+  //   shortForecast: "Mostly Sunny",
+  //   snow: {
+  //     chanceSnow: null,
+  //     snowAccumInchesMax: null,
+  //     snowAccumInchesMin: null,
+  //   },
+  //   todayHigh: 64,
+  //   todayLow: 45,
+  //   tomorrowHigh: 60,
+  //   tomorrowLow: 42,
+  //   uvIndex: null,
+  //   visibilityMiles: null,
+  //   windDirection: "WSW",
+  //   windSpeed: "1 mph",
+  // }
 
   // setTimeout(() => {
   //   console.log(dataObj)
@@ -178,6 +181,10 @@ $(document).ready(function () {
   // setTimeout(() => {
   //   renderInfoToScreen()
   // }, 300)
+
+  ///////////////////////////////
+  ///////////////////////////////
+  ///////////////////////////////
 
   initializeInfoRequests()
 
@@ -189,7 +196,6 @@ $(document).ready(function () {
       getSolarData(function () {
         // After getSolarData runs:
         getCurrentTimePeriod()
-        getSunriseAndSunsetDisplay()
         getCurrentWeather()
         getWeatherForecast()
       })
@@ -459,30 +465,10 @@ $(document).ready(function () {
   }
 
   function renderInfoToScreen() {
-    // Change color and night to warmer tones
-    if (dataObj.date.isDaytime === "false") {
-      renderNightTimeMode()
-    }
-    renderSolarAndWeatherDataToScreen()
-    renderBackground()
-
     // Date & Time
-    dayOfWeek.innerText = dataObj.date.dayOfWeek
-    todaysDate.innerText = `${dataObj.date.month} ${dataObj.date.todaysDate}`
-    time.innerText = dataObj.date.displayTime
-
-    // Set elements to empty if data does not exist
-    hideIfEmpty()
-
-    checkForQualifyingEventToRequestInfo()
-  }
-
-  function checkForQualifyingEventToRequestInfo() {
     var d = new Date()
-    var h = d.getHours()
     var m = d.getMinutes()
     var s = d.getSeconds()
-    var ms = d.getMilliseconds()
 
     timeString = d.toTimeString().substring(0, 5)
 
@@ -490,16 +476,33 @@ $(document).ready(function () {
     dataObj.date.currentTime = timeString
     dataObj.date.displayTime = d.toLocaleTimeString().match(/[0-9]+[:][0-9]+/g)[0]
     time.innerText = dataObj.date.displayTime
+    dayOfWeek.innerText = dataObj.date.dayOfWeek
+    todaysDate.innerText = `${dataObj.date.month} ${dataObj.date.todaysDate}`
 
-    // console.log("Checking for qualifying event...", `${h}:${m}:${s}`)
+    // Change color and night to warmer tones
+    if (dataObj.date.isDaytime === "false") {
+      renderNightTimeMode()
+    }
 
-    if (h >= 5 && h <= 23) {
-      if ((m === 29 && s === 59 && ms < 500) || (m === 59 && s === 59 && ms < 500)) {
-        initializeInfoRequests()
-        // console.log("Initialized request!")
+    // Display Solar and Weather Info
+    renderSolarAndWeatherDataToScreen()
+    renderBackground()
+    renderSunriseAndSunsetDisplay()
+
+    // Set elements to empty if data does not exist
+    hideIfEmpty()
+
+    // Run API calls every 30 minutes between 6am and 12:31am
+    if (dataObj.date.currentTime > "06:00" || dataObj.date.currentTime < "00:31") {
+      if ((m === 30 && s === 0) || (m === 0 && s === 0)) {
+        // console.log("About to initialized request")
+        setTimeout(function () {
+          initializeInfoRequests()
+          // console.log("Initialized request!")
+        }, 1000)
       } else {
         // Recursive call
-        setTimeout(checkForQualifyingEventToRequestInfo, 1000)
+        setTimeout(renderInfoToScreen, 1000)
       }
     }
   }
@@ -686,43 +689,43 @@ $(document).ready(function () {
       case 60:
         return "0,255,0"
       case 61:
-        return "12,255,0"
-      case 62:
         return "24,255,0"
-      case 63:
-        return "36,255,0"
-      case 64:
+      case 62:
         return "48,255,0"
-      case 65:
-        return "60,255,0"
-      case 66:
-        return "72,255,0"
-      case 67:
-        return "84,255,0"
-      case 68:
+      case 63:
         return "96,255,0"
-      case 69:
-        return "108,255,0"
-      case 70:
+      case 64:
         return "120,255,0"
-      case 71:
+      case 65:
         return "132,255,0"
-      case 72:
+      case 66:
         return "144,255,0"
-      case 73:
+      case 67:
         return "156,255,0"
-      case 74:
+      case 68:
         return "168,255,0"
-      case 75:
+      case 69:
+        return "172,255,0"
+      case 70:
         return "180,255,0"
-      case 76:
+      case 71:
+        return "186,255,0"
+      case 72:
         return "192,255,0"
-      case 77:
+      case 73:
+        return "198,255,0"
+      case 74:
         return "204,255,0"
-      case 78:
-        return "216,255,0"
-      case 79:
+      case 75:
+        return "212,255,0"
+      case 76:
+        return "220,255,0"
+      case 77:
         return "228,255,0"
+      case 78:
+        return "232,255,0"
+      case 79:
+        return "240,255,0"
       case 80:
         return "255,255,0"
       case 81:
@@ -857,11 +860,11 @@ $(document).ready(function () {
   function getBgImg() {
     var conditions = dataObj.shortForecast.replace(/\s/g, "").toLowerCase()
     var string = `${dataObj.date.season}-${conditions}-${dataObj.date.currentTimePeriod}`.toLowerCase()
-    console.log(string)
+    // console.log(string)
     return string
   }
 
-  function getSunriseAndSunsetDisplay() {
+  function renderSunriseAndSunsetDisplay() {
     // console.log("Getting Sunrise and Sunset Display")
     var sunriseDisplay = dataObj.astronomical.sunrise
     var sunsetDisplay = dataObj.astronomical.sunset
