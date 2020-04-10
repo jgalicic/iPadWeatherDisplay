@@ -43,8 +43,8 @@ $(document).ready(function () {
   const sunriseTime = document.getElementById("sunriseTime")
   const sunsetTime = document.getElementById("sunsetTime")
   const shortForecastDisplay = document.getElementById("shortForecastDisplay")
-  var date = new Date()
-  var timeString = date.toTimeString().substring(0, 5)
+  var globalDate = new Date()
+  var timeString = globalDate.toTimeString().substring(0, 5)
 
   var dataObj = {
     aqi: null,
@@ -102,84 +102,101 @@ $(document).ready(function () {
     windSpeed: "",
   }
 
-  // ///////// For development /////////
-  // dataObj = {
-  //   aqi: null,
-  //   astronomical: {
-  //     astronomical_twilight_begin: "04:42",
-  //     astronomical_twilight_end: "21:39",
-  //     civil_twilight_begin: "06:01",
-  //     civil_twilight_end: "20:20",
-  //     day_length: "06:15",
-  //     moon: {
-  //       age: "",
-  //       moonrise: "",
-  //       moonset: "",
-  //       phase: "",
-  //     },
-  //     nautical_twilight_begin: "05:23",
-  //     nautical_twilight_end: "20:58",
-  //     solar_noon: "13:10",
-  //     sunrise: "06:32",
-  //     sunset: "19:48",
-  //   },
-  //   bestDayToGetOutside: "",
-  //   chanceHail: null,
-  //   chancePrecipitation: null,
-  //   chanceRain: null,
-  //   chanceThunder: null,
-  //   currentConditions: "Mostly Sunny",
-  //   currentTemp: 55,
-  //   date: {
-  //     currentTime: "13:27",
-  //     currentTimePeriod: "day",
-  //     dayOfWeek: "Tuesday",
-  //     displayTime: "1:27",
-  //     isDaytime: "true",
-  //     month: "April",
-  //     season: "Spring",
-  //     todaysDate: 7,
-  //     year: 2020,
-  //   },
-  //   detailedForecast: "Mostly sunny, with a high near 56. Northwest wind 1 to 5 mph.",
-  //   humitidy: null,
-  //   pollen: {
-  //     grass: null,
-  //     overall: null,
-  //     tree: null,
-  //     ragweed: null,
-  //   },
-  //   pressure: null,
-  //   pressureDirection: "",
-  //   season: "",
-  //   shortForecast: "Mostly Sunny",
-  //   snow: {
-  //     chanceSnow: null,
-  //     snowAccumInchesMax: null,
-  //     snowAccumInchesMin: null,
-  //   },
-  //   todayHigh: 56,
-  //   todayLow: 39,
-  //   tomorrowHigh: 60,
-  //   tomorrowLow: 42,
-  //   uvIndex: null,
-  //   visibilityMiles: null,
-  //   windDirection: "WSW",
-  //   windSpeed: "1 mph",
-  // }
+  ///////// For development /////////
+  dataObj = {
+    aqi: null,
+    astronomical: {
+      astronomical_twilight_begin: "04:42",
+      astronomical_twilight_end: "21:39",
+      civil_twilight_begin: "06:01",
+      civil_twilight_end: "20:20",
+      day_length: "06:15",
+      moon: {
+        age: "",
+        moonrise: "",
+        moonset: "",
+        phase: "",
+      },
+      nautical_twilight_begin: "05:23",
+      nautical_twilight_end: "20:58",
+      solar_noon: "13:10",
+      sunrise: "06:32",
+      sunset: "19:48",
+    },
+    bestDayToGetOutside: "",
+    chanceHail: null,
+    chancePrecipitation: null,
+    chanceRain: null,
+    chanceThunder: null,
+    currentConditions: "Mostly Sunny",
+    currentTemp: 55,
+    date: {
+      currentTime: "13:27",
+      currentTimePeriod: "day",
+      dayOfWeek: "Tuesday",
+      displayTime: "1:27",
+      isDaytime: "true",
+      month: "April",
+      season: "Spring",
+      todaysDate: 7,
+      year: 2020,
+    },
+    detailedForecast: "Mostly sunny, with a high near 56. Northwest wind 1 to 5 mph.",
+    humitidy: null,
+    pollen: {
+      grass: null,
+      overall: null,
+      tree: null,
+      ragweed: null,
+    },
+    pressure: null,
+    pressureDirection: "",
+    season: "",
+    shortForecast: "Mostly Sunny",
+    snow: {
+      chanceSnow: null,
+      snowAccumInchesMax: null,
+      snowAccumInchesMin: null,
+    },
+    todayHigh: 56,
+    todayLow: 39,
+    tomorrowHigh: 60,
+    tomorrowLow: 42,
+    uvIndex: null,
+    visibilityMiles: null,
+    windDirection: "WSW",
+    windSpeed: "1 mph",
+  }
 
-  // renderTimeInfoToScreen()
-
-  //   ///////////////////////////////
+  ///////////////////////////////
 
   // setTimeout(() => {
   //   console.log(dataObj)
-  // }, 3000)
+  // }, 200)
 
-  getDateInfo()
-  getSolarData()
+  // setTimeout(() => {
+  //   renderInfoToScreen()
+  // }, 300)
 
-  function getDateInfo() {
+  initializeInfoRequests()
+
+  function initializeInfoRequests() {
+    getDateInfo(function () {
+      // After getDateInfo runs:
+      getCurrentTimePeriod()
+      populateDetailedForecast()
+      getSeason()
+      getSolarData(function () {
+        // After getSolarData runs:
+        getSunriseAndSunsetDisplay()
+        getCurrentWeather()
+        getWeatherForecast()
+      })
+    })
+  }
+
+  function getDateInfo(callback) {
+    // console.log("Getting date info")
     date = new Date()
     timeString = date.toTimeString().substring(0, 5)
 
@@ -191,30 +208,9 @@ $(document).ready(function () {
     dataObj.date.todaysDate = date.getDate()
     dataObj.date.season = getSeason()
     dataObj.date.year = date.getFullYear()
+    dataObj.date.currentTimePeriod = getCurrentTimePeriod()
 
-    // Check for certain events
-
-    if (dataObj.date.currentTime === dataObj.astronomical.sunrise && date.getSeconds() === 15) {
-      console.log("SUNRISE!")
-      getCurrentWeather()
-      getWeatherForecast()
-      getSolarData()
-    }
-    if (dataObj.date.currentTime === dataObj.astronomical.sunset && date.getSeconds() === 15) {
-      console.log("SUNSET!")
-      getCurrentWeather()
-      getWeatherForecast()
-      getSolarData()
-    }
-    if (dataObj.date.currentTime === "00:00" && date.getSeconds() === 15) {
-      console.log("MIDNIGHT!")
-      getCurrentWeather()
-      getWeatherForecast()
-      getSolarData()
-    }
-
-    // Recursively call getDateInfo
-    setTimeout(getDateInfo, 10000)
+    callback()
   }
 
   function getSeason() {
@@ -237,7 +233,7 @@ $(document).ready(function () {
     if (time < 1679295600000) return "Winter"
   }
 
-  function getSolarData() {
+  function getSolarData(callback) {
     $.ajax({
       url: "https://api.sunrise-sunset.org/json?lat=47.6&lng=-122.3",
       dataType: "json",
@@ -265,18 +261,7 @@ $(document).ready(function () {
         console.log(error)
       },
       complete: function () {
-        dataObj.date.currentTimePeriod = getCurrentTimePeriod()
-        getSunriseAndSunsetDisplay()
-
-        getCurrentWeather()
-        getWeatherForecast()
-        if (dataObj.date.isDaytime === "true") {
-          console.log("Data updating every 30 minutes")
-          setTimeout(getSolarData, 60000 * 30)
-        } else {
-          console.log("Data updating every 3 hours")
-          setTimeout(getSolarData, 3600000 * 3)
-        }
+        callback()
       },
     })
   }
@@ -305,7 +290,6 @@ $(document).ready(function () {
     if (dataObj.date.currentTime < dataObj.astronomical.civil_twilight_end) return "sunset"
     if (dataObj.date.currentTime < dataObj.astronomical.nautical_twilight_end) return "twilight"
     if (dataObj.date.currentTime < dataObj.astronomical.astronomical_twilight_end) return "zdusk"
-    if (dataObj.date.currentTime > dataObj.astronomical.astronomical_twilight_end) return "znight"
 
     // Fallback
     return "summer-clear-twilight"
@@ -351,7 +335,10 @@ $(document).ready(function () {
         dataObj.shortForecast = data.properties.periods[0].shortForecast
         dataObj.detailedForecast = data.properties.periods[0].detailedForecast
 
-        if (data.properties.periods[0].name === "Tonight") {
+        if (
+          data.properties.periods[0].name === "Tonight" ||
+          data.properties.periods[0].name === "Overnight"
+        ) {
           // console.log("It is nighttime")
           dataObj.todayLow = data.properties.periods[0].temperature
           dataObj.tomorrowHigh = data.properties.periods[1].temperature
@@ -367,6 +354,7 @@ $(document).ready(function () {
         if (dataObj.todayHigh === null) {
           getPseudoHigh()
         }
+        populateDetailedForecast()
       },
       error: function (data, status, error) {
         console.log(data)
@@ -374,27 +362,14 @@ $(document).ready(function () {
         console.log(error)
       },
       complete: function () {
-        console.log("Got weather Forecast")
-        // Weather
-        $(weatherIcon).removeClass().addClass(getWeatherIcon())
-        $(shortForecastDisplay).text(`${dataObj.shortForecast}`)
-        populateDetailedForecast()
-        renderTimeInfoToScreen()
-        renderSolarAndWeatherDataToScreen()
-        renderBackground()
-        // if (date.getHours() > 6 && date.getHours() < 23) {
-        //   console.log("weather updating every 30 minutes")
-        //   setTimeout(getWeatherForecast, 60000 * 30)
-        // } else {
-        //   console.log("weather updating every 3 hours")
-        //   setTimeout(getWeatherForecast, 3600000 * 3)
-        // }
+        // console.log("Got weather Forecast")
+        renderInfoToScreen()
       },
     })
   }
 
   function getPseudoHigh() {
-    console.log("Got pseudohigh")
+    // console.log("Got pseudohigh")
     /* Why pseudoHigh? Because the current API does not serve up the day's high temperature afte 6pm
     This is only a concern when the program is started or refreshed between 6pm and midnight. Once it's 
     running it will keep track of the high for the day and the pseudoHigh will not be used */
@@ -409,11 +384,11 @@ $(document).ready(function () {
     if (dataObj.shortForecast.includes("clear")) pseudoHigh += 2
     if (dataObj.shortForecast.includes("rain")) pseudoHigh -= 2
     dataObj.todayHigh = pseudoHigh
-    console.log(dataObj)
+    // console.log(dataObj)
   }
 
   function populateDetailedForecast() {
-    console.log("PopulatedDetailedForecast")
+    // console.log("PopulatedDetailedForecast")
     smallForecast.innerText = ""
     var splitForecast = dataObj.detailedForecast.split(".")
     splitForecast.pop() // last element is empty so remove it
@@ -447,22 +422,44 @@ $(document).ready(function () {
     }
   }
 
-  function renderTimeInfoToScreen() {
-    console.log("Rendered time info to screen")
-    // Set elements to empty if data does not exist
-    hideIfEmpty()
+  function renderInfoToScreen() {
+    renderSolarAndWeatherDataToScreen()
+    renderBackground()
 
     // Date & Time
     dayOfWeek.innerText = dataObj.date.dayOfWeek
     todaysDate.innerText = `${dataObj.date.month} ${dataObj.date.todaysDate}`
     time.innerText = dataObj.date.displayTime
 
+    // Set elements to empty if data does not exist
+    hideIfEmpty()
+
+    checkForQualifyingEventToRequestInfo()
+  }
+
+  function checkForQualifyingEventToRequestInfo() {
+    // // Check for certain events
+
+    var d = new Date()
+    var h = d.getHours()
+    var m = d.getMinutes()
+    var s = d.getSeconds()
+
+    if (h >= 5 && h <= 23) {
+      if (m === 59 && s === 59) {
+        initializeInfoRequests()
+        // console.log("Initialized request!")
+      }
+    }
+
     // Recursive call
-    setTimeout(renderTimeInfoToScreen, 1000)
+    setTimeout(checkForQualifyingEventToRequestInfo, 1000)
   }
 
   function renderSolarAndWeatherDataToScreen() {
-    // Temperatures
+    // Weather
+    $(weatherIcon).removeClass().addClass(getWeatherIcon())
+    $(shortForecastDisplay).text(`${dataObj.shortForecast}`)
     $(currentTemp).html(`${dataObj.currentTemp}<span id="degreeSymbol">°</span>`)
     lowTemp.innerText = `${dataObj.todayLow}°`
     $(lowTemp).css("color", `rgb(${getRGB(dataObj.todayLow)})`)
@@ -482,7 +479,7 @@ $(document).ready(function () {
   }
 
   function renderBackground() {
-    console.log("Got bg image string")
+    // console.log("Got bg image string")
     document.body.style.backgroundImage = `url("img/bg/${getBgImg()}.jpg")`
   }
 
@@ -516,7 +513,7 @@ $(document).ready(function () {
   }
 
   function getRGB(temperature) {
-    console.log("Getting RGB for temps")
+    // console.log("Getting RGB for temps")
     switch (temperature) {
       case -1:
         return "252,252,255"
@@ -770,7 +767,7 @@ $(document).ready(function () {
   }
 
   function getWeatherIcon() {
-    console.log("Got weather icon")
+    // console.log("Got weather icon")
     // day or night
     if (dataObj.shortForecast === "") return ""
     if (dataObj.shortForecast.toLowerCase().includes("snow")) return "fas fa-snowflake"
@@ -812,14 +809,14 @@ $(document).ready(function () {
   }
 
   function getBgImg() {
-    console.log("Got bg image")
     var conditions = dataObj.shortForecast.replace(/\s/g, "").toLowerCase()
     var string = `${dataObj.date.season}-${conditions}-${dataObj.date.currentTimePeriod}`.toLowerCase()
+    console.log(string)
     return string
   }
 
   function getSunriseAndSunsetDisplay() {
-    console.log("Getting Sunrise and Sunset Display")
+    // console.log("Getting Sunrise and Sunset Display")
     var sunriseDisplay = dataObj.astronomical.sunrise
     var sunsetDisplay = dataObj.astronomical.sunset
 
@@ -835,7 +832,7 @@ $(document).ready(function () {
   }
 
   function renderNightTimeMode() {
-    console.log("Rendering NightTime Mode")
+    // console.log("Rendering NightTime Mode")
     var warmDisplayColor = "rgb(255, 235, 190)"
 
     $(todaysDate).css("color", warmDisplayColor)
