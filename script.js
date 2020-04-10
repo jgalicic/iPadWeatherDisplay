@@ -45,6 +45,7 @@ $(document).ready(function () {
   const shortForecastDisplay = document.getElementById("shortForecastDisplay")
   var globalDate = new Date()
   var timeString = globalDate.toTimeString().substring(0, 5)
+  dayArray = []
 
   var dataObj = {
     aqi: null,
@@ -183,11 +184,11 @@ $(document).ready(function () {
   function initializeInfoRequests() {
     getDateInfo(function () {
       // After getDateInfo runs:
-      getCurrentTimePeriod()
       populateDetailedForecast()
       getSeason()
       getSolarData(function () {
         // After getSolarData runs:
+        getCurrentTimePeriod()
         getSunriseAndSunsetDisplay()
         getCurrentWeather()
         getWeatherForecast()
@@ -267,6 +268,32 @@ $(document).ready(function () {
   }
 
   function getCurrentTimePeriod() {
+    dayArray = [
+      dataObj.astronomical.astronomical_twilight_begin,
+      "znight",
+      dataObj.astronomical.nautical_twilight_begin,
+      "znight",
+      dataObj.astronomical.civil_twilight_begin,
+      "_beforesunrise",
+      dataObj.astronomical.sunrise,
+      "_sunrise",
+      "08:30",
+      "am",
+      "10:30",
+      "amlate",
+      "14:00",
+      "day",
+      "16:30",
+      "dayafternoon",
+      dataObj.astronomical.sunset,
+      "evening",
+      dataObj.astronomical.civil_twilight_end,
+      "sunset",
+      dataObj.astronomical.nautical_twilight_end,
+      "twilight",
+      dataObj.astronomical.astronomical_twilight_end,
+      "zdusk",
+    ]
     // console.log(dataObj.date.currentTime < dataObj.astronomical.astronomical_twilight_begin)
     // console.log(dataObj.date.currentTime < dataObj.astronomical.nautical_twilight_begin)
     // console.log(dataObj.date.currentTime < dataObj.astronomical.civil_twilight_begin)
@@ -279,17 +306,25 @@ $(document).ready(function () {
     // console.log(dataObj.date.currentTime < dataObj.astronomical.astronomical_twilight_end)
     // console.log(dataObj.date.currentTime > dataObj.astronomical.astronomical_twilight_begin)
 
-    if (dataObj.date.currentTime < dataObj.astronomical.astronomical_twilight_begin) return "znight"
-    if (dataObj.date.currentTime < dataObj.astronomical.nautical_twilight_begin) return "znight"
-    if (dataObj.date.currentTime < dataObj.astronomical.civil_twilight_begin)
-      return "_beforesunrise"
-    if (dataObj.date.currentTime < dataObj.astronomical.sunrise) return "_sunrise"
-    if (dataObj.date.currentTime < "10:30") return "am"
-    if (dataObj.date.currentTime < "16:00") return "day"
-    if (dataObj.date.currentTime < dataObj.astronomical.sunset) return "evening"
-    if (dataObj.date.currentTime < dataObj.astronomical.civil_twilight_end) return "sunset"
-    if (dataObj.date.currentTime < dataObj.astronomical.nautical_twilight_end) return "twilight"
-    if (dataObj.date.currentTime < dataObj.astronomical.astronomical_twilight_end) return "zdusk"
+    // if (dataObj.date.currentTime < dataObj.astronomical.astronomical_twilight_begin) return "znight"
+    // if (dataObj.date.currentTime < dataObj.astronomical.nautical_twilight_begin) return "znight"
+    // if (dataObj.date.currentTime < dataObj.astronomical.civil_twilight_begin)
+    //   return "_beforesunrise"
+    // if (dataObj.date.currentTime < dataObj.astronomical.sunrise) return "_sunrise"
+    // if (dataObj.date.currentTime < "08:30") return "am"
+    // if (dataObj.date.currentTime < "10:30") return "amlate"
+    // if (dataObj.date.currentTime < "14:00") return "day"
+    // if (dataObj.date.currentTime < "16:30") return "dayafternoon"
+    // if (dataObj.date.currentTime < dataObj.astronomical.sunset) return "evening"
+    // if (dataObj.date.currentTime < dataObj.astronomical.civil_twilight_end) return "sunset"
+    // if (dataObj.date.currentTime < dataObj.astronomical.nautical_twilight_end) return "twilight"
+    // if (dataObj.date.currentTime < dataObj.astronomical.astronomical_twilight_end) return "zdusk"
+
+    for (var i = 0; i < dayArray.length; i += 2) {
+      if (dataObj.date.currentTime < dayArray[i]) {
+        return dayArray[i + 1]
+      }
+    }
 
     // Fallback
     return "summer-clear-twilight"
@@ -374,6 +409,7 @@ $(document).ready(function () {
     This is only a concern when the program is started or refreshed between 6pm and midnight. Once it's 
     running it will keep track of the high for the day and the pseudoHigh will not be used */
     var pseudoHigh = dataObj.currentTemp
+    if (dataObj.date.currentTimePeriod === "dayafternoon") pseudoHigh += 4
     if (dataObj.date.currentTimePeriod === "evening") pseudoHigh += 5
     if (dataObj.date.currentTimePeriod === "sunset") pseudoHigh += 6
     if (dataObj.date.currentTimePeriod === "twilight") pseudoHigh += 7
@@ -423,6 +459,10 @@ $(document).ready(function () {
   }
 
   function renderInfoToScreen() {
+    // Change color and night to warmer tones
+    if (dataObj.date.isDaytime === "false") {
+      renderNightTimeMode()
+    }
     renderSolarAndWeatherDataToScreen()
     renderBackground()
 
@@ -444,31 +484,32 @@ $(document).ready(function () {
     var h = d.getHours()
     var m = d.getMinutes()
     var s = d.getSeconds()
+    var ms = d.getMilliseconds()
+
+    // console.log("Checking for qualifying event...", `${h}:${m}:${s}`)
 
     if (h >= 5 && h <= 23) {
-      if (m === 59 && s === 59) {
+      if ((m === 29 && s === 59 && ms < 500) || (m === 59 && s === 59 && ms < 500)) {
         initializeInfoRequests()
         // console.log("Initialized request!")
+      } else {
+        // Recursive call
+        setTimeout(checkForQualifyingEventToRequestInfo, 1000)
       }
     }
-
-    // Recursive call
-    setTimeout(checkForQualifyingEventToRequestInfo, 1000)
   }
 
   function renderSolarAndWeatherDataToScreen() {
-    // Weather
+    // Weather Icon
     $(weatherIcon).removeClass().addClass(getWeatherIcon())
     $(shortForecastDisplay).text(`${dataObj.shortForecast}`)
+    // Temperature
     $(currentTemp).html(`${dataObj.currentTemp}<span id="degreeSymbol">°</span>`)
     lowTemp.innerText = `${dataObj.todayLow}°`
     $(lowTemp).css("color", `rgb(${getRGB(dataObj.todayLow)})`)
     highTemp.innerText = `${dataObj.todayHigh}°`
     $(highTemp).css("color", `rgb(${getRGB(dataObj.todayHigh)})`)
-    // Change color and night to warmer tones
-    if (dataObj.date.isDaytime === "false") {
-      renderNightTimeMode()
-    }
+
     // Gradient bar
     $(tempRangeBar).css(
       "background-image",
