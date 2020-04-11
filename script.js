@@ -301,32 +301,6 @@ $(document).ready(function () {
       dataObj.astronomical.astronomical_twilight_end,
       "zdusk",
     ]
-    // console.log(dataObj.date.currentTime < dataObj.astronomical.astronomical_twilight_begin)
-    // console.log(dataObj.date.currentTime < dataObj.astronomical.nautical_twilight_begin)
-    // console.log(dataObj.date.currentTime < dataObj.astronomical.civil_twilight_begin)
-    // console.log(dataObj.date.currentTime < dataObj.astronomical.sunrise)
-    // console.log(dataObj.date.currentTime < "10:30")
-    // console.log(dataObj.date.currentTime < "16:00")
-    // console.log(dataObj.date.currentTime < dataObj.astronomical.sunset)
-    // console.log(dataObj.date.currentTime < dataObj.astronomical.civil_twilight_end)
-    // console.log(dataObj.date.currentTime < dataObj.astronomical.nautical_twilight_end)
-    // console.log(dataObj.date.currentTime < dataObj.astronomical.astronomical_twilight_end)
-    // console.log(dataObj.date.currentTime > dataObj.astronomical.astronomical_twilight_begin)
-
-    // if (dataObj.date.currentTime < dataObj.astronomical.astronomical_twilight_begin) return "znight"
-    // if (dataObj.date.currentTime < dataObj.astronomical.nautical_twilight_begin) return "znight"
-    // if (dataObj.date.currentTime < dataObj.astronomical.civil_twilight_begin)
-    //   return "_beforesunrise"
-    // if (dataObj.date.currentTime < dataObj.astronomical.sunrise) return "_sunrise"
-    // if (dataObj.date.currentTime < "08:30") return "am"
-    // if (dataObj.date.currentTime < "10:30") return "amlate"
-    // if (dataObj.date.currentTime < "14:00") return "day"
-    // if (dataObj.date.currentTime < "16:30") return "dayafternoon"
-    // if (dataObj.date.currentTime < dataObj.astronomical.sunset) return "evening"
-    // if (dataObj.date.currentTime < dataObj.astronomical.civil_twilight_end) return "sunset"
-    // if (dataObj.date.currentTime < dataObj.astronomical.nautical_twilight_end) return "twilight"
-    // if (dataObj.date.currentTime < dataObj.astronomical.astronomical_twilight_end) return "zdusk"
-
     for (var i = 0; i < dayArray.length; i += 2) {
       if (dataObj.date.currentTime < dayArray[i]) {
         dataObj.date.currentTimePeriod = dayArray[i + 1]
@@ -860,7 +834,7 @@ $(document).ready(function () {
   function getBgImg() {
     var conditions = dataObj.shortForecast.replace(/\s/g, "").toLowerCase()
     var string = `${dataObj.date.season}-${conditions}-${dataObj.date.currentTimePeriod}`.toLowerCase()
-    // console.log(string)
+    console.log(string)
     return string
   }
 
