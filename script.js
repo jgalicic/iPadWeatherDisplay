@@ -174,9 +174,9 @@ $(document).ready(function () {
   //   windSpeed: "1 mph",
   // }
 
-  setTimeout(() => {
-    console.log(dataObj)
-  }, 200)
+  // setTimeout(() => {
+  //   console.log(dataObj)
+  // }, 200)
 
   // setTimeout(() => {
   //   renderInfoToScreen()
@@ -402,9 +402,7 @@ $(document).ready(function () {
       },
       complete: function () {
         // console.log("Got weather Forecast")
-        console.log(000000)
         if (dataObj.shortForecast === "Slight Chance Light Rain") {
-          console.log(11111)
           dataObj.shortForecast = "Cloudy"
         }
         renderInfoToScreen()
@@ -863,7 +861,7 @@ $(document).ready(function () {
   function getBgImg() {
     var conditions = dataObj.shortForecast.replace(/\s/g, "").toLowerCase()
     var string = `${dataObj.date.season}-${conditions}-${dataObj.date.currentTimePeriod}`.toLowerCase()
-    console.log(string)
+    // console.log(string)
     return string
   }
 
