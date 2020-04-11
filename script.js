@@ -45,7 +45,7 @@ $(document).ready(function () {
   const shortForecastDisplay = document.getElementById("shortForecastDisplay")
   var globalDate = new Date()
   var timeString = globalDate.toTimeString().substring(0, 5)
-  dayArray = []
+  var dayArray = []
 
   var dataObj = {
     aqi: null,
@@ -174,9 +174,9 @@ $(document).ready(function () {
   //   windSpeed: "1 mph",
   // }
 
-  // setTimeout(() => {
-  //   console.log(dataObj)
-  // }, 200)
+  setTimeout(() => {
+    console.log(dataObj)
+  }, 200)
 
   // setTimeout(() => {
   //   renderInfoToScreen()
@@ -215,7 +215,7 @@ $(document).ready(function () {
     dataObj.date.todaysDate = date.getDate()
     dataObj.date.season = getSeason()
     dataObj.date.year = date.getFullYear()
-    dataObj.date.currentTimePeriod = getCurrentTimePeriod()
+    getCurrentTimePeriod()
 
     callback()
   }
@@ -300,6 +300,13 @@ $(document).ready(function () {
       dataObj.astronomical.astronomical_twilight_end,
       "zdusk",
     ]
+
+    for (var i = 0; i < dayArray.length; i += 2) {
+      if (dataObj.date.currentTime < dayArray[i]) {
+        dataObj.date.currentTimePeriod = dayArray[i + 1]
+        return
+      }
+    }
     // console.log(dataObj.date.currentTime < dataObj.astronomical.astronomical_twilight_begin)
     // console.log(dataObj.date.currentTime < dataObj.astronomical.nautical_twilight_begin)
     // console.log(dataObj.date.currentTime < dataObj.astronomical.civil_twilight_begin)
@@ -325,15 +332,6 @@ $(document).ready(function () {
     // if (dataObj.date.currentTime < dataObj.astronomical.civil_twilight_end) return "sunset"
     // if (dataObj.date.currentTime < dataObj.astronomical.nautical_twilight_end) return "twilight"
     // if (dataObj.date.currentTime < dataObj.astronomical.astronomical_twilight_end) return "zdusk"
-
-    for (var i = 0; i < dayArray.length; i += 2) {
-      if (dataObj.date.currentTime < dayArray[i]) {
-        return dayArray[i + 1]
-      }
-    }
-
-    // Fallback
-    return "summer-clear-twilight"
   }
 
   function getCurrentWeather() {
@@ -404,6 +402,11 @@ $(document).ready(function () {
       },
       complete: function () {
         // console.log("Got weather Forecast")
+        console.log(000000)
+        if (dataObj.shortForecast === "Slight Chance Light Rain") {
+          console.log(11111)
+          dataObj.shortForecast = "Cloudy"
+        }
         renderInfoToScreen()
       },
     })
@@ -860,7 +863,7 @@ $(document).ready(function () {
   function getBgImg() {
     var conditions = dataObj.shortForecast.replace(/\s/g, "").toLowerCase()
     var string = `${dataObj.date.season}-${conditions}-${dataObj.date.currentTimePeriod}`.toLowerCase()
-    // console.log(string)
+    console.log(string)
     return string
   }
 
