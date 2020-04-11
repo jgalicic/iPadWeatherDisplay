@@ -192,13 +192,12 @@ $(document).ready(function () {
   function initializeInfoRequests() {
     getDateInfo(function () {
       // After getDateInfo runs:
-      populateDetailedForecast()
+
       getSeason()
       getSolarData(function () {
         // After getSolarData runs:
         getCurrentTimePeriod()
         getCurrentWeather()
-        getWeatherForecast()
       })
     })
   }
@@ -327,6 +326,7 @@ $(document).ready(function () {
       },
       complete: function () {
         console.log("Got Current Weather")
+        getWeatherForecast()
 
         // // Schedule the next request when the current one's complete
         // if (dataObj.date.isDaytime === "true") {
@@ -369,7 +369,6 @@ $(document).ready(function () {
         if (dataObj.todayHigh === null) {
           getPseudoHigh()
         }
-        populateDetailedForecast()
       },
       error: function (data, status, error) {
         console.log(data)
@@ -377,7 +376,9 @@ $(document).ready(function () {
         console.log(error)
       },
       complete: function () {
+        populateDetailedForecast()
         // console.log("Got weather Forecast")
+        renderBackground()
         renderInfoToScreen()
       },
     })
@@ -460,7 +461,7 @@ $(document).ready(function () {
 
     // Display Solar and Weather Info
     renderSolarAndWeatherDataToScreen()
-    renderBackground()
+
     renderSunriseAndSunsetDisplay()
 
     // Set elements to empty if data does not exist
@@ -469,7 +470,7 @@ $(document).ready(function () {
     // Run API calls every 30 minutes between 6am and 12:31am
     if (dataObj.date.currentTime > "06:00" || dataObj.date.currentTime < "00:31") {
       if ((m === 30 && s === 0) || (m === 0 && s === 0)) {
-        // console.log("About to initialized request")
+        // console.log("About to initialize request")
         setTimeout(function () {
           initializeInfoRequests()
           // console.log("Initialized request!")
@@ -484,12 +485,13 @@ $(document).ready(function () {
   function renderSolarAndWeatherDataToScreen() {
     // Weather Icon
     $(weatherIcon).removeClass().addClass(getWeatherIcon())
-    $(shortForecastDisplay).text(`${dataObj.shortForecast}`)
+    if (dataObj.shortForecast !== null) $(shortForecastDisplay).text(`${dataObj.shortForecast}`)
     // Temperature
-    $(currentTemp).html(`${dataObj.currentTemp}`)
-    lowTemp.innerText = `${dataObj.todayLow}°`
+    if (dataObj.currentTemp !== null) $(currentTemp).html(`${dataObj.currentTemp}`)
+    if (dataObj.currentTemp === null) $(degreeSymbol).html("")
+    if (dataObj.todayLow !== null) lowTemp.innerText = `${dataObj.todayLow}°`
     $(lowTemp).css("color", `rgb(${getRGB(dataObj.todayLow)})`)
-    highTemp.innerText = `${dataObj.todayHigh}°`
+    if (dataObj.todayHigh !== null) highTemp.innerText = `${dataObj.todayHigh}°`
     $(highTemp).css("color", `rgb(${getRGB(dataObj.todayHigh)})`)
 
     // Gradient bar
