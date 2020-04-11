@@ -215,7 +215,7 @@ $(document).ready(function () {
     dataObj.date.todaysDate = date.getDate()
     dataObj.date.season = getSeason()
     dataObj.date.year = date.getFullYear()
-    dataObj.date.currentTimePeriod = getCurrentTimePeriod()
+    getCurrentTimePeriod()
 
     callback()
   }
@@ -328,12 +328,10 @@ $(document).ready(function () {
 
     for (var i = 0; i < dayArray.length; i += 2) {
       if (dataObj.date.currentTime < dayArray[i]) {
-        return dayArray[i + 1]
+        dataObj.date.currentTimePeriod = dayArray[i + 1]
+        return
       }
     }
-
-    // Fallback
-    return "summer-clear-twilight"
   }
 
   function getCurrentWeather() {
@@ -354,6 +352,7 @@ $(document).ready(function () {
       },
       complete: function () {
         console.log("Got Current Weather")
+
         // // Schedule the next request when the current one's complete
         // if (dataObj.date.isDaytime === "true") {
         //   console.log("weather updating every 30 minutes")
@@ -860,6 +859,7 @@ $(document).ready(function () {
   function getBgImg() {
     var conditions = dataObj.shortForecast.replace(/\s/g, "").toLowerCase()
     var string = `${dataObj.date.season}-${conditions}-${dataObj.date.currentTimePeriod}`.toLowerCase()
+    // console.log(string)
     return string
   }
 
