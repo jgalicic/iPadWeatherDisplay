@@ -121,13 +121,22 @@ body {
   top: 5px;
   left: 40px;
 }
+#innerTempContainer {
+  display: flex;
 
+  position: relative;
+  top: 22px;
+}
 #currentTemp {
   display: flex;
   z-index: 3;
   font-size: 15vw;
+}
+
+#degreeSymbol {
+  font-size: 8vw;
   position: relative;
-  top: 22px;
+  top: 10px;
 }
 
 #currentTemp span {

@@ -31,6 +31,7 @@ $(document).ready(function () {
   const todaysDate = document.getElementById("todaysDate")
   const time = document.getElementById("time")
   const currentTemp = document.getElementById("currentTemp")
+  const degreeSymbol = document.getElementById("degreeSymbol")
   const lowTemp = document.getElementById("lowTemp")
   const tempRangeBar = document.getElementById("tempRangeBar")
   const tempRangeContainer = document.getElementById("tempRangeContainer")
@@ -511,7 +512,7 @@ $(document).ready(function () {
     $(weatherIcon).removeClass().addClass(getWeatherIcon())
     $(shortForecastDisplay).text(`${dataObj.shortForecast}`)
     // Temperature
-    $(currentTemp).html(`${dataObj.currentTemp}<span id="degreeSymbol">°</span>`)
+    $(currentTemp).html(`${dataObj.currentTemp}`)
     lowTemp.innerText = `${dataObj.todayLow}°`
     $(lowTemp).css("color", `rgb(${getRGB(dataObj.todayLow)})`)
     highTemp.innerText = `${dataObj.todayHigh}°`
@@ -881,7 +882,7 @@ $(document).ready(function () {
 
   function renderNightTimeMode() {
     // console.log("Rendering NightTime Mode")
-    var warmDisplayColor = "rgb(255, 235, 190)"
+    var warmDisplayColor = "rgb(250, 230, 185)"
 
     $(todaysDate).css("color", warmDisplayColor)
     $(dayOfWeek).css("color", warmDisplayColor)
