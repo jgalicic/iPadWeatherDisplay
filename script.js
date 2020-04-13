@@ -191,11 +191,8 @@ $(document).ready(function () {
 
   function initializeInfoRequests() {
     getDateInfo(function () {
-      // After getDateInfo runs:
-
       getSeason()
       getSolarData(function () {
-        // After getSolarData runs:
         getCurrentTimePeriod()
         getCurrentWeather()
       })
@@ -467,18 +464,16 @@ $(document).ready(function () {
     // Set elements to empty if data does not exist
     hideIfEmpty()
 
-    // Run API calls every 30 minutes between 6am and 12:31am
-    if (dataObj.date.currentTime > "06:00" || dataObj.date.currentTime < "00:31") {
-      if ((m === 30 && s === 0) || (m === 0 && s === 0)) {
-        // console.log("About to initialize request")
-        setTimeout(function () {
-          initializeInfoRequests()
-          // console.log("Initialized request!")
-        }, 1000)
-      } else {
-        // Recursive call
-        setTimeout(renderInfoToScreen, 1000)
-      }
+    // Refresh API data every 30 minutes
+    if ((m === 30 && s === 0) || (m === 0 && s === 0)) {
+      // console.log("About to initialize request")
+      setTimeout(function () {
+        initializeInfoRequests()
+        // console.log("Initialized request!")
+      }, 1000)
+    } else {
+      // Recursive call
+      setTimeout(renderInfoToScreen, 1000)
     }
   }
 
