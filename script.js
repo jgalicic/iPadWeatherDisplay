@@ -265,6 +265,7 @@ $(document).ready(function () {
         console.log(error)
       },
       complete: function () {
+        console.log("Got solar data")
         callback()
       },
     })
@@ -373,8 +374,8 @@ $(document).ready(function () {
         console.log(error)
       },
       complete: function () {
+        console.log("Got weather Forecast")
         populateDetailedForecast()
-        // console.log("Got weather Forecast")
         renderBackground()
         renderInfoToScreen()
       },
@@ -441,6 +442,7 @@ $(document).ready(function () {
     var d = new Date()
     var m = d.getMinutes()
     var s = d.getSeconds()
+    var h = d.getHours()
 
     timeString = d.toTimeString().substring(0, 5)
 
@@ -467,10 +469,15 @@ $(document).ready(function () {
     // Refresh API data every 30 minutes
     if ((m === 30 && s === 0) || (m === 0 && s === 0)) {
       // console.log("About to initialize request")
-      setTimeout(function () {
-        initializeInfoRequests()
-        // console.log("Initialized request!")
-      }, 1000)
+
+      if (h >= 1 && h <= 5) {
+        setTimeout(renderInfoToScreen, 1000)
+      } else {
+        setTimeout(function () {
+          initializeInfoRequests()
+          // console.log("Initialized request!")
+        }, 1000)
+      }
     } else {
       // Recursive call
       setTimeout(renderInfoToScreen, 1000)
