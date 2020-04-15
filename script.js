@@ -312,7 +312,14 @@ $(document).ready(function () {
       dataType: "json",
       success: function (data) {
         console.log("Current weather:", data)
-        dataObj.shortForecast = data.properties.periods[0].shortForecast
+
+        // Preempt undesirable short forecasts
+        if (data.properties.periods[0].shortForecast.toLowerCase() === "areas of drizzle") {
+          dataObj.shortForecast = "Slight Chance Light Rain"
+        } else {
+          dataObj.shortForecast = data.properties.periods[0].shortForecast
+        }
+
         dataObj.currentTemp = data.properties.periods[0].temperature
         dataObj.windSpeed = data.properties.periods[0].windSpeed
         dataObj.windDirection = data.properties.periods[0].windDirection
