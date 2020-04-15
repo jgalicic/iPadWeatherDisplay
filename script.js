@@ -258,6 +258,7 @@ $(document).ready(function () {
         } else {
           dataObj.date.isDaytime = "false"
         }
+        // console.log(data)
       },
       error: function (data, status, error) {
         console.log(data)
@@ -311,7 +312,7 @@ $(document).ready(function () {
       url: "https://api.weather.gov/gridpoints/SEW/125,67/forecast/hourly",
       dataType: "json",
       success: function (data) {
-        console.log("Current weather:", data)
+        // console.log("Current weather:", data)
 
         // Preempt undesirable short forecasts
         if (data.properties.periods[0].shortForecast.toLowerCase() === "areas of drizzle") {
@@ -331,7 +332,7 @@ $(document).ready(function () {
         console.log(error)
       },
       complete: function () {
-        console.log("Got Current Weather")
+        console.log("Got current weather")
         getWeatherForecast()
 
         // // Schedule the next request when the current one's complete
@@ -382,7 +383,7 @@ $(document).ready(function () {
         console.log(error)
       },
       complete: function () {
-        console.log("Got weather Forecast")
+        console.log("Got weather forecast")
         populateDetailedForecast()
         renderBackground()
         renderInfoToScreen()
@@ -392,7 +393,7 @@ $(document).ready(function () {
 
   function getPseudoHigh() {
     // console.log("Got pseudohigh")
-    /* Why pseudoHigh? Because the current API does not serve up the day's high temperature afte 6pm
+    /* PseudoHigh is used because the current API does not serve up the day's high temperature after 6pm.
     This is only a concern when the program is started or refreshed between 6pm and midnight. Once it's 
     running it will keep track of the high for the day and the pseudoHigh will not be used */
     var pseudoHigh = dataObj.currentTemp
@@ -519,20 +520,6 @@ $(document).ready(function () {
   }
 
   function hideIfEmpty() {
-    // console.log("Checking for empty elements")
-    // if (dataObj.date.dayOfWeek === "") console.log(1)
-    // if (dataObj.date.displayTime === "") console.log(2)
-    // if (dataObj.date.month === "" || dataObj.date.todaysDate === "") console.log(3)
-    // if (dataObj.date.dayOfWeek === "") console.log(4)
-    // if (dataObj.date.detailedForecast === "") console.log(5)
-    // if (dataObj.currentTemp === "") console.log(6)
-    // if (dataObj.todayHigh === "") console.log(7)
-    // if (dataObj.todayLow === "") console.log(8)
-    // if (dataObj.date.displayTime === "") console.log(9)
-    // if (dataObj.astronomical.sunrise === "") console.log(10)
-    // if (dataObj.astronomical.sunset === "") console.log(11)
-    // if (dataObj.shortForecast === "") console.log(12)
-
     if (dataObj.date.dayOfWeek === "") $(dayOfWeek).hide()
     if (dataObj.date.displayTime === "") $(time).hide()
     if (dataObj.date.month === "" || dataObj.date.todaysDate === "") $(todaysDate).hide()
@@ -850,20 +837,26 @@ $(document).ready(function () {
     return string
   }
 
+  function tConvert(time) {
+    // Check correct time format and split into components
+    time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time]
+
+    if (time.length > 1) {
+      // If time format correct
+      time = time.slice(1) // Remove full string match value
+      time[5] = +time[0] < 12 ? "am" : "pm" // Set AM/PM
+      time[0] = +time[0] % 12 || 12 // Adjust hours
+    }
+    return time.join("") // return adjusted time or original string
+  }
+
   function renderSunriseAndSunsetDisplay() {
     // console.log("Getting Sunrise and Sunset Display")
-    var sunriseDisplay = dataObj.astronomical.sunrise
-    var sunsetDisplay = dataObj.astronomical.sunset
+    var sunriseDisplay = tConvert(dataObj.astronomical.sunrise)
+    var sunsetDisplay = tConvert(dataObj.astronomical.sunset)
 
-    if (sunriseDisplay[0] === "0") sunriseDisplay = sunriseDisplay.substr(1)
-    // Note: This may break if sunset is after midnight
-    sunsetDisplay = sunsetDisplay.substr(1)
-    var num = sunsetDisplay[0]
-    num = num - 2
-    sunsetDisplay = num + sunsetDisplay.substr(1)
-
-    sunriseTime.innerHTML = `${sunriseDisplay}am &nbsp;`
-    sunsetTime.innerHTML = `${sunsetDisplay}pm`
+    sunriseTime.innerHTML = `${sunriseDisplay}&nbsp;`
+    sunsetTime.innerHTML = `${sunsetDisplay}`
   }
 
   function renderNightTimeMode() {
