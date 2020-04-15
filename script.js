@@ -311,7 +311,8 @@ $(document).ready(function () {
       url: "https://api.weather.gov/gridpoints/SEW/125,67/forecast/hourly",
       dataType: "json",
       success: function (data) {
-        // console.log("Current weather:", data)
+        console.log("Current weather:", data)
+        dataObj.shortForecast = data.properties.periods[0].shortForecast
         dataObj.currentTemp = data.properties.periods[0].temperature
         dataObj.windSpeed = data.properties.periods[0].windSpeed
         dataObj.windDirection = data.properties.periods[0].windDirection
@@ -345,7 +346,7 @@ $(document).ready(function () {
       dataType: "json",
       success: function (data) {
         // console.log("Weather forecast: ", data)
-        dataObj.shortForecast = data.properties.periods[0].shortForecast
+
         dataObj.detailedForecast = data.properties.periods[0].detailedForecast
 
         if (
