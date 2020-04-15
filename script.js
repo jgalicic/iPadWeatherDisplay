@@ -317,6 +317,8 @@ $(document).ready(function () {
         // Preempt undesirable short forecasts
         if (data.properties.periods[0].shortForecast.toLowerCase() === "areas of drizzle") {
           dataObj.shortForecast = "Slight Chance Light Rain"
+        } else if (data.properties.periods[0].shortForecast.toLowerCase() === "partly sunny") {
+          dataObj.shortForecast = "Partly Cloudy"
         } else {
           dataObj.shortForecast = data.properties.periods[0].shortForecast
         }
