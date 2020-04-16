@@ -110,84 +110,86 @@ $(document).ready(function () {
   ///////////////////////////////////
   ///////////////////////////////////
 
-  // dataObj = {
-  //   aqi: null,
-  //   astronomical: {
-  //     astronomical_twilight_begin: "04:42",
-  //     astronomical_twilight_end: "21:39",
-  //     civil_twilight_begin: "06:01",
-  //     civil_twilight_end: "20:20",
-  //     day_length: "06:15",
-  //     moon: {
-  //       age: "",
-  //       moonrise: "",
-  //       moonset: "",
-  //       phase: "",
-  //     },
-  //     nautical_twilight_begin: "05:23",
-  //     nautical_twilight_end: "20:58",
-  //     solar_noon: "13:10",
-  //     sunrise: "06:32",
-  //     sunset: "19:48",
-  //   },
-  //   bestDayToGetOutside: "",
-  //   chanceHail: null,
-  //   chancePrecipitation: null,
-  //   chanceRain: null,
-  //   chanceThunder: null,
-  //   currentConditions: "Mostly Sunny",
-  //   currentTemp: 55,
-  //   date: {
-  //     currentTime: "13:27",
-  //     currentTimePeriod: "day",
-  //     dayOfWeek: "Tuesday",
-  //     displayTime: "1:27",
-  //     isDaytime: "true",
-  //     month: "April",
-  //     season: "Spring",
-  //     todaysDate: 7,
-  //     year: 2020,
-  //   },
-  //   detailedForecast: "Mostly sunny, with a high near 56. Northwest wind 1 to 5 mph.",
-  //   humitidy: null,
-  //   pollen: {
-  //     grass: null,
-  //     overall: null,
-  //     tree: null,
-  //     ragweed: null,
-  //   },
-  //   pressure: null,
-  //   pressureDirection: "",
-  //   season: "",
-  //   shortForecast: "Mostly Sunny",
-  //   snow: {
-  //     chanceSnow: null,
-  //     snowAccumInchesMax: null,
-  //     snowAccumInchesMin: null,
-  //   },
-  //   todayHigh: 64,
-  //   todayLow: 45,
-  //   tomorrowHigh: 60,
-  //   tomorrowLow: 42,
-  //   uvIndex: null,
-  //   visibilityMiles: null,
-  //   windDirection: "WSW",
-  //   windSpeed: "1 mph",
-  // }
+  dataObj = {
+    aqi: null,
+    astronomical: {
+      astronomical_twilight_begin: "04:42",
+      astronomical_twilight_end: "21:39",
+      civil_twilight_begin: "06:01",
+      civil_twilight_end: "20:20",
+      day_length: "06:15",
+      moon: {
+        age: "",
+        moonrise: "",
+        moonset: "",
+        phase: "",
+      },
+      nautical_twilight_begin: "05:23",
+      nautical_twilight_end: "20:58",
+      solar_noon: "13:10",
+      sunrise: "06:32",
+      sunset: "19:48",
+    },
+    bestDayToGetOutside: "",
+    chanceHail: null,
+    chancePrecipitation: null,
+    chanceRain: null,
+    chanceThunder: null,
+    currentConditions: "Mostly Sunny",
+    currentTemp: 55,
+    date: {
+      currentTime: "13:27",
+      currentTimePeriod: "day",
+      dayOfWeek: "Tuesday",
+      displayTime: "1:27",
+      isDaytime: "true",
+      month: "April",
+      season: "Spring",
+      todaysDate: 7,
+      year: 2020,
+    },
+    detailedForecast: "Mostly sunny, with a high near 56. Northwest wind 1 to 5 mph.",
+    humitidy: null,
+    pollen: {
+      grass: null,
+      overall: null,
+      tree: null,
+      ragweed: null,
+    },
+    pressure: null,
+    pressureDirection: "",
+    season: "",
+    shortForecast: "Mostly Sunny",
+    snow: {
+      chanceSnow: null,
+      snowAccumInchesMax: null,
+      snowAccumInchesMin: null,
+    },
+    todayHigh: 64,
+    todayLow: 45,
+    tomorrowHigh: 60,
+    tomorrowLow: 42,
+    uvIndex: null,
+    visibilityMiles: null,
+    windDirection: "WSW",
+    windSpeed: "1 mph",
+  }
 
-  // setTimeout(() => {
-  //   console.log(dataObj)
-  // }, 200)
+  setTimeout(() => {
+    console.log(dataObj)
+  }, 200)
 
-  // setTimeout(() => {
-  //   renderInfoToScreen()
-  // }, 300)
+  setTimeout(() => {
+    renderInfoToScreen()
+    populateDetailedForecast()
+    renderBackground()
+  }, 300)
 
   ///////////////////////////////
   ///////////////////////////////
   ///////////////////////////////
 
-  initializeInfoRequests()
+  // initializeInfoRequests()
 
   function initializeInfoRequests() {
     getDateInfo(function () {
@@ -212,7 +214,6 @@ $(document).ready(function () {
     dataObj.date.todaysDate = date.getDate()
     dataObj.date.season = getSeason()
     dataObj.date.year = date.getFullYear()
-    getCurrentTimePeriod()
 
     callback()
   }
@@ -273,6 +274,7 @@ $(document).ready(function () {
   }
 
   function getCurrentTimePeriod() {
+    // console.log("Getting time period")
     dayArray = [
       dataObj.astronomical.astronomical_twilight_begin,
       "znight",
@@ -298,9 +300,11 @@ $(document).ready(function () {
       "twilight",
       dataObj.astronomical.astronomical_twilight_end,
       "zdusk",
+      "23:59",
+      "znight",
     ]
     for (var i = 0; i < dayArray.length; i += 2) {
-      if (dataObj.date.currentTime < dayArray[i]) {
+      if (dataObj.date.currentTime <= dayArray[i]) {
         dataObj.date.currentTimePeriod = dayArray[i + 1]
         return
       }
@@ -334,7 +338,7 @@ $(document).ready(function () {
         console.log(error)
       },
       complete: function () {
-        console.log("Got current weather")
+        // console.log("Got current weather")
         getWeatherForecast()
 
         // // Schedule the next request when the current one's complete
@@ -363,10 +367,15 @@ $(document).ready(function () {
           data.properties.periods[0].name === "Tonight" ||
           data.properties.periods[0].name === "Overnight"
         ) {
-          // console.log("It is nighttime")
-          dataObj.todayLow = data.properties.periods[0].temperature
-          dataObj.tomorrowHigh = data.properties.periods[1].temperature
-          dataObj.tomorrowLow = data.properties.periods[2].temperature
+          if (dataObj.date.currentTime > "23:00") {
+            dataObj.todayHigh = data.properties.periods[1].temperature
+            dataObj.todayLow = data.properties.periods[2].temperature
+          } else if (dataObj.data.currentTime > dataObj.astronomical.sunset) {
+            // console.log("It is nighttime")
+            dataObj.todayLow = data.properties.periods[0].temperature
+            dataObj.tomorrowHigh = data.properties.periods[1].temperature
+            dataObj.tomorrowLow = data.properties.periods[2].temperature
+          }
         } else {
           // console.log("It is daytime")
           dataObj.todayHigh = data.properties.periods[0].temperature
@@ -378,6 +387,7 @@ $(document).ready(function () {
         if (dataObj.todayHigh === null) {
           getPseudoHigh()
         }
+        // console.log(data)
       },
       error: function (data, status, error) {
         console.log(data)
@@ -398,6 +408,7 @@ $(document).ready(function () {
     /* PseudoHigh is used because the current API does not serve up the day's high temperature after 6pm.
     This is only a concern when the program is started or refreshed between 6pm and midnight. Once it's 
     running it will keep track of the high for the day and the pseudoHigh will not be used */
+    // console.log("Getting pseudoHigh")
     var pseudoHigh = dataObj.currentTemp
     if (dataObj.date.currentTimePeriod === "dayafternoon") pseudoHigh += 4
     if (dataObj.date.currentTimePeriod === "evening") pseudoHigh += 5
@@ -836,6 +847,7 @@ $(document).ready(function () {
     var conditions = dataObj.shortForecast.replace(/\s/g, "").toLowerCase()
     var string = `${dataObj.date.season}-${conditions}-${dataObj.date.currentTimePeriod}`.toLowerCase()
     console.log(string)
+    // console.log(dataObj)
     return string
   }
 

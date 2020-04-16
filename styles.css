@@ -247,3 +247,6 @@ body {
   text-align: center;
   font-size: 3vw;
 }
+
+@media only screen and (max-width: 600px) {
+}
