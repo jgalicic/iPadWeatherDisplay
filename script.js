@@ -110,86 +110,86 @@ $(document).ready(function () {
   ///////////////////////////////////
   ///////////////////////////////////
 
-  dataObj = {
-    aqi: null,
-    astronomical: {
-      astronomical_twilight_begin: "04:42",
-      astronomical_twilight_end: "21:39",
-      civil_twilight_begin: "06:01",
-      civil_twilight_end: "20:20",
-      day_length: "06:15",
-      moon: {
-        age: "",
-        moonrise: "",
-        moonset: "",
-        phase: "",
-      },
-      nautical_twilight_begin: "05:23",
-      nautical_twilight_end: "20:58",
-      solar_noon: "13:10",
-      sunrise: "06:32",
-      sunset: "19:48",
-    },
-    bestDayToGetOutside: "",
-    chanceHail: null,
-    chancePrecipitation: null,
-    chanceRain: null,
-    chanceThunder: null,
-    currentConditions: "Mostly Sunny",
-    currentTemp: 55,
-    date: {
-      currentTime: "13:27",
-      currentTimePeriod: "day",
-      dayOfWeek: "Tuesday",
-      displayTime: "1:27",
-      isDaytime: "true",
-      month: "April",
-      season: "Spring",
-      todaysDate: 7,
-      year: 2020,
-    },
-    detailedForecast: "Mostly sunny, with a high near 56. Northwest wind 1 to 5 mph.",
-    humitidy: null,
-    pollen: {
-      grass: null,
-      overall: null,
-      tree: null,
-      ragweed: null,
-    },
-    pressure: null,
-    pressureDirection: "",
-    season: "",
-    shortForecast: "Mostly Sunny",
-    snow: {
-      chanceSnow: null,
-      snowAccumInchesMax: null,
-      snowAccumInchesMin: null,
-    },
-    todayHigh: 64,
-    todayLow: 45,
-    tomorrowHigh: 60,
-    tomorrowLow: 42,
-    uvIndex: null,
-    visibilityMiles: null,
-    windDirection: "WSW",
-    windSpeed: "1 mph",
-  }
+  // dataObj = {
+  //   aqi: null,
+  //   astronomical: {
+  //     astronomical_twilight_begin: "04:42",
+  //     astronomical_twilight_end: "21:39",
+  //     civil_twilight_begin: "06:01",
+  //     civil_twilight_end: "20:20",
+  //     day_length: "06:15",
+  //     moon: {
+  //       age: "",
+  //       moonrise: "",
+  //       moonset: "",
+  //       phase: "",
+  //     },
+  //     nautical_twilight_begin: "05:23",
+  //     nautical_twilight_end: "20:58",
+  //     solar_noon: "13:10",
+  //     sunrise: "06:32",
+  //     sunset: "19:48",
+  //   },
+  //   bestDayToGetOutside: "",
+  //   chanceHail: null,
+  //   chancePrecipitation: null,
+  //   chanceRain: null,
+  //   chanceThunder: null,
+  //   currentConditions: "Mostly Sunny",
+  //   currentTemp: 55,
+  //   date: {
+  //     currentTime: "13:27",
+  //     currentTimePeriod: "day",
+  //     dayOfWeek: "Tuesday",
+  //     displayTime: "1:27",
+  //     isDaytime: "true",
+  //     month: "April",
+  //     season: "Spring",
+  //     todaysDate: 7,
+  //     year: 2020,
+  //   },
+  //   detailedForecast: "Mostly sunny, with a high near 56. Northwest wind 1 to 5 mph.",
+  //   humitidy: null,
+  //   pollen: {
+  //     grass: null,
+  //     overall: null,
+  //     tree: null,
+  //     ragweed: null,
+  //   },
+  //   pressure: null,
+  //   pressureDirection: "",
+  //   season: "",
+  //   shortForecast: "Mostly Sunny",
+  //   snow: {
+  //     chanceSnow: null,
+  //     snowAccumInchesMax: null,
+  //     snowAccumInchesMin: null,
+  //   },
+  //   todayHigh: 64,
+  //   todayLow: 45,
+  //   tomorrowHigh: 60,
+  //   tomorrowLow: 42,
+  //   uvIndex: null,
+  //   visibilityMiles: null,
+  //   windDirection: "WSW",
+  //   windSpeed: "1 mph",
+  // }
 
-  setTimeout(() => {
-    console.log(dataObj)
-  }, 200)
+  // setTimeout(() => {
+  //   console.log(dataObj)
+  // }, 200)
 
-  setTimeout(() => {
-    renderInfoToScreen()
-    populateDetailedForecast()
-    renderBackground()
-  }, 300)
+  // setTimeout(() => {
+  //   renderInfoToScreen()
+  //   populateDetailedForecast()
+  //   renderBackground()
+  // }, 300)
 
   ///////////////////////////////
   ///////////////////////////////
   ///////////////////////////////
 
-  // initializeInfoRequests()
+  initializeInfoRequests()
 
   function initializeInfoRequests() {
     getDateInfo(function () {
