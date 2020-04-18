@@ -316,7 +316,7 @@ $(document).ready(function () {
       url: "https://api.weather.gov/gridpoints/SEW/125,67/forecast/hourly",
       dataType: "json",
       success: function (data) {
-        // console.log("Current weather:", data)
+        console.log("Current weather:", data)
 
         // Preempt undesirable short forecasts
         if (data.properties.periods[0].shortForecast.toLowerCase() === "areas of drizzle") {
@@ -359,7 +359,7 @@ $(document).ready(function () {
 
       dataType: "json",
       success: function (data) {
-        // console.log("Weather forecast: ", data)
+        console.log("Weather forecast: ", data)
 
         dataObj.detailedForecast = data.properties.periods[0].detailedForecast
 
@@ -370,7 +370,7 @@ $(document).ready(function () {
           if (dataObj.date.currentTime > "23:00") {
             dataObj.todayHigh = data.properties.periods[1].temperature
             dataObj.todayLow = data.properties.periods[2].temperature
-          } else if (dataObj.data.currentTime > dataObj.astronomical.sunset) {
+          } else if (dataObj.date.currentTime > dataObj.astronomical.sunset) {
             // console.log("It is nighttime")
             dataObj.todayLow = data.properties.periods[0].temperature
             dataObj.tomorrowHigh = data.properties.periods[1].temperature
@@ -488,8 +488,8 @@ $(document).ready(function () {
     // Set elements to empty if data does not exist
     hideIfEmpty()
 
-    // Refresh API data every 30 minutes
-    if ((m === 30 && s === 0) || (m === 0 && s === 0)) {
+    // Refresh API data every 60 minutes
+    if (m === 0 && s === 0) {
       // console.log("About to initialize request")
 
       if (h >= 1 && h <= 5) {
@@ -831,6 +831,8 @@ $(document).ready(function () {
       if (dataObj.shortForecast.toLowerCase() === "mostly clear") return "fas fa-moon"
       if (dataObj.shortForecast.toLowerCase() === "partly clear") return "fas fa-cloud-moon"
       if (dataObj.shortForecast.toLowerCase() === "partly cloudy") return "fas fa-cloud-moon"
+      if (dataObj.shortForecast.toLowerCase() === "mostly cloudy") return "fas fa-cloud"
+      if (dataObj.shortForecast.toLowerCase() === "cloudy") return "fas fa-cloud"
       if (dataObj.shortForecast.toLowerCase() === "chance rain showers")
         return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase().includes("light rain"))
