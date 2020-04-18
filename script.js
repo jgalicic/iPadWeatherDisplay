@@ -316,10 +316,14 @@ $(document).ready(function () {
       url: "https://api.weather.gov/gridpoints/SEW/125,67/forecast/hourly",
       dataType: "json",
       success: function (data) {
-        console.log("Current weather:", data)
+        // console.log("Current weather:", data)
 
         // Preempt undesirable short forecasts
         if (data.properties.periods[0].shortForecast.toLowerCase() === "areas of drizzle") {
+          dataObj.shortForecast = "Slight Chance Light Rain"
+        } else if (
+          data.properties.periods[0].shortForecast.toLowerCase() === "slight chance rain showers"
+        ) {
           dataObj.shortForecast = "Slight Chance Light Rain"
         } else if (data.properties.periods[0].shortForecast.toLowerCase() === "partly sunny") {
           dataObj.shortForecast = "Partly Cloudy"
@@ -339,6 +343,7 @@ $(document).ready(function () {
       },
       complete: function () {
         // console.log("Got current weather")
+
         getWeatherForecast()
 
         // // Schedule the next request when the current one's complete
@@ -359,25 +364,33 @@ $(document).ready(function () {
 
       dataType: "json",
       success: function (data) {
-        console.log("Weather forecast: ", data)
+        // console.log("Weather forecast: ", data)
 
         dataObj.detailedForecast = data.properties.periods[0].detailedForecast
+        // console.log(dataObj)
 
+        if (dataObj.date.currentTime < "6:00") {
+        }
         if (
           data.properties.periods[0].name === "Tonight" ||
           data.properties.periods[0].name === "Overnight"
         ) {
-          if (dataObj.date.currentTime > "23:00") {
-            dataObj.todayHigh = data.properties.periods[1].temperature
-            dataObj.todayLow = data.properties.periods[2].temperature
-          } else if (dataObj.date.currentTime > dataObj.astronomical.sunset) {
-            // console.log("It is nighttime")
+          if (dataObj.date.currentTime > dataObj.astronomical.sunset) {
+            console.log("It is after sunset and before 11pm")
             dataObj.todayLow = data.properties.periods[0].temperature
             dataObj.tomorrowHigh = data.properties.periods[1].temperature
             dataObj.tomorrowLow = data.properties.periods[2].temperature
+          } else if (dataObj.date.currentTime > "23:00") {
+            console.log("It is between 11pm and midnight")
+            dataObj.todayHigh = data.properties.periods[1].temperature
+            dataObj.todayLow = data.properties.periods[2].temperature
+          } else {
+            console.log("It is after midnight and before sunrise")
+            getPseudoHigh()
+            dataObj.todayLow = data.properties.periods[0].temperature
           }
         } else {
-          // console.log("It is daytime")
+          console.log("It is daytime")
           dataObj.todayHigh = data.properties.periods[0].temperature
           dataObj.todayLow = data.properties.periods[1].temperature
           dataObj.tomorrowHigh = data.properties.periods[2].temperature
