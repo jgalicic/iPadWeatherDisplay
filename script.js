@@ -22,8 +22,10 @@ $(document).ready(function () {
   const lowTemp = document.getElementById("lowTemp")
   const tempRangeBar = document.getElementById("tempRangeBar")
   const tempRangeContainer = document.getElementById("tempRangeContainer")
+  const tempRangeBg = document.getElementById("tempRangeBg")
   const highTemp = document.getElementById("highTemp")
   const weatherIcon = document.getElementById("weatherIcon")
+  const detailedForecast = document.getElementById("detailedForecast")
   const bigForecast = document.getElementById("bigForecast")
   const medForecast = document.getElementById("medForecast")
   const smallForecast = document.getElementById("smallForecast")
@@ -508,7 +510,11 @@ $(document).ready(function () {
 
   function renderBackground() {
     // console.log("Got bg image string")
-    document.body.style.backgroundImage = `url("img/bg/${getBgImg()}.jpg")`
+    if (dataObj.shortForecast === "") {
+      document.body.style.backgroundColor = "#333"
+    } else {
+      document.body.style.backgroundImage = `url("img/bg/${getBgImg()}.jpg")`
+    }
   }
 
   function hideIfEmpty() {
@@ -516,14 +522,15 @@ $(document).ready(function () {
     if (dataObj.date.displayTime === "") $(time).hide()
     if (dataObj.date.month === "" || dataObj.date.todaysDate === "") $(todaysDate).hide()
     if (dataObj.date.dayOfWeek === "") $(dayOfWeek).hide()
-    if (dataObj.date.detailedForecast === "") $(dayOfWeek).hide()
-    if (dataObj.currentTemp === "") $(currentTemp).hide()
-    if (dataObj.todayHigh === "") $(tempRangeContainer).hide()
-    if (dataObj.todayLow === "") $(tempRangeContainer).hide()
+    if (dataObj.currentTemp === null) $(tempRangeBar).hide()
+    if (dataObj.currentTemp === null) $(tempRangeBg).hide()
+    if (dataObj.todayHigh === null) $(tempRangeContainer).hide()
+    if (dataObj.todayLow === null) $(tempRangeContainer).hide()
     if (dataObj.date.displayTime === "") $(time).hide()
     if (dataObj.astronomical.sunrise === "") $(solarStats).hide()
     if (dataObj.astronomical.sunset === "") $(solarStats).hide()
     if (dataObj.shortForecast === "") $(shortForecastDisplay).hide()
+    if (dataObj.detailedForecast === "") $(detailedForecast).hide()
   }
 
   function getRGB(temperature) {
