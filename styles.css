@@ -44,10 +44,12 @@ body {
 }
 
 #dayOfWeek {
+  z-index: 3;
   font-size: 6vw;
 }
 
 #todaysDate {
+  z-index: 3;
   font-size: 9vw;
   position: relative;
   bottom: 20px;
@@ -285,6 +287,7 @@ body {
 
   #weatherContainer {
     justify-content: space-evenly;
+    height: 40%;
   }
   #tempContainer {
     margin-bottom: 0;
@@ -302,10 +305,14 @@ body {
     z-index: 3;
     font-size: 28vw;
     position: relative;
-    right: 5px;
+    bottom: 5px;
+    right: 8px;
   }
   #degreeSymbol {
     font-size: 12vw;
+    position: relative;
+    bottom: 5px;
+    right: 8px;
   }
   #lowTemp,
   #highTemp {
@@ -324,7 +331,7 @@ body {
     z-index: 3;
     width: 50%;
     right: 0px;
-    bottom: 12px;
+    bottom: 14px;
   }
 
   #weatherIcon {
@@ -335,7 +342,7 @@ body {
 
   #shortForecastDisplay {
     z-index: 3;
-    font-size: 5vw;
+    font-size: 6vw;
   }
 
   .sunriseContainer p {
