@@ -65,6 +65,7 @@ $(document).ready(function () {
       dayOfWeek: "",
       displayTime: "",
       isDaytime: "",
+      millis: null,
       month: "",
       season: "",
       todaysDate: "",
@@ -80,7 +81,6 @@ $(document).ready(function () {
     },
     pressure: null,
     pressureDirection: "",
-    season: "",
     shortForecast: "",
     shortForecastForBg: "",
     snow: { chanceSnow: null, snowAccumInchesMax: null, snowAccumInchesMin: null },
@@ -133,6 +133,7 @@ $(document).ready(function () {
   //     dayOfWeek: "Wednesday",
   //     displayTime: "1:27",
   //     isDaytime: "true",
+  //     millis: null,
   //     month: "March",
   //     season: "Spring",
   //     todaysDate: 30,
@@ -148,7 +149,6 @@ $(document).ready(function () {
   //   },
   //   pressure: null,
   //   pressureDirection: "",
-  //   season: "",
   //   shortForecast: "Mostly Sunny",
   //   shortForecastForBg: "Mostly Sunny",
   //   snow: {
@@ -171,7 +171,7 @@ $(document).ready(function () {
   // }, 200)
 
   // setTimeout(() => {
-  //   renderInfoToScreen()
+  //   updateTime()
   //   populateDetailedForecast()
   //   renderBackground()
   // }, 300)
@@ -184,7 +184,6 @@ $(document).ready(function () {
 
   function initializeInfoRequests() {
     getDateInfo(function () {
-      getSeason()
       getSolarData(function () {
         getCurrentTimePeriod()
         getCurrentWeather()
@@ -193,13 +192,13 @@ $(document).ready(function () {
   }
 
   function getDateInfo(callback) {
-    // console.log("Getting date info")
     date = new Date()
     timeString = date.toTimeString().substring(0, 5)
 
     // Populate dataObj with date & time data
     dataObj.date.currentTime = timeString
     dataObj.date.displayTime = date.toLocaleTimeString().match(/[0-9]+[:][0-9]+/g)[0]
+    dataObj.date.millis = Date.now()
     dataObj.date.dayOfWeek = dayNames[date.getDay()]
     dataObj.date.month = monthNames[date.getMonth()]
     dataObj.date.todaysDate = date.getDate()
@@ -210,23 +209,20 @@ $(document).ready(function () {
   }
 
   function getSeason() {
-    // console.log("Got season")
-    var time = Date.now()
-    // 2020
-    if (time < 1592636400000) return "Spring"
-    if (time < 1600758000000) return "Summer"
-    if (time < 1608537600000) return "Fall"
-    if (time < 1616223600000) return "Winter"
+    if (dataObj.date.millis < 1592636400000) return "Spring"
+    if (dataObj.date.millis < 1600758000000) return "Summer"
+    if (dataObj.date.millis < 1608537600000) return "Fall"
+    if (dataObj.date.millis < 1616223600000) return "Winter"
     // 2021
-    if (time < 1624172400000) return "Spring"
-    if (time < 1632294000000) return "Summer"
-    if (time < 1640073600000) return "Fall"
-    if (time < 1647759600000) return "Winter"
+    if (dataObj.date.millis < 1624172400000) return "Spring"
+    if (dataObj.date.millis < 1632294000000) return "Summer"
+    if (dataObj.date.millis < 1640073600000) return "Fall"
+    if (dataObj.date.millis < 1647759600000) return "Winter"
     // 2022
-    if (time < 1655794800000) return "Spring"
-    if (time < 1663830000000) return "Summer"
-    if (time < 1671609600000) return "Fall"
-    if (time < 1679295600000) return "Winter"
+    if (dataObj.date.millis < 1655794800000) return "Spring"
+    if (dataObj.date.millis < 1663830000000) return "Summer"
+    if (dataObj.date.millis < 1671609600000) return "Fall"
+    if (dataObj.date.millis < 1679295600000) return "Winter"
   }
 
   function getSolarData(callback) {
@@ -256,14 +252,12 @@ $(document).ready(function () {
         console.log(error)
       },
       complete: function () {
-        console.log("Got solar data")
         callback()
       },
     })
   }
 
   function getCurrentTimePeriod() {
-    // console.log("Getting time period")
     dayArray = [
       dataObj.astronomical.astronomical_twilight_begin,
       "znight",
@@ -337,7 +331,6 @@ $(document).ready(function () {
         console.log(error)
       },
       complete: function () {
-        // console.log("Got current weather")
         getWeatherForecast()
       },
     })
@@ -388,10 +381,23 @@ $(document).ready(function () {
         console.log(error)
       },
       complete: function () {
-        console.log("Got weather forecast")
         populateDetailedForecast()
         renderBackground()
-        renderInfoToScreen()
+        renderSolarAndWeatherDataToScreen()
+        renderSunriseAndSunsetDisplay()
+
+        // Change color and night to warmer tones
+        if (dataObj.date.isDaytime === "false") {
+          renderNightTimeMode()
+        } else {
+          renderDayTimeMode()
+        }
+
+        // Set display elements to empty if data does not exist
+        hideIfEmpty()
+
+        updateTime() // This should go last
+        console.log(dataObj)
       },
     })
   }
@@ -414,7 +420,6 @@ $(document).ready(function () {
   }
 
   function populateDetailedForecast() {
-    // console.log("PopulatedDetailedForecast")
     smallForecast.innerText = ""
     var splitForecast = dataObj.detailedForecast.split(".")
     splitForecast.pop() // last element is empty so remove it
@@ -448,7 +453,7 @@ $(document).ready(function () {
     }
   }
 
-  function renderInfoToScreen() {
+  function updateTime() {
     // Date & Time
     var d = new Date()
     var m = d.getMinutes()
@@ -464,23 +469,25 @@ $(document).ready(function () {
     dayOfWeek.innerText = dataObj.date.dayOfWeek
     todaysDate.innerText = `${dataObj.date.month} ${dataObj.date.todaysDate}`
 
-    // Change color and night to warmer tones
-    if (dataObj.date.isDaytime === "false") {
-      renderNightTimeMode()
+    // Refresh API data at sunrise and sunset
+    if (
+      dataObj.date.currentTime === dataObj.astronomical.sunrise ||
+      dataObj.date.currentTime === dataObj.astronomical.sunset
+    ) {
+      if (s === 0) {
+        setTimeout(function () {
+          initializeInfoRequests()
+          // console.log("Initialized request!")
+        }, 1000)
+      }
     }
-
-    renderSolarAndWeatherDataToScreen()
-    renderSunriseAndSunsetDisplay()
-
-    // Set display elements to empty if data does not exist
-    hideIfEmpty()
 
     // Refresh API data every 60 minutes
     if (m === 0 && s === 0) {
       // console.log("About to initialize request")
 
       if (h >= 1 && h <= 5) {
-        setTimeout(renderInfoToScreen, 1000)
+        setTimeout(updateTime, 1000)
       } else {
         setTimeout(function () {
           initializeInfoRequests()
@@ -489,7 +496,7 @@ $(document).ready(function () {
       }
     } else {
       // Recursive call
-      setTimeout(renderInfoToScreen, 1000)
+      setTimeout(updateTime, 1000)
     }
   }
 
@@ -870,6 +877,24 @@ $(document).ready(function () {
 
     sunriseTime.innerHTML = `${sunriseDisplay}&nbsp;`
     sunsetTime.innerHTML = `${sunsetDisplay}`
+  }
+
+  function renderDayTimeMode() {
+    // console.log("Rendering DayTime Mode")
+    var whiteDisplayColor = "rgb(255, 255, 255)"
+
+    $(todaysDate).css("color", whiteDisplayColor)
+    $(dayOfWeek).css("color", whiteDisplayColor)
+    $(bigForecast).css("color", whiteDisplayColor)
+    $(medForecast).css("color", whiteDisplayColor)
+    $(currentTemp).css("color", whiteDisplayColor)
+    $(degreeSymbol).css("color", whiteDisplayColor)
+    $(smallForecast).css("color", whiteDisplayColor)
+    $(solarStats).children().children().css("color", whiteDisplayColor)
+    $(solarStats).children().children().children().css("color", whiteDisplayColor)
+    $(time).css("color", whiteDisplayColor)
+    $(shortForecastDisplay).css("color", whiteDisplayColor)
+    $(weatherIcon).css("color", whiteDisplayColor)
   }
 
   function renderNightTimeMode() {
