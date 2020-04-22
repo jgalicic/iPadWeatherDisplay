@@ -317,6 +317,8 @@ $(document).ready(function () {
                     Slight Chance Light Rain, Snow, Sunny */
         if (data.properties.periods[0].shortForecast.toLowerCase() === "light rain likely") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
+        } else if (data.properties.periods[0].shortForecast.toLowerCase() === "chance light rain") {
+          dataObj.shortForecastForBg = "Slight Chance Light Rain"
         } else if (data.properties.periods[0].shortForecast.toLowerCase() === "areas of drizzle") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
         } else if (data.properties.periods[0].shortForecast.toLowerCase() === "slight chance rain showers") {
@@ -351,13 +353,13 @@ $(document).ready(function () {
         // console.log(dataObj)
 
         if (data.properties.periods[0].name === "Tonight" || data.properties.periods[0].name === "Overnight") {
-          if (dataObj.date.currentTime > dataObj.astronomical.sunset) {
-            console.log("It is after sunset and before 11pm")
+          if (dataObj.date.currentTime > "23:00") {
+            console.log("It is between 11pm and midnight")
             dataObj.todayLow = data.properties.periods[0].temperature
             dataObj.tomorrowHigh = data.properties.periods[1].temperature
             dataObj.tomorrowLow = data.properties.periods[2].temperature
-          } else if (dataObj.date.currentTime > "23:00") {
-            console.log("It is between 11pm and midnight")
+          } else if (dataObj.date.currentTime > dataObj.astronomical.sunset) {
+            console.log("It is after sunset and before 11pm")
             dataObj.todayHigh = data.properties.periods[1].temperature
             dataObj.todayLow = data.properties.periods[2].temperature
           } else {
@@ -806,9 +808,13 @@ $(document).ready(function () {
       if (dataObj.shortForecast.toLowerCase() === "mostly cloudy") return "fas fa-cloud-sun"
       if (dataObj.shortForecast.toLowerCase() === "cloudy") return "fas fa-cloud"
       if (dataObj.shortForecast.toLowerCase() === "chance rain showers") return "fas fa-cloud-sun-rain"
+      if (dataObj.shortForecast.toLowerCase() === "chance light rain") return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase() === "light rain likely") return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase() === "light rain") return "fas fa-cloud-sun-rain"
+      if (dataObj.shortForecast.toLowerCase() === "chance showers") return "fas fa-cloud-rain"
       if (dataObj.shortForecast.toLowerCase() === "showers") return "fas fa-cloud-rain"
+      if (dataObj.shortForecast.toLowerCase() === "chance rain") return "fas fa-cloud-rain"
+      if (dataObj.shortForecast.toLowerCase() === "rain likely") return "fas fa-cloud-showers-heavy"
       if (dataObj.shortForecast.toLowerCase() === "rain") return "fas fa-cloud-showers-heavy"
       if (dataObj.shortForecast.toLowerCase() === "heavy rain") return "fas fa-cloud-showers-heavy"
     } else if (dataObj.date.isDaytime === "false") {
@@ -820,15 +826,18 @@ $(document).ready(function () {
       if (dataObj.shortForecast.toLowerCase() === "mostly cloudy") return "fas fa-cloud"
       if (dataObj.shortForecast.toLowerCase() === "cloudy") return "fas fa-cloud"
       if (dataObj.shortForecast.toLowerCase() === "chance rain showers") return "fas fa-cloud-moon-rain"
+      if (dataObj.shortForecast.toLowerCase() === "chance light rain") return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase() === "light rain likely") return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase() === "light rain") return "fas fa-cloud-moon-rain"
+      if (dataObj.shortForecast.toLowerCase() === "chance showers") return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase() === "showers") return "fas fa-cloud-rain"
+      if (dataObj.shortForecast.toLowerCase() === "chance rain") return "fas fa-cloud-showers-heavy"
+      if (dataObj.shortForecast.toLowerCase() === "rain likely") return "fas fa-cloud-showers-heavy"
       if (dataObj.shortForecast.toLowerCase() === "rain") return "fas fa-cloud-showers-heavy"
       if (dataObj.shortForecast.toLowerCase() === "heavy rain") return "fas fa-cloud-showers-heavy"
-    } else {
-      // fallback
-      return "fas fa-rainbow"
     }
+    // fallback
+    return "fas fa-rainbow"
   }
 
   function getBgImg() {
