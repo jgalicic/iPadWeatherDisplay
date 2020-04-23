@@ -318,7 +318,9 @@ $(document).ready(function () {
         } else if (data.properties.periods[0].shortForecast.toLowerCase() === "areas of drizzle") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
         } else if (data.properties.periods[0].shortForecast.toLowerCase() === "light rain") {
-          dataObj.shortForecastForBg = "Rain"
+          dataObj.shortForecastForBg = "Slight Chance Light Rain"
+        } else if (data.properties.periods[0].shortForecast.toLowerCase() === "rain showers") {
+          dataObj.shortForecastForBg = "Slight Chance Light Rain"
         } else if (data.properties.periods[0].shortForecast.toLowerCase() === "partly sunny") {
           dataObj.shortForecastForBg = "Partly Cloudy"
         } else {
@@ -345,18 +347,19 @@ $(document).ready(function () {
         // console.log("Weather forecast: ", data)
 
         dataObj.detailedForecast = data.properties.periods[0].detailedForecast
-        // console.log(dataObj)
 
         if (data.properties.periods[0].name === "Tonight" || data.properties.periods[0].name === "Overnight") {
-          if (dataObj.date.currentTime > "23:00") {
-            console.log("It is between 11pm and midnight")
+          if (dataObj.date.currentTime < dataObj.astronomical.sunset) {
+            console.log("It is before sunset")
+          } else if (dataObj.date.currentTime >= dataObj.astronomical.sunset) {
+            console.log("It is after sunset")
+            dataObj.todayHigh = data.properties.periods[1].temperature
+            dataObj.todayLow = data.properties.periods[2].temperature
+          } else if (dataObj.date.currentTime > "23:00") {
+            console.log("It is after 11pm")
             dataObj.todayLow = data.properties.periods[0].temperature
             dataObj.tomorrowHigh = data.properties.periods[1].temperature
             dataObj.tomorrowLow = data.properties.periods[2].temperature
-          } else if (dataObj.date.currentTime > dataObj.astronomical.sunset) {
-            console.log("It is after sunset and before 11pm")
-            dataObj.todayHigh = data.properties.periods[1].temperature
-            dataObj.todayLow = data.properties.periods[2].temperature
           } else {
             console.log("It is after midnight and before sunrise")
             getPseudoHigh()
@@ -397,7 +400,6 @@ $(document).ready(function () {
         hideIfEmpty()
 
         updateTime() // This should go last
-        console.log(dataObj)
       },
     })
   }
@@ -656,143 +658,143 @@ $(document).ready(function () {
       case 50:
         return "0,255,144"
       case 51:
-        return "0,255,132"
+        return "0,255,128"
       case 52:
-        return "0,255,120"
+        return "0,255,112"
       case 53:
-        return "0,255,108"
+        return "0,255,80"
       case 54:
-        return "0,255,96"
+        return "0,255,64"
       case 55:
-        return "0,255,84"
-      case 56:
-        return "0,255,72"
-      case 57:
-        return "0,255,60"
-      case 58:
         return "0,255,48"
+      case 56:
+        return "0,255,32"
+      case 57:
+        return "0,255,16"
+      case 58:
+        return "16,255,0"
       case 59:
-        return "0,255,36"
+        return "32,255,0"
       case 60:
-        return "0,255,0"
-      case 61:
-        return "24,255,0"
-      case 62:
         return "48,255,0"
+      case 61:
+        return "64,255,0"
+      case 62:
+        return "80,255,0"
       case 63:
-        return "96,255,0"
+        return "112,255,0"
       case 64:
-        return "120,255,0"
+        return "128,255,0"
       case 65:
-        return "132,255,0"
-      case 66:
         return "144,255,0"
+      case 66:
+        return "160,255,0"
       case 67:
-        return "156,255,0"
+        return "176,255,0"
       case 68:
-        return "168,255,0"
-      case 69:
-        return "172,255,0"
-      case 70:
-        return "180,255,0"
-      case 71:
-        return "186,255,0"
-      case 72:
         return "192,255,0"
-      case 73:
-        return "198,255,0"
-      case 74:
+      case 69:
         return "204,255,0"
-      case 75:
-        return "212,255,0"
-      case 76:
-        return "220,255,0"
-      case 77:
+      case 70:
+        return "216,255,0"
+      case 71:
         return "228,255,0"
-      case 78:
-        return "232,255,0"
-      case 79:
+      case 72:
         return "240,255,0"
-      case 80:
+      case 73:
+        return "252,255,0"
+      case 74:
         return "255,255,0"
+      case 75:
+        return "255,244,0"
+      case 76:
+        return "255,232,0"
+      case 77:
+        return "255,220,0"
+      case 78:
+        return "255,208,0"
+      case 79:
+        return "255,196,0"
+      case 80:
+        return "255,184,0"
       case 81:
-        return "255,240,0"
+        return "255,172,0"
       case 82:
-        return "255,228,0"
+        return "255,160,0"
       case 83:
-        return "255,216,0"
+        return "255,148,0"
       case 84:
-        return "255,204,0"
+        return "255,136,0"
       case 85:
-        return "255,192,0"
+        return "255,124,0"
       case 86:
-        return "255,180,0"
+        return "255,112,0"
       case 87:
-        return "255,168,0"
+        return "255,100,0"
       case 88:
-        return "255,156,0"
+        return "255,88,0"
       case 89:
-        return "255,144,0"
+        return "255,76,0"
       case 90:
-        return "255,132,0"
+        return "255,64,0"
       case 91:
-        return "255,120,0"
+        return "255,52,0"
       case 92:
-        return "255,108,0"
+        return "255,40,0"
       case 93:
-        return "255,96,0"
+        return "255,28,0"
       case 94:
-        return "255,84,0"
+        return "255,16,0"
       case 95:
-        return "255,72,0"
+        return "255,4,0"
       case 96:
-        return "255,60,0"
+        return "255,10,10"
       case 97:
-        return "255,48,0"
+        return "255,20,20"
       case 98:
-        return "255,36,0"
+        return "255,30,30"
       case 99:
-        return "255,24,0"
+        return "255,40,40"
       case 100:
-        return "255,0,0"
+        return "255,50,50"
       case 101:
-        return "255,12,12"
-      case 102:
-        return "255,24,24"
-      case 103:
-        return "255,36,36"
-      case 104:
-        return "255,48,48"
-      case 105:
         return "255,60,60"
+      case 102:
+        return "255,70,70"
+      case 103:
+        return "255,80,80"
+      case 104:
+        return "255,90,90"
+      case 105:
+        return "255,100,100"
       case 106:
-        return "255,72,72"
+        return "255,110,110"
       case 107:
-        return "255,84,84"
-      case 108:
-        return "255,96,96"
-      case 109:
-        return "255,108,108"
-      case 110:
         return "255,120,120"
+      case 108:
+        return "255,130,130"
+      case 109:
+        return "255,140,140"
+      case 110:
+        return "255,150,150"
       case 111:
-        return "255,132,132"
+        return "255,160,160"
       case 112:
-        return "255,144,144"
+        return "255,170,170"
       case 113:
-        return "255,156,156"
-      case 114:
-        return "255,168,168"
-      case 115:
         return "255,180,180"
+      case 114:
+        return "255,190,190"
+      case 115:
+        return "255,200,200"
       case 116:
-        return "255,192,192"
+        return "255,210,210"
       case 117:
-        return "255,204,204"
+        return "255,220,220"
       case 118:
-        return "255,216,216"
+        return "255,230,230"
       case 119:
-        return "255,228,228"
+        return "255,235,235"
       case 120:
         return "255,240,240"
       case 121:
@@ -826,6 +828,7 @@ $(document).ready(function () {
       if (dataObj.shortForecast.toLowerCase() === "light rain") return "fas fa-cloud-rain"
       if (dataObj.shortForecast.toLowerCase() === "chance showers") return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase() === "showers") return "fas fa-cloud-rain"
+      if (dataObj.shortForecast.toLowerCase() === "rain showers") return "fas fa-cloud-rain"
       if (dataObj.shortForecast.toLowerCase() === "chance rain") return "fas fa-cloud-rain"
       if (dataObj.shortForecast.toLowerCase() === "rain likely") return "fas fa-cloud-showers-heavy"
       if (dataObj.shortForecast.toLowerCase() === "rain") return "fas fa-cloud-showers-heavy"
@@ -844,6 +847,7 @@ $(document).ready(function () {
       if (dataObj.shortForecast.toLowerCase() === "light rain") return "fas fa-cloud-rain"
       if (dataObj.shortForecast.toLowerCase() === "chance showers") return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase() === "showers") return "fas fa-cloud-rain"
+      if (dataObj.shortForecast.toLowerCase() === "rain showers") return "fas fa-cloud-rain"
       if (dataObj.shortForecast.toLowerCase() === "chance rain") return "fas fa-cloud-showers-heavy"
       if (dataObj.shortForecast.toLowerCase() === "rain likely") return "fas fa-cloud-showers-heavy"
       if (dataObj.shortForecast.toLowerCase() === "rain") return "fas fa-cloud-showers-heavy"

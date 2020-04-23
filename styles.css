@@ -317,6 +317,8 @@ body {
   #lowTemp,
   #highTemp {
     font-size: 6vw;
+    position: relative;
+    bottom: 10px;
   }
   #tempRangeBar {
     z-index: 2;
@@ -325,6 +327,8 @@ body {
     border-radius: 15px;
     margin: 0 4px;
     box-shadow: 2px 2px 10px black;
+    position: relative;
+    bottom: 10px;
   }
 
   #weatherIconContainer {
