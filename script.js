@@ -189,7 +189,7 @@ $(document).ready(function () {
       getSolarData(function () {
         getCurrentTimePeriod()
         getCurrentWeather()
-        console.log(dataObj)
+        // console.log(dataObj)
       })
     })
   }
@@ -478,6 +478,11 @@ $(document).ready(function () {
     time.innerText = dataObj.date.displayTime
     dayOfWeek.innerText = dataObj.date.dayOfWeek
     todaysDate.innerText = `${dataObj.date.month} ${dataObj.date.todaysDate}`
+
+    // Refresh background image every 30 minutes
+    if ((m === 0 && s === 0) || (m === 30 && s === 0)) {
+      renderBackground()
+    }
 
     // Refresh API data at sunrise and sunset
     if (
@@ -830,6 +835,7 @@ $(document).ready(function () {
       if (dataObj.shortForecast.toLowerCase() === "partly cloudy") return "fas fa-cloud-sun"
       if (dataObj.shortForecast.toLowerCase() === "mostly cloudy") return "fas fa-cloud-sun"
       if (dataObj.shortForecast.toLowerCase() === "cloudy") return "fas fa-cloud"
+      if (dataObj.shortForecast.toLowerCase() === "slight chance light rain") return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase() === "chance rain showers") return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase() === "chance light rain") return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase() === "light rain likely") return "fas fa-cloud-sun-rain"
@@ -849,6 +855,7 @@ $(document).ready(function () {
       if (dataObj.shortForecast.toLowerCase() === "partly cloudy") return "fas fa-cloud-moon"
       if (dataObj.shortForecast.toLowerCase() === "mostly cloudy") return "fas fa-cloud"
       if (dataObj.shortForecast.toLowerCase() === "cloudy") return "fas fa-cloud"
+      if (dataObj.shortForecast.toLowerCase() === "slight chance light rain") return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase() === "chance rain showers") return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase() === "chance light rain") return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase() === "light rain likely") return "fas fa-cloud-moon-rain"
