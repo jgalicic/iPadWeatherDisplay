@@ -314,15 +314,17 @@ $(document).ready(function () {
                     Slight Chance Light Rain, Snow, Sunny */
         if (data.properties.periods[0].shortForecast.toLowerCase().includes("thunderstorms")) {
           dataObj.shortForecastForBg = "Thunder"
-        } else if (data.properties.periods[0].shortForecast.toLowerCase() === "light rain likely") {
-          dataObj.shortForecastForBg = "Slight Chance Light Rain"
         } else if (data.properties.periods[0].shortForecast.toLowerCase() === "chance light rain") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
         } else if (data.properties.periods[0].shortForecast.toLowerCase() === "slight chance rain showers") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
         } else if (data.properties.periods[0].shortForecast.toLowerCase() === "chance rain showers") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
+        } else if (data.properties.periods[0].shortForecast.toLowerCase() === "scattered rain showers") {
+          dataObj.shortForecastForBg = "Slight Chance Light Rain"
         } else if (data.properties.periods[0].shortForecast.toLowerCase() === "areas of drizzle") {
+          dataObj.shortForecastForBg = "Slight Chance Light Rain"
+        } else if (data.properties.periods[0].shortForecast.toLowerCase() === "light rain likely") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
         } else if (data.properties.periods[0].shortForecast.toLowerCase() === "light rain") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
@@ -840,6 +842,7 @@ $(document).ready(function () {
       if (dataObj.shortForecast.toLowerCase() === "slight chance light rain") return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase() === "slight chance rain showers") return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase() === "chance rain showers") return "fas fa-cloud-sun-rain"
+      if (dataObj.shortForecast.toLowerCase() === "scattered rain showers") return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase() === "chance light rain") return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase() === "light rain likely") return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase() === "light rain") return "fas fa-cloud-rain"
@@ -861,6 +864,7 @@ $(document).ready(function () {
       if (dataObj.shortForecast.toLowerCase() === "slight chance light rain") return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase() === "slight chance rain showers") return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase() === "chance rain showers") return "fas fa-cloud-moon-rain"
+      if (dataObj.shortForecast.toLowerCase() === "scattered rain showers") return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase() === "chance light rain") return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase() === "light rain likely") return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase() === "light rain") return "fas fa-cloud-rain"
