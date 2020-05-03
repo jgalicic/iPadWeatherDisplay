@@ -312,7 +312,7 @@ $(document).ready(function () {
         // Populate dataObj.shortForecastForBg
         /* Options: Clear, Cloudy, Fog, Mostly Clear, Mostly Sunny, Partly Cloudy, Rain,
                     Slight Chance Light Rain, Snow, Sunny */
-        if (data.properties.periods[0].shortForecast.toLowerCase() === "showers and thunderstorms") {
+        if (data.properties.periods[0].shortForecast.toLowerCase().includes("thunderstorms")) {
           dataObj.shortForecastForBg = "Thunder"
         } else if (data.properties.periods[0].shortForecast.toLowerCase() === "light rain likely") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
