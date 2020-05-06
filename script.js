@@ -328,6 +328,8 @@ $(document).ready(function () {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
         } else if (data.properties.periods[0].shortForecast.toLowerCase() === "light rain") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
+        } else if (data.properties.periods[0].shortForecast.toLowerCase() === "rain showers likely") {
+          dataObj.shortForecastForBg = "Slight Chance Light Rain"
         } else if (data.properties.periods[0].shortForecast.toLowerCase() === "rain showers") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
         } else if (data.properties.periods[0].shortForecast.toLowerCase() === "partly sunny") {
@@ -848,6 +850,7 @@ $(document).ready(function () {
       if (dataObj.shortForecast.toLowerCase() === "light rain") return "fas fa-cloud-rain"
       if (dataObj.shortForecast.toLowerCase() === "chance showers") return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase() === "showers") return "fas fa-cloud-rain"
+      if (dataObj.shortForecast.toLowerCase() === "rain showers likely") return "fas fa-cloud-rain"
       if (dataObj.shortForecast.toLowerCase() === "rain showers") return "fas fa-cloud-rain"
       if (dataObj.shortForecast.toLowerCase() === "chance rain") return "fas fa-cloud-rain"
       if (dataObj.shortForecast.toLowerCase() === "rain likely") return "fas fa-cloud-showers-heavy"
@@ -870,6 +873,7 @@ $(document).ready(function () {
       if (dataObj.shortForecast.toLowerCase() === "light rain") return "fas fa-cloud-rain"
       if (dataObj.shortForecast.toLowerCase() === "chance showers") return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase() === "showers") return "fas fa-cloud-rain"
+      if (dataObj.shortForecast.toLowerCase() === "rain showers likely") return "fas fa-cloud-rain"
       if (dataObj.shortForecast.toLowerCase() === "rain showers") return "fas fa-cloud-rain"
       if (dataObj.shortForecast.toLowerCase() === "chance rain") return "fas fa-cloud-showers-heavy"
       if (dataObj.shortForecast.toLowerCase() === "rain likely") return "fas fa-cloud-showers-heavy"
