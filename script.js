@@ -125,7 +125,7 @@ $(document).ready(function () {
   //   chancePrecipitation: null,
   //   chanceRain: null,
   //   chanceThunder: null,
-  //   currentConditions: "Cloudy",
+  //   currentConditions: "Sunny",
   //   currentTemp: 55,
   //   date: {
   //     currentTime: "13:27",
@@ -134,9 +134,9 @@ $(document).ready(function () {
   //     displayTime: "1:27",
   //     isDaytime: "true",
   //     millis: null,
-  //     month: "March",
+  //     month: "June",
   //     season: "Spring",
-  //     todaysDate: 30,
+  //     todaysDate: 21,
   //     year: 2020,
   //   },
   //   detailedForecast: "Mostly sunny, with a high near 56. Northwest wind 1 to 5 mph.",
@@ -149,7 +149,7 @@ $(document).ready(function () {
   //   },
   //   pressure: null,
   //   pressureDirection: "",
-  //   shortForecast: "Cloudy",
+  //   shortForecast: "Sunny",
   //   shortForecastForBg: "Sunny",
   //   snow: {
   //     chanceSnow: null,
@@ -189,7 +189,7 @@ $(document).ready(function () {
       getSolarData(function () {
         getCurrentTimePeriod()
         getCurrentWeather()
-        console.log(dataObj)
+        // console.log(dataObj)
       })
     })
   }
@@ -303,8 +303,6 @@ $(document).ready(function () {
       dataType: "json",
       success: function (data) {
         // console.log("Current weather:", data)
-        console.log("!!!!")
-        console.log(data)
 
         dataObj.currentTemp = data.properties.periods[0].temperature
         dataObj.windSpeed = data.properties.periods[0].windSpeed
@@ -346,7 +344,7 @@ $(document).ready(function () {
         console.log(error)
       },
       complete: function () {
-        console.log("Got weather")
+        // console.log("Got weather")
         getWeatherForecast()
       },
     })
@@ -367,23 +365,23 @@ $(document).ready(function () {
             dataObj.date.currentTime < dataObj.astronomical.sunset &&
             dataObj.date.currentTime > dataObj.astronomical.sunrise
           ) {
-            console.log("It is before sunset")
+            // console.log("It is before sunset")
           } else if (dataObj.date.currentTime >= dataObj.astronomical.sunset) {
-            console.log("It is after sunset")
+            // console.log("It is after sunset")
             dataObj.todayHigh = data.properties.periods[1].temperature
             dataObj.todayLow = data.properties.periods[2].temperature
           } else if (dataObj.date.currentTime > "23:00") {
-            console.log("It is after 11pm")
+            // console.log("It is after 11pm")
             dataObj.todayLow = data.properties.periods[0].temperature
             dataObj.tomorrowHigh = data.properties.periods[1].temperature
             dataObj.tomorrowLow = data.properties.periods[2].temperature
           } else {
-            console.log("It is after midnight and before sunrise")
+            // console.log("It is after midnight and before sunrise")
             getPseudoHigh()
             dataObj.todayLow = data.properties.periods[0].temperature
           }
         } else {
-          console.log("It is daytime")
+          // console.log("It is daytime")
           dataObj.todayHigh = data.properties.periods[0].temperature
           dataObj.todayLow = data.properties.periods[1].temperature
           dataObj.tomorrowHigh = data.properties.periods[2].temperature
@@ -573,8 +571,8 @@ $(document).ready(function () {
   }
 
   function getRGB(temperature) {
-    // console.log("Getting RGB for temps")
-    switch (temperature) {
+    const tempInt = parseInt(temperature)
+    switch (tempInt) {
       case -1:
         return "252,252,255"
       case 0:
@@ -892,7 +890,6 @@ $(document).ready(function () {
   function getBgImg() {
     var conditions = dataObj.shortForecastForBg.replace(/\s/g, "").toLowerCase()
     var string = `${dataObj.date.season}-${conditions}-${dataObj.date.currentTimePeriod}`.toLowerCase()
-    console.log(string)
     // console.log(dataObj)
     return string
   }
