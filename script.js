@@ -125,7 +125,7 @@ $(document).ready(function () {
   //   chancePrecipitation: null,
   //   chanceRain: null,
   //   chanceThunder: null,
-  //   currentConditions: "Mostly Sunny",
+  //   currentConditions: "Cloudy",
   //   currentTemp: 55,
   //   date: {
   //     currentTime: "13:27",
@@ -149,8 +149,8 @@ $(document).ready(function () {
   //   },
   //   pressure: null,
   //   pressureDirection: "",
-  //   shortForecast: "Mostly Sunny",
-  //   shortForecastForBg: "Mostly Sunny",
+  //   shortForecast: "Cloudy",
+  //   shortForecastForBg: "Sunny",
   //   snow: {
   //     chanceSnow: null,
   //     snowAccumInchesMax: null,
@@ -189,7 +189,7 @@ $(document).ready(function () {
       getSolarData(function () {
         getCurrentTimePeriod()
         getCurrentWeather()
-        // console.log(dataObj)
+        console.log(dataObj)
       })
     })
   }
@@ -303,6 +303,8 @@ $(document).ready(function () {
       dataType: "json",
       success: function (data) {
         // console.log("Current weather:", data)
+        console.log("!!!!")
+        console.log(data)
 
         dataObj.currentTemp = data.properties.periods[0].temperature
         dataObj.windSpeed = data.properties.periods[0].windSpeed
@@ -344,6 +346,7 @@ $(document).ready(function () {
         console.log(error)
       },
       complete: function () {
+        console.log("Got weather")
         getWeatherForecast()
       },
     })
@@ -834,13 +837,14 @@ $(document).ready(function () {
 
     // daytime
     if (dataObj.date.isDaytime === "true") {
-      if (dataObj.shortForecast.toLowerCase() === "sunny") return "fas fa-sun"
-      if (dataObj.shortForecast.toLowerCase() === "clear") return "fas fa-sun"
-      if (dataObj.shortForecast.toLowerCase() === "mostly sunny") return "fas fa-sun"
+      if (dataObj.shortForecast.toLowerCase() === "sunny") return "sunshine"
+      if (dataObj.shortForecast.toLowerCase() === "clear") return "sunshine"
+      if (dataObj.shortForecast.toLowerCase() === "mostly sunny") return "sunshine"
       if (dataObj.shortForecast.toLowerCase() === "partly sunny") return "fas fa-cloud-sun"
       if (dataObj.shortForecast.toLowerCase() === "partly cloudy") return "fas fa-cloud-sun"
       if (dataObj.shortForecast.toLowerCase() === "mostly cloudy") return "fas fa-cloud-sun"
       if (dataObj.shortForecast.toLowerCase() === "cloudy") return "fas fa-cloud"
+      if (dataObj.shortForecast.toLowerCase() === "areas of drizzle") return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase() === "slight chance light rain") return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase() === "slight chance rain showers") return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase() === "chance rain showers") return "fas fa-cloud-sun-rain"
@@ -864,6 +868,7 @@ $(document).ready(function () {
       if (dataObj.shortForecast.toLowerCase() === "partly cloudy") return "fas fa-cloud-moon"
       if (dataObj.shortForecast.toLowerCase() === "mostly cloudy") return "fas fa-cloud"
       if (dataObj.shortForecast.toLowerCase() === "cloudy") return "fas fa-cloud"
+      if (dataObj.shortForecast.toLowerCase() === "areas of drizzle") return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase() === "slight chance light rain") return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase() === "slight chance rain showers") return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase() === "chance rain showers") return "fas fa-cloud-moon-rain"
