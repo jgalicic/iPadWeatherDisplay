@@ -334,6 +334,8 @@ $(document).ready(function () {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
         } else if (data.properties.periods[0].shortForecast.toLowerCase() === "partly sunny") {
           dataObj.shortForecastForBg = "Partly Cloudy"
+        } else if (data.properties.periods[0].shortForecast.toLowerCase() === "mostly clear") {
+          dataObj.shortForecastForBg = "Clear"
         } else {
           dataObj.shortForecastForBg = data.properties.periods[0].shortForecast
         }
