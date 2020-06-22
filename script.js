@@ -836,8 +836,9 @@ $(document).ready(function () {
     // daytime
     if (dataObj.date.isDaytime === "true") {
       if (dataObj.shortForecast.toLowerCase() === "sunny") return "sunshine"
-      if (dataObj.shortForecast.toLowerCase() === "clear") return "sunshine"
       if (dataObj.shortForecast.toLowerCase() === "mostly sunny") return "sunshine"
+      if (dataObj.shortForecast.toLowerCase() === "clear") return "sunshine"
+      if (dataObj.shortForecast.toLowerCase() === "mostly clear") return "sunshine"
       if (dataObj.shortForecast.toLowerCase() === "partly sunny") return "fas fa-cloud-sun"
       if (dataObj.shortForecast.toLowerCase() === "partly cloudy") return "fas fa-cloud-sun"
       if (dataObj.shortForecast.toLowerCase() === "mostly cloudy") return "fas fa-cloud-sun"
