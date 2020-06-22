@@ -547,6 +547,7 @@ $(document).ready(function () {
 
   function renderBackground() {
     // console.log("Got bg image string")
+    console.log(dataObj)
     if (dataObj.shortForecast === "") {
       document.body.style.backgroundColor = "#333"
     } else {
