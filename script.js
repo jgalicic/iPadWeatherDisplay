@@ -304,11 +304,7 @@ $(document).ready(function () {
       success: function (data) {
         var tracker = 0
 
-        console.log(dataObj.date.currentTime)
-        console.log(data.properties.periods[tracker].startTime.substring(11, 16))
-
         while (dataObj.date.currentTime > data.properties.periods[tracker].startTime.substring(11, 16)) {
-          console.log(tracker)
           tracker++
           if (data.properties.periods[tracker].startTime.substring(11, 16) == "00:00") {
             break
@@ -344,7 +340,7 @@ $(document).ready(function () {
         } else if (data.properties.periods[0].shortForecast.toLowerCase() === "rain showers") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
         } else if (data.properties.periods[0].shortForecast.toLowerCase() === "partly sunny") {
-          dataObj.shortForecastForBg = "Partly Cloudy"
+          dataObj.shortForecastForBg = "Mostly Sunny"
         } else {
           dataObj.shortForecastForBg = data.properties.periods[0].shortForecast
         }
@@ -369,49 +365,78 @@ $(document).ready(function () {
       success: function (data) {
         // console.log("Weather forecast: ", data)
 
-        dataObj.detailedForecast = data.properties.periods[0].detailedForecast
-
-        if (data.properties.periods[0].name === "Tonight" || data.properties.periods[0].name === "Overnight") {
+        if (dataObj.date.currentTime >= "00:00" && dataObj.date.currentTime < dataObj.astronomical.sunrise) {
+          console.log("It is after mignight and before sunrise")
           if (
-            dataObj.date.currentTime < dataObj.astronomical.sunset &&
-            dataObj.date.currentTime > dataObj.astronomical.sunrise
+            data.properties.periods[0].name.toLowerCase() === "tonight" ||
+            data.properties.periods[0].name.toLowerCase() === "overnight"
           ) {
-            console.log("It is before sunset")
-          } else if (dataObj.date.currentTime >= dataObj.astronomical.sunset) {
-            console.log("It is after sunset")
-            dataObj.todayHigh = data.properties.periods[1].temperature
-            dataObj.todayLow = data.properties.periods[2].temperature
-          } else if (dataObj.date.currentTime > "23:00") {
-            console.log("It is after 11pm")
+            dataObj.detailedForecast = data.properties.periods[0].detailedForecast
             dataObj.todayLow = data.properties.periods[0].temperature
             dataObj.tomorrowHigh = data.properties.periods[1].temperature
             dataObj.tomorrowLow = data.properties.periods[2].temperature
-          } else if (dataObj.date.currentTime < data.astronomical.sunrise) {
-            console.log("It is after midnight and before sunrise")
-            getPseudoHigh()
+          } else if (
+            data.properties.periods[1].name.toLowerCase() === "tonight" ||
+            data.properties.periods[1].name.toLowerCase() === "overnight"
+          ) {
+            dataObj.todayHigh = data.properties.periods[0].temperature
+            dataObj.detailedForecast = data.properties.periods[1].detailedForecast
+            dataObj.todayLow = data.properties.periods[1].temperature
+            dataObj.tomorrowHigh = data.properties.periods[2].temperature
+            dataObj.tomorrowLow = data.properties.periods[3].temperature
+          } else {
+            console.log("Check data.properties.periods[0]!")
+          }
+        } else if (dataObj.date.currentTime >= dataObj.astronomical.sunrise && dataObj.date.currentTime < "12:00") {
+          console.log("It is after sunrise and before 12 noon")
+          if (
+            data.properties.periods[0].name.toLowerCase() === "today" ||
+            data.properties.periods[0].name.toLowerCase() === "this morning"
+          ) {
+            dataObj.detailedForecast = data.properties.periods[0].detailedForecast
+            dataObj.todayHigh = data.properties.periods[0].temperature
+            dataObj.todayLow = data.properties.periods[1].temperature
+            dataObj.tomorrowHigh = data.properties.periods[2].temperature
+            dataObj.tomorrowLow = data.properties.periods[3].temperature
+          } else {
+            console.log("Check data.properties.periods[0]!")
+          }
+        } else if (dataObj.date.currentTime >= "12:00" && dataObj.date.currentTime < dataObj.astronomical.sunset) {
+          console.log("It is after noon and before sunset")
+          if (
+            data.properties.periods[0].name.toLowerCase() === "today" ||
+            data.properties.periods[0].name.toLowerCase() === "this afternoon"
+          ) {
+            dataObj.todayHigh = data.properties.periods[0].temperature
+            dataObj.detailedForecast = data.properties.periods[0].detailedForecast
+            dataObj.todayLow = data.properties.periods[1].temperature
+            dataObj.tomorrowHigh = data.properties.periods[2].temperature
+            dataObj.tomorrowLow = data.properties.periods[3].temperature
+          } else {
+            console.log("Check data.properties.periods[0]!")
+          }
+        } else if (dataObj.date.currentTime >= dataObj.astronomical.sunset && dataObj.date.currentTime <= "23:59") {
+          console.log("It is after sunset and before midnight")
+          if (
+            data.properties.periods[0].name.toLowerCase() === "tonight" ||
+            data.properties.periods[0].name.toLowerCase() === "overnight"
+          ) {
             dataObj.todayLow = data.properties.periods[0].temperature
+            dataObj.detailedForecast = data.properties.periods[0].detailedForecast
+            dataObj.tomorrowHigh = data.properties.periods[1].temperature
+            dataObj.tomorrowLow = data.properties.periods[2].temperature
+          } else if (
+            data.properties.periods[1].name.toLowerCase() === "tonight" ||
+            data.properties.periods[1].name.toLowerCase() === "overnight"
+          ) {
+            dataObj.todayHigh = data.properties.periods[0].temperature
+            dataObj.detailedForecast = data.properties.periods[1].detailedForecast
+            dataObj.todayLow = data.properties.periods[1].temperature
+            dataObj.tomorrowHigh = data.properties.periods[2].temperature
+            dataObj.tomorrowLow = data.properties.periods[3].temperature
+          } else {
+            console.log("Check data.properties.periods[0]!")
           }
-        } // Check if first element in data.properties.periods is "This afternoon"
-        else if (data.properties.periods[0].name != "Tonight" || data.properties.periods[0].name != "Overnight") {
-          if (dataObj.date.currentTime >= dataObj.astronomical.sunset) {
-            if (data.properties.periods[1].name == "Tonight" || data.properties.periods[1].name != "Overnight") {
-              //
-              if (dataObj.date.currentTime >= dataObj.astronomical.sunset && dataObj.date.currentTime <= "23:59") {
-                console.log("It is after sunset and before midnight!!!!!!")
-                dataObj.todayHigh = data.properties.periods[0].temperature
-                dataObj.todayLow = data.properties.periods[1].temperature
-                dataObj.tomorrowHigh = data.properties.periods[2].temperature
-                dataObj.tomorrowLow = data.properties.periods[3].temperature
-              }
-              //
-            }
-          }
-        } else {
-          console.log("It is daytime")
-          dataObj.todayHigh = data.properties.periods[0].temperature
-          dataObj.todayLow = data.properties.periods[1].temperature
-          dataObj.tomorrowHigh = data.properties.periods[2].temperature
-          dataObj.tomorrowLow = data.properties.periods[3].temperature
         }
 
         if (dataObj.todayHigh === null) {
@@ -572,8 +597,6 @@ $(document).ready(function () {
   }
 
   function renderBackground() {
-    // console.log("Got bg image string")
-    console.log(dataObj)
     if (dataObj.shortForecast === "") {
       document.body.style.backgroundColor = "#333"
     } else {
