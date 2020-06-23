@@ -304,12 +304,15 @@ $(document).ready(function () {
       success: function (data) {
         var tracker = 0
 
-        while (
-          dataObj.date.currentTime > data.properties.periods[tracker].startTime.substring(11, 15) ||
-          (dataObj.date.currentTime >= "23:00" &&
-            data.properties.periods[tracker].startTime.substring(11, 15) == "00:00")
-        ) {
+        console.log(dataObj.date.currentTime)
+        console.log(data.properties.periods[tracker].startTime.substring(11, 16))
+
+        while (dataObj.date.currentTime > data.properties.periods[tracker].startTime.substring(11, 16)) {
+          console.log(tracker)
           tracker++
+          if (data.properties.periods[tracker].startTime.substring(11, 16) == "00:00") {
+            break
+          }
         }
 
         dataObj.currentTemp = data.properties.periods[tracker].temperature
