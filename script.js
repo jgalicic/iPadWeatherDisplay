@@ -939,10 +939,32 @@ $(document).ready(function () {
   }
 
   function getBgImg() {
+    console.log(dataObj)
+    if (getSpecialOccasion()) {
+      console.log(getSpecialOccasion())
+      return getSpecialOccasion()
+    } else {
+      var conditions = dataObj.shortForecastForBg.replace(/\s/g, "").toLowerCase()
+      var string = `${dataObj.date.season}-${conditions}-${dataObj.date.currentTimePeriod}`.toLowerCase()
+      // console.log(dataObj)
+      return string
+    }
+  }
+
+  function getSpecialOccasion() {
     var conditions = dataObj.shortForecastForBg.replace(/\s/g, "").toLowerCase()
-    var string = `${dataObj.date.season}-${conditions}-${dataObj.date.currentTimePeriod}`.toLowerCase()
-    // console.log(dataObj)
-    return string
+    // Check for pride weekend
+    if (dataObj.date.month.toLowerCase() == "june") {
+      if (
+        (dataObj.date.dayOfWeek.toLowerCase() == "friday" && dataObj.date.todaysDate > 21) ||
+        (dataObj.date.dayOfWeek.toLowerCase() == "saturday" && dataObj.date.todaysDate > 22) ||
+        (dataObj.date.dayOfWeek.toLowerCase() == "sunday" && dataObj.date.todaysDate > 23)
+      ) {
+        return `_special/pride-${conditions}-${dataObj.date.currentTimePeriod}`.toLowerCase()
+      }
+    }
+
+    return false
   }
 
   function tConvert(time) {
