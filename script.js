@@ -416,15 +416,30 @@ $(document).ready(function () {
           }
         } else if (dataObj.date.currentTime >= "12:00" && dataObj.date.currentTime < dataObj.astronomical.sunset) {
           console.log("It is after noon and before sunset")
+          // console.log(dataObj)
+          // console.log(data.properties.periods[1].name.toLowerCase())
+          // console.log(data.properties.periods[1].name.toLowerCase())
+          // console.log(data.properties.periods[1].name.toLowerCase() === dataObj.date.dayOfWeek.toLowerCase())
           if (
             data.properties.periods[0].name.toLowerCase() === "today" ||
-            data.properties.periods[0].name.toLowerCase() === "this afternoon"
+            data.properties.periods[0].name.toLowerCase() === "this afternoon" ||
+            data.properties.periods[0].name.toLowerCase() === dataObj.date.dayOfWeek.toLowerCase()
           ) {
             dataObj.todayHigh = data.properties.periods[0].temperature
             dataObj.detailedForecast = data.properties.periods[0].detailedForecast
             dataObj.todayLow = data.properties.periods[1].temperature
             dataObj.tomorrowHigh = data.properties.periods[2].temperature
             dataObj.tomorrowLow = data.properties.periods[3].temperature
+          } else if (
+            data.properties.periods[1].name.toLowerCase() === "today" ||
+            data.properties.periods[1].name.toLowerCase() === "this afternoon" ||
+            data.properties.periods[1].name.toLowerCase() === dataObj.date.dayOfWeek.toLowerCase()
+          ) {
+            dataObj.todayHigh = data.properties.periods[1].temperature
+            dataObj.detailedForecast = data.properties.periods[1].detailedForecast
+            dataObj.todayLow = data.properties.periods[2].temperature
+            dataObj.tomorrowHigh = data.properties.periods[3].temperature
+            dataObj.tomorrowLow = data.properties.periods[4].temperature
           } else {
             console.log("Check data.properties.periods[0]!")
             console.log(data.properties.periods)
