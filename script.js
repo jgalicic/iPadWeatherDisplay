@@ -311,6 +311,8 @@ $(document).ready(function () {
           }
         }
 
+        // console.log("Current weather: ", data.properties.periods[tracker])
+
         dataObj.currentTemp = data.properties.periods[tracker].temperature
         dataObj.windSpeed = data.properties.periods[tracker].windSpeed
         dataObj.windDirection = data.properties.periods[tracker].windDirection
@@ -319,30 +321,30 @@ $(document).ready(function () {
         // Populate dataObj.shortForecastForBg
         /* Options: Clear, Cloudy, Fog, Mostly Clear, Mostly Sunny, Partly Cloudy, Rain,
                     Slight Chance Light Rain, Snow, Sunny */
-        if (data.properties.periods[0].shortForecast.toLowerCase().includes("thunderstorms")) {
+        if (data.properties.periods[tracker].shortForecast.toLowerCase().includes("thunderstorms")) {
           dataObj.shortForecastForBg = "Thunder"
-        } else if (data.properties.periods[0].shortForecast.toLowerCase() === "chance light rain") {
+        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "chance light rain") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
-        } else if (data.properties.periods[0].shortForecast.toLowerCase() === "slight chance rain showers") {
+        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "slight chance rain showers") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
-        } else if (data.properties.periods[0].shortForecast.toLowerCase() === "chance rain showers") {
+        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "chance rain showers") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
-        } else if (data.properties.periods[0].shortForecast.toLowerCase() === "scattered rain showers") {
+        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "scattered rain showers") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
-        } else if (data.properties.periods[0].shortForecast.toLowerCase() === "areas of drizzle") {
+        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "areas of drizzle") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
-        } else if (data.properties.periods[0].shortForecast.toLowerCase() === "light rain likely") {
+        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "light rain likely") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
-        } else if (data.properties.periods[0].shortForecast.toLowerCase() === "light rain") {
+        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "light rain") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
-        } else if (data.properties.periods[0].shortForecast.toLowerCase() === "rain showers likely") {
+        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "rain showers likely") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
-        } else if (data.properties.periods[0].shortForecast.toLowerCase() === "rain showers") {
+        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "rain showers") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
-        } else if (data.properties.periods[0].shortForecast.toLowerCase() === "partly sunny") {
-          dataObj.shortForecastForBg = "Mostly Sunny"
+        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "partly sunny") {
+          dataObj.shortForecastForBg = "Partly Cloudy"
         } else {
-          dataObj.shortForecastForBg = data.properties.periods[0].shortForecast
+          dataObj.shortForecastForBg = data.properties.periods[tracker].shortForecast
         }
       },
       error: function (data, status, error) {
@@ -398,8 +400,19 @@ $(document).ready(function () {
             dataObj.todayLow = data.properties.periods[1].temperature
             dataObj.tomorrowHigh = data.properties.periods[2].temperature
             dataObj.tomorrowLow = data.properties.periods[3].temperature
+          } else if (
+            data.properties.periods[0].name.toLowerCase() === "overnight" ||
+            data.properties.periods[0].name.toLowerCase() === "last night" ||
+            data.properties.periods[0].name.toLowerCase() === "tonight"
+          ) {
+            dataObj.detailedForecast = data.properties.periods[1].detailedForecast
+            dataObj.todayHigh = data.properties.periods[1].temperature
+            dataObj.todayLow = data.properties.periods[2].temperature
+            dataObj.tomorrowHigh = data.properties.periods[3].temperature
+            dataObj.tomorrowLow = data.properties.periods[4].temperature
           } else {
             console.log("Check data.properties.periods[0]!")
+            console.log(data.properties.periods)
           }
         } else if (dataObj.date.currentTime >= "12:00" && dataObj.date.currentTime < dataObj.astronomical.sunset) {
           console.log("It is after noon and before sunset")
@@ -414,6 +427,7 @@ $(document).ready(function () {
             dataObj.tomorrowLow = data.properties.periods[3].temperature
           } else {
             console.log("Check data.properties.periods[0]!")
+            console.log(data.properties.periods)
           }
         } else if (dataObj.date.currentTime >= dataObj.astronomical.sunset && dataObj.date.currentTime <= "23:59") {
           console.log("It is after sunset and before midnight")
@@ -436,13 +450,13 @@ $(document).ready(function () {
             dataObj.tomorrowLow = data.properties.periods[3].temperature
           } else {
             console.log("Check data.properties.periods[0]!")
+            console.log(data.properties.periods)
           }
         }
 
         if (dataObj.todayHigh === null) {
           getPseudoHigh()
         }
-        // console.log(data)
       },
       error: function (data, status, error) {
         console.log(data)
@@ -574,6 +588,15 @@ $(document).ready(function () {
     } else {
       // Recursive call
       setTimeout(updateTime, 1000)
+    }
+
+    // Special: Refresh at 9:30pm and 9:45pm around summer solstice
+    if (dataObj.date.month.toLowerCase() === "june" && h === 21 && s === 0) {
+      if (m === 30 || m === 45) {
+        setTimeout(function () {
+          initializeInfoRequests()
+        }, 1000)
+      }
     }
   }
 
@@ -939,14 +962,14 @@ $(document).ready(function () {
   }
 
   function getBgImg() {
-    console.log(dataObj)
+    // console.log(dataObj)
     if (getSpecialOccasion()) {
       console.log(getSpecialOccasion())
       return getSpecialOccasion()
     } else {
       var conditions = dataObj.shortForecastForBg.replace(/\s/g, "").toLowerCase()
       var string = `${dataObj.date.season}-${conditions}-${dataObj.date.currentTimePeriod}`.toLowerCase()
-      // console.log(dataObj)
+      console.log(string)
       return string
     }
   }
