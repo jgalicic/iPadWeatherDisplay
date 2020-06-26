@@ -303,15 +303,27 @@ $(document).ready(function () {
       dataType: "json",
       success: function (data) {
         var tracker = 0
+        var MAX = 10
 
-        while (dataObj.date.currentTime > data.properties.periods[tracker].startTime.substring(11, 16)) {
-          tracker++
+        while (tracker < MAX) {
+          if (
+            dataObj.date.currentTime.substring(0, 2 === data.properties.periods[tracker].startTime.substring(11, 13))
+          ) {
+            console.log("code a")
+            break
+          } else if (dataObj.date.currentTime > data.properties.periods[tracker].startTime.substring(11, 16)) {
+            console.log("code b")
+            tracker++
+          } else {
+            console.log("code c")
+            break
+          }
           if (data.properties.periods[tracker].startTime.substring(11, 16) == "00:00") {
             break
           }
         }
 
-        // console.log("Current weather: ", data.properties.periods[tracker])
+        console.log("Current weather: ", data.properties.periods)
 
         dataObj.currentTemp = data.properties.periods[tracker].temperature
         dataObj.windSpeed = data.properties.periods[tracker].windSpeed
@@ -446,6 +458,7 @@ $(document).ready(function () {
           }
         } else if (dataObj.date.currentTime >= dataObj.astronomical.sunset && dataObj.date.currentTime <= "23:59") {
           console.log("It is after sunset and before midnight")
+
           if (
             data.properties.periods[0].name.toLowerCase() === "tonight" ||
             data.properties.periods[0].name.toLowerCase() === "overnight"
