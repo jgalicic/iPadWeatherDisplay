@@ -990,16 +990,17 @@ $(document).ready(function () {
   }
 
   function getBgImg() {
-    // console.log(dataObj)
+    var string
+    var conditions
+
     if (getSpecialOccasion()) {
-      console.log(getSpecialOccasion())
-      return getSpecialOccasion()
+      string = getSpecialOccasion()
     } else {
-      var conditions = dataObj.shortForecastForBg.replace(/\s/g, "").toLowerCase()
-      var string = `${dataObj.date.season}-${conditions}-${dataObj.date.currentTimePeriod}`.toLowerCase()
-      console.log(string)
-      return string
+      conditions = dataObj.shortForecastForBg.replace(/\s/g, "").toLowerCase()
+      string = `${dataObj.date.season}-${conditions}-${dataObj.date.currentTimePeriod}`.toLowerCase()
     }
+    console.log(string)
+    return string
   }
 
   function getSpecialOccasion() {
