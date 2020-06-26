@@ -1012,7 +1012,7 @@ $(document).ready(function () {
         (dataObj.date.dayOfWeek.toLowerCase() == "saturday" && dataObj.date.todaysDate > 22) ||
         (dataObj.date.dayOfWeek.toLowerCase() == "sunday" && dataObj.date.todaysDate > 23)
       ) {
-        return `_special/pride-${conditions}-${dataObj.date.currentTimePeriod}`.toLowerCase()
+        return `special/pride-${conditions}-${dataObj.date.currentTimePeriod}`.toLowerCase()
       }
     }
 
