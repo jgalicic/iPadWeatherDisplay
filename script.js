@@ -299,7 +299,7 @@ $(document).ready(function () {
 
   function getCurrentWeather() {
     $.ajax({
-      url: "https://api.weather.gov/gridpoints/SEW/125,67/forecast/hourly",
+      url: "https://api.weather.gov/gridpoints/SEW/124,67/forecast/hourly",
       dataType: "json",
       success: function (data) {
         var tracker = 0
@@ -345,6 +345,8 @@ $(document).ready(function () {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
         } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "areas of drizzle") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
+        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "patchy drizzle") {
+          dataObj.shortForecastForBg = "Slight Chance Light Rain"
         } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "light rain likely") {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
         } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "light rain") {
@@ -373,7 +375,7 @@ $(document).ready(function () {
 
   function getWeatherForecast() {
     $.ajax({
-      url: "https://api.weather.gov/gridpoints/SEW/125,67/forecast",
+      url: "https://api.weather.gov/gridpoints/SEW/124,67/forecast",
 
       dataType: "json",
       success: function (data) {
@@ -945,6 +947,7 @@ $(document).ready(function () {
       if (dataObj.shortForecast.toLowerCase() === "mostly cloudy") return "fas fa-cloud-sun"
       if (dataObj.shortForecast.toLowerCase() === "cloudy") return "fas fa-cloud"
       if (dataObj.shortForecast.toLowerCase() === "areas of drizzle") return "fas fa-cloud-sun-rain"
+      if (dataObj.shortForecast.toLowerCase() === "patchy drizzle") return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase() === "slight chance light rain") return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase() === "slight chance rain showers") return "fas fa-cloud-sun-rain"
       if (dataObj.shortForecast.toLowerCase() === "chance rain showers") return "fas fa-cloud-sun-rain"
@@ -969,6 +972,7 @@ $(document).ready(function () {
       if (dataObj.shortForecast.toLowerCase() === "mostly cloudy") return "fas fa-cloud"
       if (dataObj.shortForecast.toLowerCase() === "cloudy") return "fas fa-cloud"
       if (dataObj.shortForecast.toLowerCase() === "areas of drizzle") return "fas fa-cloud-moon-rain"
+      if (dataObj.shortForecast.toLowerCase() === "patchy drizzle") return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase() === "slight chance light rain") return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase() === "slight chance rain showers") return "fas fa-cloud-moon-rain"
       if (dataObj.shortForecast.toLowerCase() === "chance rain showers") return "fas fa-cloud-moon-rain"
