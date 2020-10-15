@@ -437,6 +437,16 @@ $(document).ready(function () {
           "partly sunny"
         ) {
           dataObj.shortForecastForBg = "Partly Cloudy"
+        } else if (
+          data.properties.periods[tracker].shortForecast.toLowerCase() ===
+          "ares of fog"
+        ) {
+          dataObj.shortForecastForBg = "Clear"
+        } else if (
+          data.properties.periods[tracker].shortForecast.toLowerCase() ===
+          "patchy fog"
+        ) {
+          dataObj.shortForecastForBg = "Clear"
         } else {
           dataObj.shortForecastForBg =
             data.properties.periods[tracker].shortForecast
@@ -1060,6 +1070,12 @@ $(document).ready(function () {
       if (dataObj.shortForecast.toLowerCase() === "clear") return "sunshine"
       if (dataObj.shortForecast.toLowerCase() === "mostly clear")
         return "sunshine"
+      if (dataObj.shortForecast.toLowerCase() === "areas of fog")
+        return "sunshine"
+      //
+      if (dataObj.shortForecast.toLowerCase() === "patchy fog")
+        return "sunshine"
+      //
       if (dataObj.shortForecast.toLowerCase() === "partly sunny")
         return "fas fa-cloud-sun"
       if (dataObj.shortForecast.toLowerCase() === "partly cloudy")
