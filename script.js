@@ -11,9 +11,30 @@ during certain events such as sunrise, sunset, at midnight, etc.
 */
 
 $(document).ready(function () {
-  const monthNames = ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"]
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec",
+  ]
 
-  const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+  const dayNames = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ]
   const dayOfWeek = document.getElementById("dayOfWeek")
   const todaysDate = document.getElementById("todaysDate")
   const time = document.getElementById("time")
@@ -83,7 +104,11 @@ $(document).ready(function () {
     pressureDirection: "",
     shortForecast: "",
     shortForecastForBg: "",
-    snow: { chanceSnow: null, snowAccumInchesMax: null, snowAccumInchesMin: null },
+    snow: {
+      chanceSnow: null,
+      snowAccumInchesMax: null,
+      snowAccumInchesMin: null,
+    },
     todayHigh: null,
     todayLow: null,
     tomorrowHigh: null,
@@ -139,7 +164,8 @@ $(document).ready(function () {
   //     todaysDate: 21,
   //     year: 2020,
   //   },
-  //   detailedForecast: "Mostly sunny, with a high near 56. Northwest wind 1 to 5 mph.",
+  //   detailedForecast:
+  //     "Mostly sunny, with a high near 56. Northwest wind 1 to 5 mph.",
   //   humitidy: null,
   //   pollen: {
   //     grass: null,
@@ -156,8 +182,8 @@ $(document).ready(function () {
   //     snowAccumInchesMax: null,
   //     snowAccumInchesMin: null,
   //   },
-  //   todayHigh: 64,
-  //   todayLow: 45,
+  //   todayHigh: 76,
+  //   todayLow: 60,
   //   tomorrowHigh: 60,
   //   tomorrowLow: 42,
   //   uvIndex: null,
@@ -200,7 +226,9 @@ $(document).ready(function () {
 
     // Populate dataObj with date & time data
     dataObj.date.currentTime = timeString
-    dataObj.date.displayTime = date.toLocaleTimeString().match(/[0-9]+[:][0-9]+/g)[0]
+    dataObj.date.displayTime = date
+      .toLocaleTimeString()
+      .match(/[0-9]+[:][0-9]+/g)[0]
     dataObj.date.millis = Date.now()
     dataObj.date.dayOfWeek = dayNames[date.getDay()]
     dataObj.date.month = monthNames[date.getMonth()]
@@ -236,8 +264,14 @@ $(document).ready(function () {
         var d = new Date()
 
         for (var key in data.results) {
-          var myDate = new Date(`${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${data.results[key]} UTC`)
-          dataObj.astronomical[key] = myDate.toTimeString().match(/[0-9]+[:][0-9]+/g)[0]
+          var myDate = new Date(
+            `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()} ${
+              data.results[key]
+            } UTC`
+          )
+          dataObj.astronomical[key] = myDate
+            .toTimeString()
+            .match(/[0-9]+[:][0-9]+/g)[0]
         }
         if (
           dataObj.date.currentTime > dataObj.astronomical.sunrise &&
@@ -307,18 +341,27 @@ $(document).ready(function () {
 
         while (tracker < MAX) {
           if (
-            dataObj.date.currentTime.substring(0, 2 === data.properties.periods[tracker].startTime.substring(11, 13))
+            dataObj.date.currentTime.substring(
+              0,
+              2 === data.properties.periods[tracker].startTime.substring(11, 13)
+            )
           ) {
             console.log("code a")
             break
-          } else if (dataObj.date.currentTime > data.properties.periods[tracker].startTime.substring(11, 16)) {
+          } else if (
+            dataObj.date.currentTime >
+            data.properties.periods[tracker].startTime.substring(11, 16)
+          ) {
             console.log("code b")
             tracker++
           } else {
             console.log("code c")
             break
           }
-          if (data.properties.periods[tracker].startTime.substring(11, 16) == "00:00") {
+          if (
+            data.properties.periods[tracker].startTime.substring(11, 16) ==
+            "00:00"
+          ) {
             break
           }
         }
@@ -333,32 +376,70 @@ $(document).ready(function () {
         // Populate dataObj.shortForecastForBg
         /* Options: Clear, Cloudy, Fog, Mostly Clear, Mostly Sunny, Partly Cloudy, Rain,
                     Slight Chance Light Rain, Snow, Sunny */
-        if (data.properties.periods[tracker].shortForecast.toLowerCase().includes("thunderstorms")) {
+        if (
+          data.properties.periods[tracker].shortForecast
+            .toLowerCase()
+            .includes("thunderstorms")
+        ) {
           dataObj.shortForecastForBg = "Thunder"
-        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "chance light rain") {
+        } else if (
+          data.properties.periods[tracker].shortForecast.toLowerCase() ===
+          "chance light rain"
+        ) {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
-        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "slight chance rain showers") {
+        } else if (
+          data.properties.periods[tracker].shortForecast.toLowerCase() ===
+          "slight chance rain showers"
+        ) {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
-        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "chance rain showers") {
+        } else if (
+          data.properties.periods[tracker].shortForecast.toLowerCase() ===
+          "chance rain showers"
+        ) {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
-        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "scattered rain showers") {
+        } else if (
+          data.properties.periods[tracker].shortForecast.toLowerCase() ===
+          "scattered rain showers"
+        ) {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
-        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "areas of drizzle") {
+        } else if (
+          data.properties.periods[tracker].shortForecast.toLowerCase() ===
+          "areas of drizzle"
+        ) {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
-        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "patchy drizzle") {
+        } else if (
+          data.properties.periods[tracker].shortForecast.toLowerCase() ===
+          "patchy drizzle"
+        ) {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
-        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "light rain likely") {
+        } else if (
+          data.properties.periods[tracker].shortForecast.toLowerCase() ===
+          "light rain likely"
+        ) {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
-        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "light rain") {
+        } else if (
+          data.properties.periods[tracker].shortForecast.toLowerCase() ===
+          "light rain"
+        ) {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
-        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "rain showers likely") {
+        } else if (
+          data.properties.periods[tracker].shortForecast.toLowerCase() ===
+          "rain showers likely"
+        ) {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
-        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "rain showers") {
+        } else if (
+          data.properties.periods[tracker].shortForecast.toLowerCase() ===
+          "rain showers"
+        ) {
           dataObj.shortForecastForBg = "Slight Chance Light Rain"
-        } else if (data.properties.periods[tracker].shortForecast.toLowerCase() === "partly sunny") {
+        } else if (
+          data.properties.periods[tracker].shortForecast.toLowerCase() ===
+          "partly sunny"
+        ) {
           dataObj.shortForecastForBg = "Partly Cloudy"
         } else {
-          dataObj.shortForecastForBg = data.properties.periods[tracker].shortForecast
+          dataObj.shortForecastForBg =
+            data.properties.periods[tracker].shortForecast
         }
       },
       error: function (data, status, error) {
@@ -381,13 +462,17 @@ $(document).ready(function () {
       success: function (data) {
         // console.log("Weather forecast: ", data)
 
-        if (dataObj.date.currentTime >= "00:00" && dataObj.date.currentTime < dataObj.astronomical.sunrise) {
+        if (
+          dataObj.date.currentTime >= "00:00" &&
+          dataObj.date.currentTime < dataObj.astronomical.sunrise
+        ) {
           console.log("It is after mignight and before sunrise")
           if (
             data.properties.periods[0].name.toLowerCase() === "tonight" ||
             data.properties.periods[0].name.toLowerCase() === "overnight"
           ) {
-            dataObj.detailedForecast = data.properties.periods[0].detailedForecast
+            dataObj.detailedForecast =
+              data.properties.periods[0].detailedForecast
             dataObj.todayLow = data.properties.periods[0].temperature
             dataObj.tomorrowHigh = data.properties.periods[1].temperature
             dataObj.tomorrowLow = data.properties.periods[2].temperature
@@ -396,20 +481,25 @@ $(document).ready(function () {
             data.properties.periods[1].name.toLowerCase() === "overnight"
           ) {
             dataObj.todayHigh = data.properties.periods[0].temperature
-            dataObj.detailedForecast = data.properties.periods[1].detailedForecast
+            dataObj.detailedForecast =
+              data.properties.periods[1].detailedForecast
             dataObj.todayLow = data.properties.periods[1].temperature
             dataObj.tomorrowHigh = data.properties.periods[2].temperature
             dataObj.tomorrowLow = data.properties.periods[3].temperature
           } else {
             console.log("Check data.properties.periods[0]!")
           }
-        } else if (dataObj.date.currentTime >= dataObj.astronomical.sunrise && dataObj.date.currentTime < "12:00") {
+        } else if (
+          dataObj.date.currentTime >= dataObj.astronomical.sunrise &&
+          dataObj.date.currentTime < "12:00"
+        ) {
           console.log("It is after sunrise and before 12 noon")
           if (
             data.properties.periods[0].name.toLowerCase() === "today" ||
             data.properties.periods[0].name.toLowerCase() === "this morning"
           ) {
-            dataObj.detailedForecast = data.properties.periods[0].detailedForecast
+            dataObj.detailedForecast =
+              data.properties.periods[0].detailedForecast
             dataObj.todayHigh = data.properties.periods[0].temperature
             dataObj.todayLow = data.properties.periods[1].temperature
             dataObj.tomorrowHigh = data.properties.periods[2].temperature
@@ -419,7 +509,8 @@ $(document).ready(function () {
             data.properties.periods[0].name.toLowerCase() === "last night" ||
             data.properties.periods[0].name.toLowerCase() === "tonight"
           ) {
-            dataObj.detailedForecast = data.properties.periods[1].detailedForecast
+            dataObj.detailedForecast =
+              data.properties.periods[1].detailedForecast
             dataObj.todayHigh = data.properties.periods[1].temperature
             dataObj.todayLow = data.properties.periods[2].temperature
             dataObj.tomorrowHigh = data.properties.periods[3].temperature
@@ -428,7 +519,10 @@ $(document).ready(function () {
             console.log("Check data.properties.periods[0]!")
             console.log(data.properties.periods)
           }
-        } else if (dataObj.date.currentTime >= "12:00" && dataObj.date.currentTime < dataObj.astronomical.sunset) {
+        } else if (
+          dataObj.date.currentTime >= "12:00" &&
+          dataObj.date.currentTime < dataObj.astronomical.sunset
+        ) {
           console.log("It is after noon and before sunset")
           // console.log(dataObj)
           // console.log(data.properties.periods[1].name.toLowerCase())
@@ -436,21 +530,27 @@ $(document).ready(function () {
           // console.log(data.properties.periods[1].name.toLowerCase() === dataObj.date.dayOfWeek.toLowerCase())
           if (
             data.properties.periods[0].name.toLowerCase() === "today" ||
-            data.properties.periods[0].name.toLowerCase() === "this afternoon" ||
-            data.properties.periods[0].name.toLowerCase() === dataObj.date.dayOfWeek.toLowerCase()
+            data.properties.periods[0].name.toLowerCase() ===
+              "this afternoon" ||
+            data.properties.periods[0].name.toLowerCase() ===
+              dataObj.date.dayOfWeek.toLowerCase()
           ) {
             dataObj.todayHigh = data.properties.periods[0].temperature
-            dataObj.detailedForecast = data.properties.periods[0].detailedForecast
+            dataObj.detailedForecast =
+              data.properties.periods[0].detailedForecast
             dataObj.todayLow = data.properties.periods[1].temperature
             dataObj.tomorrowHigh = data.properties.periods[2].temperature
             dataObj.tomorrowLow = data.properties.periods[3].temperature
           } else if (
             data.properties.periods[1].name.toLowerCase() === "today" ||
-            data.properties.periods[1].name.toLowerCase() === "this afternoon" ||
-            data.properties.periods[1].name.toLowerCase() === dataObj.date.dayOfWeek.toLowerCase()
+            data.properties.periods[1].name.toLowerCase() ===
+              "this afternoon" ||
+            data.properties.periods[1].name.toLowerCase() ===
+              dataObj.date.dayOfWeek.toLowerCase()
           ) {
             dataObj.todayHigh = data.properties.periods[1].temperature
-            dataObj.detailedForecast = data.properties.periods[1].detailedForecast
+            dataObj.detailedForecast =
+              data.properties.periods[1].detailedForecast
             dataObj.todayLow = data.properties.periods[2].temperature
             dataObj.tomorrowHigh = data.properties.periods[3].temperature
             dataObj.tomorrowLow = data.properties.periods[4].temperature
@@ -458,7 +558,10 @@ $(document).ready(function () {
             console.log("Check data.properties.periods[0]!")
             console.log(data.properties.periods)
           }
-        } else if (dataObj.date.currentTime >= dataObj.astronomical.sunset && dataObj.date.currentTime <= "23:59") {
+        } else if (
+          dataObj.date.currentTime >= dataObj.astronomical.sunset &&
+          dataObj.date.currentTime <= "23:59"
+        ) {
           console.log("It is after sunset and before midnight")
 
           if (
@@ -466,7 +569,8 @@ $(document).ready(function () {
             data.properties.periods[0].name.toLowerCase() === "overnight"
           ) {
             dataObj.todayLow = data.properties.periods[0].temperature
-            dataObj.detailedForecast = data.properties.periods[0].detailedForecast
+            dataObj.detailedForecast =
+              data.properties.periods[0].detailedForecast
             dataObj.tomorrowHigh = data.properties.periods[1].temperature
             dataObj.tomorrowLow = data.properties.periods[2].temperature
           } else if (
@@ -474,7 +578,8 @@ $(document).ready(function () {
             data.properties.periods[1].name.toLowerCase() === "overnight"
           ) {
             dataObj.todayHigh = data.properties.periods[0].temperature
-            dataObj.detailedForecast = data.properties.periods[1].detailedForecast
+            dataObj.detailedForecast =
+              data.properties.periods[1].detailedForecast
             dataObj.todayLow = data.properties.periods[1].temperature
             dataObj.tomorrowHigh = data.properties.periods[2].temperature
             dataObj.tomorrowLow = data.properties.periods[3].temperature
@@ -576,7 +681,9 @@ $(document).ready(function () {
 
     // Populate dataObj with date & time data
     dataObj.date.currentTime = timeString
-    dataObj.date.displayTime = d.toLocaleTimeString().match(/[0-9]+[:][0-9]+/g)[0]
+    dataObj.date.displayTime = d
+      .toLocaleTimeString()
+      .match(/[0-9]+[:][0-9]+/g)[0]
     time.innerText = dataObj.date.displayTime
     dayOfWeek.innerText = dataObj.date.dayOfWeek
     todaysDate.innerText = `${dataObj.date.month} ${dataObj.date.todaysDate}`
@@ -633,9 +740,11 @@ $(document).ready(function () {
   function renderSolarAndWeatherDataToScreen() {
     // Weather Icon
     $(weatherIcon).removeClass().addClass(getWeatherIcon())
-    if (dataObj.shortForecast !== null) $(shortForecastDisplay).text(`${dataObj.shortForecast}`)
+    if (dataObj.shortForecast !== null)
+      $(shortForecastDisplay).text(`${dataObj.shortForecast}`)
     // Temperature
-    if (dataObj.currentTemp !== null) $(currentTemp).html(`${dataObj.currentTemp}`)
+    if (dataObj.currentTemp !== null)
+      $(currentTemp).html(`${dataObj.currentTemp}`)
     if (dataObj.currentTemp === null) $(degreeSymbol).html("")
     if (dataObj.todayLow !== null) lowTemp.innerText = `${dataObj.todayLow}°`
     $(lowTemp).css("color", `rgb(${getRGB(dataObj.todayLow)})`)
@@ -645,7 +754,9 @@ $(document).ready(function () {
     // Gradient bar
     $(tempRangeBar).css(
       "background-image",
-      `linear-gradient(to right, rgb(${getRGB(dataObj.todayLow)}), rgb(${getRGB(dataObj.todayHigh)}))`
+      `linear-gradient(to right, rgb(${getRGB(dataObj.todayLow)}), rgb(${getRGB(
+        dataObj.todayHigh
+      )}))`
     )
   }
 
@@ -660,7 +771,8 @@ $(document).ready(function () {
   function hideIfEmpty() {
     if (dataObj.date.dayOfWeek === "") $(dayOfWeek).hide()
     if (dataObj.date.displayTime === "") $(time).hide()
-    if (dataObj.date.month === "" || dataObj.date.todaysDate === "") $(todaysDate).hide()
+    if (dataObj.date.month === "" || dataObj.date.todaysDate === "")
+      $(todaysDate).hide()
     if (dataObj.date.dayOfWeek === "") $(dayOfWeek).hide()
     if (dataObj.currentTemp === null) $(tempRangeBar).hide()
     if (dataObj.currentTemp === null) $(tempRangeBg).hide()
@@ -931,63 +1043,112 @@ $(document).ready(function () {
     // console.log("Got weather icon")
     // day or night
     if (dataObj.shortForecast === "") return ""
-    if (dataObj.shortForecast.toLowerCase().includes("snow")) return "fas fa-snowflake"
-    if (dataObj.shortForecast.toLowerCase().includes("thunder")) return "fas fa-bolt"
-    if (dataObj.shortForecast.toLowerCase().includes("smoke")) return "fas fa-smog"
-    if (dataObj.shortForecast.toLowerCase().includes("smog")) return "fas fa-smog"
+    if (dataObj.shortForecast.toLowerCase().includes("snow"))
+      return "fas fa-snowflake"
+    if (dataObj.shortForecast.toLowerCase().includes("thunder"))
+      return "fas fa-bolt"
+    if (dataObj.shortForecast.toLowerCase().includes("smoke"))
+      return "fas fa-smog"
+    if (dataObj.shortForecast.toLowerCase().includes("smog"))
+      return "fas fa-smog"
 
     // daytime
     if (dataObj.date.isDaytime === "true") {
       if (dataObj.shortForecast.toLowerCase() === "sunny") return "sunshine"
-      if (dataObj.shortForecast.toLowerCase() === "mostly sunny") return "sunshine"
+      if (dataObj.shortForecast.toLowerCase() === "mostly sunny")
+        return "sunshine"
       if (dataObj.shortForecast.toLowerCase() === "clear") return "sunshine"
-      if (dataObj.shortForecast.toLowerCase() === "mostly clear") return "sunshine"
-      if (dataObj.shortForecast.toLowerCase() === "partly sunny") return "fas fa-cloud-sun"
-      if (dataObj.shortForecast.toLowerCase() === "partly cloudy") return "fas fa-cloud-sun"
-      if (dataObj.shortForecast.toLowerCase() === "mostly cloudy") return "fas fa-cloud-sun"
-      if (dataObj.shortForecast.toLowerCase() === "cloudy") return "fas fa-cloud"
-      if (dataObj.shortForecast.toLowerCase() === "areas of drizzle") return "fas fa-cloud-sun-rain"
-      if (dataObj.shortForecast.toLowerCase() === "patchy drizzle") return "fas fa-cloud-sun-rain"
-      if (dataObj.shortForecast.toLowerCase() === "slight chance light rain") return "fas fa-cloud-sun-rain"
-      if (dataObj.shortForecast.toLowerCase() === "slight chance rain showers") return "fas fa-cloud-sun-rain"
-      if (dataObj.shortForecast.toLowerCase() === "chance rain showers") return "fas fa-cloud-sun-rain"
-      if (dataObj.shortForecast.toLowerCase() === "scattered rain showers") return "fas fa-cloud-sun-rain"
-      if (dataObj.shortForecast.toLowerCase() === "chance light rain") return "fas fa-cloud-sun-rain"
-      if (dataObj.shortForecast.toLowerCase() === "light rain likely") return "fas fa-cloud-sun-rain"
-      if (dataObj.shortForecast.toLowerCase() === "light rain") return "fas fa-cloud-rain"
-      if (dataObj.shortForecast.toLowerCase() === "chance showers") return "fas fa-cloud-sun-rain"
-      if (dataObj.shortForecast.toLowerCase() === "showers") return "fas fa-cloud-rain"
-      if (dataObj.shortForecast.toLowerCase() === "rain showers likely") return "fas fa-cloud-rain"
-      if (dataObj.shortForecast.toLowerCase() === "rain showers") return "fas fa-cloud-rain"
-      if (dataObj.shortForecast.toLowerCase() === "chance rain") return "fas fa-cloud-rain"
-      if (dataObj.shortForecast.toLowerCase() === "rain likely") return "fas fa-cloud-showers-heavy"
-      if (dataObj.shortForecast.toLowerCase() === "rain") return "fas fa-cloud-showers-heavy"
-      if (dataObj.shortForecast.toLowerCase() === "heavy rain") return "fas fa-cloud-showers-heavy"
+      if (dataObj.shortForecast.toLowerCase() === "mostly clear")
+        return "sunshine"
+      if (dataObj.shortForecast.toLowerCase() === "partly sunny")
+        return "fas fa-cloud-sun"
+      if (dataObj.shortForecast.toLowerCase() === "partly cloudy")
+        return "fas fa-cloud-sun"
+      if (dataObj.shortForecast.toLowerCase() === "mostly cloudy")
+        return "fas fa-cloud-sun"
+      if (dataObj.shortForecast.toLowerCase() === "cloudy")
+        return "fas fa-cloud"
+      if (dataObj.shortForecast.toLowerCase() === "areas of drizzle")
+        return "fas fa-cloud-sun-rain"
+      if (dataObj.shortForecast.toLowerCase() === "patchy drizzle")
+        return "fas fa-cloud-sun-rain"
+      if (dataObj.shortForecast.toLowerCase() === "slight chance light rain")
+        return "fas fa-cloud-sun-rain"
+      if (dataObj.shortForecast.toLowerCase() === "slight chance rain showers")
+        return "fas fa-cloud-sun-rain"
+      if (dataObj.shortForecast.toLowerCase() === "chance rain showers")
+        return "fas fa-cloud-sun-rain"
+      if (dataObj.shortForecast.toLowerCase() === "scattered rain showers")
+        return "fas fa-cloud-sun-rain"
+      if (dataObj.shortForecast.toLowerCase() === "chance light rain")
+        return "fas fa-cloud-sun-rain"
+      if (dataObj.shortForecast.toLowerCase() === "light rain likely")
+        return "fas fa-cloud-sun-rain"
+      if (dataObj.shortForecast.toLowerCase() === "light rain")
+        return "fas fa-cloud-rain"
+      if (dataObj.shortForecast.toLowerCase() === "chance showers")
+        return "fas fa-cloud-sun-rain"
+      if (dataObj.shortForecast.toLowerCase() === "showers")
+        return "fas fa-cloud-rain"
+      if (dataObj.shortForecast.toLowerCase() === "rain showers likely")
+        return "fas fa-cloud-rain"
+      if (dataObj.shortForecast.toLowerCase() === "rain showers")
+        return "fas fa-cloud-rain"
+      if (dataObj.shortForecast.toLowerCase() === "chance rain")
+        return "fas fa-cloud-rain"
+      if (dataObj.shortForecast.toLowerCase() === "rain likely")
+        return "fas fa-cloud-showers-heavy"
+      if (dataObj.shortForecast.toLowerCase() === "rain")
+        return "fas fa-cloud-showers-heavy"
+      if (dataObj.shortForecast.toLowerCase() === "heavy rain")
+        return "fas fa-cloud-showers-heavy"
     } else if (dataObj.date.isDaytime === "false") {
       // nighttime
       if (dataObj.shortForecast.toLowerCase() === "clear") return "fas fa-moon"
-      if (dataObj.shortForecast.toLowerCase() === "mostly clear") return "fas fa-moon"
-      if (dataObj.shortForecast.toLowerCase() === "partly clear") return "fas fa-cloud-moon"
-      if (dataObj.shortForecast.toLowerCase() === "partly cloudy") return "fas fa-cloud-moon"
-      if (dataObj.shortForecast.toLowerCase() === "mostly cloudy") return "fas fa-cloud"
-      if (dataObj.shortForecast.toLowerCase() === "cloudy") return "fas fa-cloud"
-      if (dataObj.shortForecast.toLowerCase() === "areas of drizzle") return "fas fa-cloud-moon-rain"
-      if (dataObj.shortForecast.toLowerCase() === "patchy drizzle") return "fas fa-cloud-moon-rain"
-      if (dataObj.shortForecast.toLowerCase() === "slight chance light rain") return "fas fa-cloud-moon-rain"
-      if (dataObj.shortForecast.toLowerCase() === "slight chance rain showers") return "fas fa-cloud-moon-rain"
-      if (dataObj.shortForecast.toLowerCase() === "chance rain showers") return "fas fa-cloud-moon-rain"
-      if (dataObj.shortForecast.toLowerCase() === "scattered rain showers") return "fas fa-cloud-moon-rain"
-      if (dataObj.shortForecast.toLowerCase() === "chance light rain") return "fas fa-cloud-moon-rain"
-      if (dataObj.shortForecast.toLowerCase() === "light rain likely") return "fas fa-cloud-moon-rain"
-      if (dataObj.shortForecast.toLowerCase() === "light rain") return "fas fa-cloud-rain"
-      if (dataObj.shortForecast.toLowerCase() === "chance showers") return "fas fa-cloud-moon-rain"
-      if (dataObj.shortForecast.toLowerCase() === "showers") return "fas fa-cloud-rain"
-      if (dataObj.shortForecast.toLowerCase() === "rain showers likely") return "fas fa-cloud-rain"
-      if (dataObj.shortForecast.toLowerCase() === "rain showers") return "fas fa-cloud-rain"
-      if (dataObj.shortForecast.toLowerCase() === "chance rain") return "fas fa-cloud-showers-heavy"
-      if (dataObj.shortForecast.toLowerCase() === "rain likely") return "fas fa-cloud-showers-heavy"
-      if (dataObj.shortForecast.toLowerCase() === "rain") return "fas fa-cloud-showers-heavy"
-      if (dataObj.shortForecast.toLowerCase() === "heavy rain") return "fas fa-cloud-showers-heavy"
+      if (dataObj.shortForecast.toLowerCase() === "mostly clear")
+        return "fas fa-moon"
+      if (dataObj.shortForecast.toLowerCase() === "partly clear")
+        return "fas fa-cloud-moon"
+      if (dataObj.shortForecast.toLowerCase() === "partly cloudy")
+        return "fas fa-cloud-moon"
+      if (dataObj.shortForecast.toLowerCase() === "mostly cloudy")
+        return "fas fa-cloud"
+      if (dataObj.shortForecast.toLowerCase() === "cloudy")
+        return "fas fa-cloud"
+      if (dataObj.shortForecast.toLowerCase() === "areas of drizzle")
+        return "fas fa-cloud-moon-rain"
+      if (dataObj.shortForecast.toLowerCase() === "patchy drizzle")
+        return "fas fa-cloud-moon-rain"
+      if (dataObj.shortForecast.toLowerCase() === "slight chance light rain")
+        return "fas fa-cloud-moon-rain"
+      if (dataObj.shortForecast.toLowerCase() === "slight chance rain showers")
+        return "fas fa-cloud-moon-rain"
+      if (dataObj.shortForecast.toLowerCase() === "chance rain showers")
+        return "fas fa-cloud-moon-rain"
+      if (dataObj.shortForecast.toLowerCase() === "scattered rain showers")
+        return "fas fa-cloud-moon-rain"
+      if (dataObj.shortForecast.toLowerCase() === "chance light rain")
+        return "fas fa-cloud-moon-rain"
+      if (dataObj.shortForecast.toLowerCase() === "light rain likely")
+        return "fas fa-cloud-moon-rain"
+      if (dataObj.shortForecast.toLowerCase() === "light rain")
+        return "fas fa-cloud-rain"
+      if (dataObj.shortForecast.toLowerCase() === "chance showers")
+        return "fas fa-cloud-moon-rain"
+      if (dataObj.shortForecast.toLowerCase() === "showers")
+        return "fas fa-cloud-rain"
+      if (dataObj.shortForecast.toLowerCase() === "rain showers likely")
+        return "fas fa-cloud-rain"
+      if (dataObj.shortForecast.toLowerCase() === "rain showers")
+        return "fas fa-cloud-rain"
+      if (dataObj.shortForecast.toLowerCase() === "chance rain")
+        return "fas fa-cloud-showers-heavy"
+      if (dataObj.shortForecast.toLowerCase() === "rain likely")
+        return "fas fa-cloud-showers-heavy"
+      if (dataObj.shortForecast.toLowerCase() === "rain")
+        return "fas fa-cloud-showers-heavy"
+      if (dataObj.shortForecast.toLowerCase() === "heavy rain")
+        return "fas fa-cloud-showers-heavy"
     }
     // fallback
     return "fas fa-rainbow"
@@ -1012,9 +1173,12 @@ $(document).ready(function () {
     // Check for pride weekend
     if (dataObj.date.month.toLowerCase() == "june") {
       if (
-        (dataObj.date.dayOfWeek.toLowerCase() == "friday" && dataObj.date.todaysDate > 21) ||
-        (dataObj.date.dayOfWeek.toLowerCase() == "saturday" && dataObj.date.todaysDate > 22) ||
-        (dataObj.date.dayOfWeek.toLowerCase() == "sunday" && dataObj.date.todaysDate > 23)
+        (dataObj.date.dayOfWeek.toLowerCase() == "friday" &&
+          dataObj.date.todaysDate > 21) ||
+        (dataObj.date.dayOfWeek.toLowerCase() == "saturday" &&
+          dataObj.date.todaysDate > 22) ||
+        (dataObj.date.dayOfWeek.toLowerCase() == "sunday" &&
+          dataObj.date.todaysDate > 23)
       ) {
         return `special/pride-${conditions}-${dataObj.date.currentTimePeriod}`.toLowerCase()
       }
@@ -1025,7 +1189,9 @@ $(document).ready(function () {
 
   function tConvert(time) {
     // Check correct time format and split into components
-    time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time]
+    time = time
+      .toString()
+      .match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time]
 
     if (time.length > 1) {
       // If time format correct
@@ -1057,7 +1223,11 @@ $(document).ready(function () {
     $(degreeSymbol).css("color", whiteDisplayColor)
     $(smallForecast).css("color", whiteDisplayColor)
     $(solarStats).children().children().css("color", whiteDisplayColor)
-    $(solarStats).children().children().children().css("color", whiteDisplayColor)
+    $(solarStats)
+      .children()
+      .children()
+      .children()
+      .css("color", whiteDisplayColor)
     $(time).css("color", whiteDisplayColor)
     $(shortForecastDisplay).css("color", whiteDisplayColor)
     $(weatherIcon).css("color", whiteDisplayColor)
@@ -1075,7 +1245,11 @@ $(document).ready(function () {
     $(degreeSymbol).css("color", warmDisplayColor)
     $(smallForecast).css("color", warmDisplayColor)
     $(solarStats).children().children().css("color", warmDisplayColor)
-    $(solarStats).children().children().children().css("color", warmDisplayColor)
+    $(solarStats)
+      .children()
+      .children()
+      .children()
+      .css("color", warmDisplayColor)
     $(time).css("color", warmDisplayColor)
     $(shortForecastDisplay).css("color", warmDisplayColor)
     $(weatherIcon).css("color", warmDisplayColor)
