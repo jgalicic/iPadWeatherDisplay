@@ -771,11 +771,16 @@ $(document).ready(function () {
   }
 
   function renderBackground() {
-    if (dataObj.shortForecast === "") {
-      document.body.style.backgroundColor = "#333"
-    } else {
-      document.body.style.backgroundImage = `url("img/bg/${getBgImg()}.jpg")`
-    }
+    $("body").css({
+      background:
+        "linear-gradient(180deg, rgba(38,46,182,1) 0%, rgba(40,37,145,1) 25%, rgba(62,20,115,1) 50%, rgba(66,12,101,1) 75%, rgba(102,13,62,1) 100%)",
+    })
+
+    // if (dataObj.shortForecast === "") {
+    //   document.body.style.backgroundColor = "#333"
+    // } else {
+    //   document.body.style.backgroundImage = `url("img/bg/${getBgImg()}.jpg")`
+    // }
   }
 
   function hideIfEmpty() {
