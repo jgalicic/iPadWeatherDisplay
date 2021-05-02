@@ -240,9 +240,6 @@ $(document).ready(function () {
   }
 
   function getSeason() {
-    if (dataObj.date.millis < 1592636400000) return "Spring"
-    if (dataObj.date.millis < 1600758000000) return "Summer"
-    if (dataObj.date.millis < 1608537600000) return "Fall"
     if (dataObj.date.millis < 1616223600000) return "Winter"
     // 2021
     if (dataObj.date.millis < 1624172400000) return "Spring"
@@ -346,16 +343,13 @@ $(document).ready(function () {
               2 === data.properties.periods[tracker].startTime.substring(11, 13)
             )
           ) {
-            console.log("code a")
             break
           } else if (
             dataObj.date.currentTime >
             data.properties.periods[tracker].startTime.substring(11, 16)
           ) {
-            console.log("code b")
             tracker++
           } else {
-            console.log("code c")
             break
           }
           if (
@@ -366,7 +360,7 @@ $(document).ready(function () {
           }
         }
 
-        console.log("Current weather: ", data.properties.periods)
+        // console.log("Current weather: ", data.properties.periods)
 
         dataObj.currentTemp = data.properties.periods[tracker].temperature
         dataObj.windSpeed = data.properties.periods[tracker].windSpeed
@@ -771,16 +765,15 @@ $(document).ready(function () {
   }
 
   function renderBackground() {
-    $("body").css({
-      background:
-        "linear-gradient(180deg, rgba(38,46,182,1) 0%, rgba(40,37,145,1) 25%, rgba(62,20,115,1) 50%, rgba(66,12,101,1) 75%, rgba(102,13,62,1) 100%)",
-    })
-
-    // if (dataObj.shortForecast === "") {
-    //   document.body.style.backgroundColor = "#333"
-    // } else {
-    //   document.body.style.backgroundImage = `url("img/bg/${getBgImg()}.jpg")`
-    // }
+    if (dataObj.shortForecast === "" || getBgImg().length < 1) {
+      // Purple gradient
+      $("body").css({
+        background:
+          "linear-gradient(180deg, rgba(38,46,182,1) 0%, rgba(40,37,145,1) 25%, rgba(62,20,115,1) 50%, rgba(66,12,101,1) 75%, rgba(102,13,62,1) 100%)",
+      })
+    } else {
+      document.body.style.backgroundImage = `url("img/bg/${getBgImg()}.jpg")`
+    }
   }
 
   function hideIfEmpty() {
