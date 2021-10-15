@@ -2,11 +2,11 @@
 General notes:
 getDateInfo() is called first to get accurate date and time info
 getSolarData() is then called to get sunrise and sunset info
-getCurrentWeather() and getWeatherForecast() are then called after the above functions
+getCurrentWeather() and getWeatherForecast() are then called after the above functions are called
 
-getTodaysDate() recursively updates every second or few seconds
+getTodaysDate() recursively updates every second
 getSolarData(), getCurrentWeather() and getWeatherForecast() should update every 30 mintues or 
-during certain events such as sunrise, sunset, at midnight, etc.
+after significant daily events such as sunrise, sunset, at midnight, etc.
 
 */
 
@@ -159,136 +159,136 @@ $(document).ready(function () {
   ///////////////////////////////////
   ///////////////////////////////////
 
-  // dataObj = {
-  //   aqi: null,
-  //   aqi_msg: "",
-  //   aqi_table: {
-  //     co: null,
-  //     nh3: null,
-  //     no: null,
-  //     no2: null,
-  //     o3: null,
-  //     pm10: null,
-  //     pm2_5: null,
-  //     so2: null,
-  //   },
-  //   aqi_msg: {
-  //     co: "",
-  //     nh3: "",
-  //     no: "",
-  //     no2: "",
-  //     o3: "",
-  //     pm10: "",
-  //     pm2_5: "",
-  //     so2: "",
-  //   },
-  //   air_quality: {
-  //     co: 0.3705,
-  //     nh3: 0.25,
-  //     no: 0.28,
-  //     no2: 1.3,
-  //     o3: 0.052,
-  //     pm10: 2.83,
-  //     pm2_5: 2.64,
-  //     so2: 2.12,
-  //   },
-  //   astronomical: {
-  //     astronomical_twilight_begin: "04:42",
-  //     astronomical_twilight_end: "21:39",
-  //     civil_twilight_begin: "06:01",
-  //     civil_twilight_end: "20:20",
-  //     day_length: "06:15",
-  //     moon: {
-  //       age: "",
-  //       moonrise: "",
-  //       moonset: "",
-  //       phase: "",
-  //     },
-  //     nautical_twilight_begin: "05:23",
-  //     nautical_twilight_end: "20:58",
-  //     solar_noon: "13:10",
-  //     sunrise: "06:32",
-  //     sunset: "20:37",
-  //   },
-  //   bestDayToGetOutside: "",
-  //   chanceHail: null,
-  //   chancePrecipitation: null,
-  //   chanceRain: null,
-  //   chanceThunder: null,
-  //   currentConditions: "Sunny",
-  //   currentTemp: 84,
-  //   date: {
-  //     currentTime: "13:27",
-  //     currentTimePeriod: "day",
-  //     dayOfWeek: "Thursday",
-  //     displayTime: "6:47",
-  //     isDaytime: "true",
-  //     millis: null,
-  //     month: "August",
-  //     season: "Summer",
-  //     todaysDate: 5,
-  //     year: 2021,
-  //   },
-  //   detailedForecast:
-  //     "Mostly sunny, with a high near 56. Northwest wind 1 to 5 mph.",
-  //   humitidy: null,
-  //   pollen: {
-  //     grass: null,
-  //     overall: null,
-  //     tree: null,
-  //     ragweed: null,
-  //   },
-  //   pressure: null,
-  //   pressureDirection: "",
-  //   shortForecast: "Sunny",
-  //   shortForecastForBg: "Sunny",
-  //   snow: {
-  //     chanceSnow: null,
-  //     snowAccumInchesMax: null,
-  //     snowAccumInchesMin: null,
-  //   },
-  //   todayHigh: 106,
-  //   todayLow: 81,
-  //   tomorrowHigh: 60,
-  //   tomorrowLow: 42,
-  //   uvIndex: null,
-  //   visibilityMiles: null,
-  //   windDirection: "WSW",
-  //   windSpeed: "1 mph",
-  // }
-
-  // setTimeout(() => {
-  //   console.log(dataObj)
-  // }, 200)
-
-  // setTimeout(() => {
-  //   updateTime()
-  //   populateDetailedForecast()
-  //   renderBackground()
-  //   renderSolarAndWeatherDataToScreen()
-  //   renderSunriseAndSunsetDisplay()
-  //   calculateAQI()
-  // }, 300)
-
-  ///////////////////////////////
-  ///////////////////////////////
-  ///////////////////////////////
-
-  initializeInfoRequests()
-
-  function initializeInfoRequests() {
-    getDateInfo(function () {
-      getSolarData(function () {
-        getCurrentTimePeriod()
-        getCurrentWeather()
-        getCurrentAirQuality()
-        // console dataObj after 2 seconds
-        setTimeout(() => {
-          console.log(dataObj)
-        }, 2000)
-      })
-    })
+  dataObj = {
+    aqi: null,
+    aqi_msg: "",
+    aqi_table: {
+      co: null,
+      nh3: null,
+      no: null,
+      no2: null,
+      o3: null,
+      pm10: null,
+      pm2_5: null,
+      so2: null,
+    },
+    aqi_msg: {
+      co: "",
+      nh3: "",
+      no: "",
+      no2: "",
+      o3: "",
+      pm10: "",
+      pm2_5: "",
+      so2: "",
+    },
+    air_quality: {
+      co: 0.3705,
+      nh3: 0.25,
+      no: 0.28,
+      no2: 1.3,
+      o3: 0.052,
+      pm10: 2.83,
+      pm2_5: 2.64,
+      so2: 2.12,
+    },
+    astronomical: {
+      astronomical_twilight_begin: "04:42",
+      astronomical_twilight_end: "21:39",
+      civil_twilight_begin: "06:01",
+      civil_twilight_end: "20:20",
+      day_length: "06:15",
+      moon: {
+        age: "",
+        moonrise: "",
+        moonset: "",
+        phase: "",
+      },
+      nautical_twilight_begin: "05:23",
+      nautical_twilight_end: "20:58",
+      solar_noon: "13:10",
+      sunrise: "06:32",
+      sunset: "20:37",
+    },
+    bestDayToGetOutside: "",
+    chanceHail: null,
+    chancePrecipitation: null,
+    chanceRain: null,
+    chanceThunder: null,
+    currentConditions: "Cloudy",
+    currentTemp: 84,
+    date: {
+      currentTime: "13:27",
+      currentTimePeriod: "day",
+      dayOfWeek: "Thursday",
+      displayTime: "6:47",
+      isDaytime: "true",
+      millis: null,
+      month: "August",
+      season: "Summer",
+      todaysDate: 5,
+      year: 2021,
+    },
+    detailedForecast:
+      "Mostly sunny, with a high near 56. Northwest wind 1 to 5 mph.",
+    humitidy: null,
+    pollen: {
+      grass: null,
+      overall: null,
+      tree: null,
+      ragweed: null,
+    },
+    pressure: null,
+    pressureDirection: "",
+    shortForecast: "Cloudy",
+    shortForecastForBg: "Cloudy",
+    snow: {
+      chanceSnow: null,
+      snowAccumInchesMax: null,
+      snowAccumInchesMin: null,
+    },
+    todayHigh: 106,
+    todayLow: 81,
+    tomorrowHigh: 60,
+    tomorrowLow: 42,
+    uvIndex: null,
+    visibilityMiles: null,
+    windDirection: "WSW",
+    windSpeed: "1 mph",
   }
+
+  setTimeout(() => {
+    console.log(dataObj)
+  }, 200)
+
+  setTimeout(() => {
+    updateTime()
+    populateDetailedForecast()
+    renderBackground()
+    renderSolarAndWeatherDataToScreen()
+    renderSunriseAndSunsetDisplay()
+    calculateAQI()
+  }, 300)
+
+  ///////////////////////////////
+  ///////////////////////////////
+  ///////////////////////////////
+
+  // initializeInfoRequests()
+
+  // function initializeInfoRequests() {
+  //   getDateInfo(function () {
+  //     getSolarData(function () {
+  //       getCurrentTimePeriod()
+  //       getCurrentWeather()
+  //       getCurrentAirQuality()
+  //       // console dataObj after 2 seconds
+  //       setTimeout(() => {
+  //         console.log(dataObj)
+  //       }, 2000)
+  //     })
+  //   })
+  // }
 
   function getDateInfo(callback) {
     date = new Date()
@@ -310,9 +310,7 @@ $(document).ready(function () {
   }
 
   function getSeason() {
-    if (dataObj.date.millis < 1616223600000) return "Winter"
     // 2021
-    if (dataObj.date.millis < 1624172400000) return "Spring"
     if (dataObj.date.millis < 1632294000000) return "Summer"
     if (dataObj.date.millis < 1640073600000) return "Fall"
     if (dataObj.date.millis < 1647759600000) return "Winter"
