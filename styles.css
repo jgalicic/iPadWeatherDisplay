@@ -29,7 +29,12 @@ body {
   justify-content: space-between;
   width: 100%;
   height: 25%;
-  background: linear-gradient(0deg, rgba(2, 0, 36, 0) 0%, rgba(0, 0, 0, 0.15) 35%, rgba(0, 0, 0, 0.4) 100%);
+  background: linear-gradient(
+    0deg,
+    rgba(2, 0, 36, 0) 0%,
+    rgba(0, 0, 0, 0.15) 35%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
 }
 
 #dateContainer {
@@ -97,7 +102,12 @@ body {
   justify-content: space-between;
   width: 100%;
   height: 25%;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.38) 60%, rgba(2, 0, 36, 0) 100%);
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.65) 0%,
+    rgba(0, 0, 0, 0.38) 60%,
+    rgba(2, 0, 36, 0) 100%
+  );
 }
 
 #tempContainer {
@@ -169,26 +179,6 @@ body {
   right: 15px;
 }
 
-.sunriseContainer {
-  display: flex;
-  position: relative;
-  bottom: 12px;
-}
-
-.sunriseContainer p {
-  font-size: 5vw;
-  line-height: 1;
-}
-
-.sunriseIcons {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  bottom: 10px;
-  right: 2px;
-}
-
 #solarStats {
   display: flex;
   width: 100%;
@@ -197,13 +187,17 @@ body {
   background-color: rgba(0, 0, 0, 0.65);
 }
 
-#sunUp {
+.sunriseContainer {
+  display: flex;
   position: relative;
-  bottom: 10px;
+  bottom: 12px;
 }
 
-#arrowUp {
-  font-size: 3.5vw;
+#sunIconUp,
+#sunIconDown {
+  width: 35px;
+  height: 35px;
+  margin: 0 2px;
 }
 
 #sunDown {
@@ -216,7 +210,6 @@ body {
   bottom: 1px;
   font-size: 3.5vw;
 }
-
 #weatherIconContainer {
   width: 20%;
   display: flex;
