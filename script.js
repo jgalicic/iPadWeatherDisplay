@@ -2,11 +2,11 @@
 General notes:
 getDateInfo() is called first to get accurate date and time info
 getSolarData() is then called to get sunrise and sunset info
-getCurrentWeather() and getWeatherForecast() are then called after the above functions are called
+getCurrentWeather() and getWeatherForecast() are then called after the above functions
 
-getTodaysDate() recursively updates every second
+getTodaysDate() recursively updates every second or few seconds
 getSolarData(), getCurrentWeather() and getWeatherForecast() should update every 30 mintues or 
-after significant daily events such as sunrise, sunset, at midnight, etc.
+during certain events such as sunrise, sunset, at midnight, etc.
 
 */
 
@@ -53,9 +53,6 @@ $(document).ready(function () {
   const solarStats = document.getElementById("solarStats")
   const sunriseTime = document.getElementById("sunriseTime")
   const sunsetTime = document.getElementById("sunsetTime")
-  const sunIconUp = document.getElementById("sunIconUp")
-  const sunIconDown = document.getElementById("sunIconDown")
-
   const shortForecastDisplay = document.getElementById("shortForecastDisplay")
   var globalDate = new Date()
   var timeString = globalDate.toTimeString().substring(0, 5)
@@ -63,37 +60,6 @@ $(document).ready(function () {
 
   var dataObj = {
     aqi: null,
-    aqi_msg: "",
-    aqi_table: {
-      co: null,
-      nh3: null,
-      no: null,
-      no2: null,
-      o3: null,
-      pm10: null,
-      pm2_5: null,
-      so2: null,
-    },
-    aqi_msg: {
-      co: "",
-      nh3: "",
-      no: "",
-      no2: "",
-      o3: "",
-      pm10: "",
-      pm2_5: "",
-      so2: "",
-    },
-    air_quality: {
-      co: null,
-      nh3: null,
-      no: null,
-      no2: null,
-      o3: null,
-      pm10: null,
-      pm2_5: null,
-      so2: null,
-    },
     astronomical: {
       astronomical_twilight_begin: "",
       astronomical_twilight_end: "",
@@ -161,37 +127,6 @@ $(document).ready(function () {
 
   // dataObj = {
   //   aqi: null,
-  //   aqi_msg: "",
-  //   aqi_table: {
-  //     co: null,
-  //     nh3: null,
-  //     no: null,
-  //     no2: null,
-  //     o3: null,
-  //     pm10: null,
-  //     pm2_5: null,
-  //     so2: null,
-  //   },
-  //   aqi_msg: {
-  //     co: "",
-  //     nh3: "",
-  //     no: "",
-  //     no2: "",
-  //     o3: "",
-  //     pm10: "",
-  //     pm2_5: "",
-  //     so2: "",
-  //   },
-  //   air_quality: {
-  //     co: 0.3705,
-  //     nh3: 0.25,
-  //     no: 0.28,
-  //     no2: 1.3,
-  //     o3: 0.052,
-  //     pm10: 2.83,
-  //     pm2_5: 2.64,
-  //     so2: 2.12,
-  //   },
   //   astronomical: {
   //     astronomical_twilight_begin: "04:42",
   //     astronomical_twilight_end: "21:39",
@@ -208,26 +143,26 @@ $(document).ready(function () {
   //     nautical_twilight_end: "20:58",
   //     solar_noon: "13:10",
   //     sunrise: "06:32",
-  //     sunset: "20:37",
+  //     sunset: "19:48",
   //   },
   //   bestDayToGetOutside: "",
   //   chanceHail: null,
   //   chancePrecipitation: null,
   //   chanceRain: null,
   //   chanceThunder: null,
-  //   currentConditions: "Cloudy",
-  //   currentTemp: 84,
+  //   currentConditions: "Sunny",
+  //   currentTemp: 55,
   //   date: {
   //     currentTime: "13:27",
   //     currentTimePeriod: "day",
-  //     dayOfWeek: "Thursday",
-  //     displayTime: "6:47",
+  //     dayOfWeek: "Wednesday",
+  //     displayTime: "1:27",
   //     isDaytime: "true",
   //     millis: null,
-  //     month: "August",
-  //     season: "Summer",
-  //     todaysDate: 5,
-  //     year: 2021,
+  //     month: "June",
+  //     season: "Spring",
+  //     todaysDate: 21,
+  //     year: 2020,
   //   },
   //   detailedForecast:
   //     "Mostly sunny, with a high near 56. Northwest wind 1 to 5 mph.",
@@ -240,15 +175,15 @@ $(document).ready(function () {
   //   },
   //   pressure: null,
   //   pressureDirection: "",
-  //   shortForecast: "Cloudy",
-  //   shortForecastForBg: "Cloudy",
+  //   shortForecast: "Sunny",
+  //   shortForecastForBg: "Sunny",
   //   snow: {
   //     chanceSnow: null,
   //     snowAccumInchesMax: null,
   //     snowAccumInchesMin: null,
   //   },
-  //   todayHigh: 106,
-  //   todayLow: 81,
+  //   todayHigh: 76,
+  //   todayLow: 60,
   //   tomorrowHigh: 60,
   //   tomorrowLow: 42,
   //   uvIndex: null,
@@ -267,7 +202,6 @@ $(document).ready(function () {
   //   renderBackground()
   //   renderSolarAndWeatherDataToScreen()
   //   renderSunriseAndSunsetDisplay()
-  //   calculateAQI()
   // }, 300)
 
   ///////////////////////////////
@@ -281,11 +215,7 @@ $(document).ready(function () {
       getSolarData(function () {
         getCurrentTimePeriod()
         getCurrentWeather()
-        getCurrentAirQuality()
-        // console dataObj after 2 seconds
-        setTimeout(() => {
-          console.log(dataObj)
-        }, 2000)
+        // console.log(dataObj)
       })
     })
   }
@@ -310,7 +240,9 @@ $(document).ready(function () {
   }
 
   function getSeason() {
+    if (dataObj.date.millis < 1616223600000) return "Winter"
     // 2021
+    if (dataObj.date.millis < 1624172400000) return "Spring"
     if (dataObj.date.millis < 1632294000000) return "Summer"
     if (dataObj.date.millis < 1640073600000) return "Fall"
     if (dataObj.date.millis < 1647759600000) return "Winter"
@@ -318,12 +250,7 @@ $(document).ready(function () {
     if (dataObj.date.millis < 1655794800000) return "Spring"
     if (dataObj.date.millis < 1663830000000) return "Summer"
     if (dataObj.date.millis < 1671609600000) return "Fall"
-    if (dataObj.date.millis < 1679322240000) return "Winter"
-    // 2023
-    if (dataObj.date.millis < 1687334220000) return "Spring"
-    if (dataObj.date.millis < 1695451740000) return "Summer"
-    if (dataObj.date.millis < 1703302020000) return "Fall"
-    if (dataObj.date.millis < 1710903960000) return "Winter"
+    if (dataObj.date.millis < 1679295600000) return "Winter"
   }
 
   function getSolarData(callback) {
@@ -399,37 +326,6 @@ $(document).ready(function () {
         return
       }
     }
-  }
-
-  function getCurrentAirQuality() {
-    ///
-
-    $.ajax({
-      url:
-        "http://api.openweathermap.org/data/2.5/air_pollution?lat=47.6&lon=122.3&appid=95eb4164df570d00c9c5789f2ddad3dd",
-      dataType: "json",
-      success: function (data) {
-        // console.log(data)
-        dataObj.aqi = data.list[0].main.aqi
-        dataObj.air_quality.co = data.list[0].components.co / 1000 // Convert from μg/m3 to ppm (parts per million)
-        dataObj.air_quality.nh3 = data.list[0].components.nh3  // μg/m3
-        dataObj.air_quality.no = data.list[0].components.no
-        dataObj.air_quality.no2 = data.list[0].components.no2 * 1.9 // Convert from μg/m3 to ppb (parts per billion)
-        dataObj.air_quality.o3 = data.list[0].components.o3 // / 1000
-        dataObj.air_quality.pm10 = data.list[0].components.pm10
-        dataObj.air_quality.pm2_5 = data.list[0].components.pm2_5
-        dataObj.air_quality.so2 = data.list[0].components.so2
-      },
-      error: function (data, status, error) {
-        console.log(data)
-        console.log(status)
-        console.log(error)
-      },
-      complete: function () {
-        // callback()
-        calculateAQI()
-      },
-    })
   }
 
   function getCurrentWeather() {
@@ -727,286 +623,7 @@ $(document).ready(function () {
     })
   }
 
-  function calculateAQI() {
-    console.log("Calculating AQI...")
-    console.log(
-      "Double check units here - some of them may be wrong (e.g. micrograms instead of milligrams)!!"
-    )
-
-    // Document for calculating Daily API
-    // https://www.airnow.gov/sites/default/files/2020-05/aqi-technical-assistance-document-sept2018.pdf
-
-    // Calculate O3 (Ozone) level
-    if (dataObj.air_quality.o3 < 0.054) {
-      dataObj.aqi_table.o3 = Math.round(
-        (50 / 0.054) * dataObj.air_quality.o3 + 0
-      )
-      dataObj.aqi_msg.o3 = "Ozone level is good"
-    } else if (dataObj.air_quality.o3 < 0.07) {
-      dataObj.aqi_table.o3 = Math.round(
-        (49 / 0.015) * (dataObj.air_quality.o3 - 0.055) + 51
-      )
-      dataObj.aqi_msg.o3 = "Ozone level is moderate"
-    } else if (dataObj.air_quality.o3 < 0.085) {
-      dataObj.aqi_table.o3 = Math.round(
-        (49 / 0.014) * (dataObj.air_quality.o3 - 0.071) + 101
-      )
-      dataObj.aqi_msg.o3 = "Ozone level is unhealthy for sensitive groups"
-    } else if (dataObj.air_quality.o3 < 0.105) {
-      dataObj.aqi_table.o3 = Math.round(
-        (49 / 0.019) * (dataObj.air_quality.o3 - 0.086) + 151
-      )
-      dataObj.aqi_msg.o3 = "Ozone level is unhealthy"
-    } else if (dataObj.air_quality.o3 <= 0.2) {
-      dataObj.aqi_table.o3 = Math.round(
-        (99 / 0.094) * (dataObj.air_quality.o3 - 0.106) + 201
-      )
-      dataObj.aqi_msg.o3 = "Ozone level is very unhealthy"
-    } else if (dataObj.air_quality.o3 > 0.2) {
-      dataObj.aqi_table.o3 = Math.round(
-        (99 / 0.1) * (dataObj.air_quality.o3 - 0.2) + 301
-      )
-      dataObj.aqi_msg.o3 = "Ozone level is hazardous"
-    }
-
-    // Calculate PM2.5 (Fine particulates) level
-    if (dataObj.air_quality.pm2_5 < 12) {
-      dataObj.aqi_table.pm2_5 = Math.round(
-        (50 / 12) * (dataObj.air_quality.pm2_5 - 0) + 0
-      )
-      dataObj.aqi_msg.pm2_5 = "Fine particulates level is good"
-    } else if (dataObj.air_quality.pm2_5 < 35.4) {
-      dataObj.aqi_table.pm2_5 = Math.round(
-        (49 / 23.4) * (dataObj.air_quality.pm2_5 - 12.1) + 51
-      )
-      dataObj.aqi_msg.pm2_5 = "Fine particulates level is moderate"
-    } else if (dataObj.air_quality.pm2_5 < 55.4) {
-      dataObj.aqi_table.pm2_5 = Math.round(
-        (49 / 20) * (dataObj.air_quality.pm2_5 - 35.5) + 101
-      )
-      dataObj.aqi_msg.pm2_5 =
-        "Fine particulates level is unhealthy for sensitive groups"
-    } else if (dataObj.air_quality.pm2_5 < 150.4) {
-      dataObj.aqi_table.pm2_5 = Math.round(
-        (49 / 94.9) * (dataObj.air_quality.pm2_5 - 55.5) + 151
-      )
-      dataObj.aqi_msg.pm2_5 = "Fine particulates level is unhealthy"
-    } else if (dataObj.air_quality.pm2_5 < 250.4) {
-      dataObj.aqi_table.pm2_5 = Math.round(
-        (49 / 99.9) * (dataObj.air_quality.pm2_5 - 150.5) + 151
-      )
-      dataObj.aqi_msg.pm2_5 = "Fine particulates level is very unhealthy"
-    } else if (dataObj.air_quality.pm2_5 <= 350.4) {
-      dataObj.aqi_table.pm2_5 = Math.round(
-        (99 / 100) * (dataObj.air_quality.pm2_5 - 250.5) + 301
-      )
-      dataObj.aqi_msg.pm2_5 = "Fine particulates level is hazardous"
-    } else if (dataObj.air_quality.pm2_5 > 350.4) {
-      dataObj.aqi_table.pm2_5 = Math.round(
-        (99 / 101) * (dataObj.air_quality.pm2_5 - 350.5) + 401
-      )
-      dataObj.aqi_msg.pm2_5 = "Fine particulates level is hazardous"
-    }
-
-    // Calculate PM10 (Coarse particulates) level
-    if (dataObj.air_quality.pm10 < 54) {
-      dataObj.aqi_table.pm10 = Math.round(
-        (50 / 54) * (dataObj.air_quality.pm10 - 0) + 0
-      )
-      dataObj.aqi_msg.pm10 = "Course particulates level is good"
-    } else if (dataObj.air_quality.pm10 < 154) {
-      dataObj.aqi_table.pm10 = Math.round(
-        (49 / 99) * (dataObj.air_quality.pm10 - 55) + 51
-      )
-      dataObj.aqi_msg.pm10 = "Course particulates level is moderate"
-    } else if (dataObj.air_quality.pm10 < 254) {
-      dataObj.aqi_table.pm10 = Math.round(
-        (49 / 99) * (dataObj.air_quality.pm10 - 155) + 101
-      )
-      dataObj.aqi_msg.pm10 =
-        "Course particulates level is unhealthy for sensitive groups"
-    } else if (dataObj.air_quality.pm10 < 354) {
-      dataObj.aqi_table.pm10 = Math.round(
-        (49 / 99) * (dataObj.air_quality.pm10 - 255) + 151
-      )
-      dataObj.aqi_msg.pm10 = "Course particulates level is unhealthy"
-    } else if (dataObj.air_quality.pm10 < 424) {
-      dataObj.aqi_table.pm10 = Math.round(
-        (49 / 99) * (dataObj.air_quality.pm10 - 355) + 151
-      )
-      dataObj.aqi_msg.pm10 = "Course particulates level is very unhealthy"
-    } else if (dataObj.air_quality.pm10 <= 504) {
-      dataObj.aqi_table.pm10 = Math.round(
-        (99 / 99) * (dataObj.air_quality.pm10 - 425) + 301
-      )
-      dataObj.aqi_msg.pm10 = "Course particulates level is hazardous"
-    } else if (dataObj.air_quality.pm10 > 504) {
-      dataObj.aqi_table.pm10 = Math.round(
-        (99 / 99) * (dataObj.air_quality.pm10 - 505) + 401
-      )
-      dataObj.aqi_msg.pm10 = "Course particulates level is hazardous"
-    }
-
-    // Calculate CO (Carbon monoxide) level
-    if (dataObj.air_quality.co < 4.4) {
-      dataObj.aqi_table.co = Math.round(
-        (50 / 4.4) * (dataObj.air_quality.co - 0) + 0
-      )
-      dataObj.aqi_msg.co = "Carbon monoxide level is good"
-    } else if (dataObj.air_quality.co < 9.4) {
-      dataObj.aqi_table.co = Math.round(
-        (49 / 4.9) * (dataObj.air_quality.co - 4.5) + 51
-      )
-      dataObj.aqi_msg.co = "Carbon monoxide level is moderate"
-    } else if (dataObj.air_quality.co < 12.4) {
-      dataObj.aqi_table.co = Math.round(
-        (49 / 2.9) * (dataObj.air_quality.co - 9.5) + 101
-      )
-      dataObj.aqi_msg.co =
-        "Carbon monoxide level is unhealthy for sensitive groups"
-    } else if (dataObj.air_quality.co < 15.4) {
-      dataObj.aqi_table.co = Math.round(
-        (49 / 2.9) * (dataObj.air_quality.co - 12.5) + 151
-      )
-      dataObj.aqi_msg.co = "Carbon monoxide level is unhealthy"
-    } else if (dataObj.air_quality.co < 30.4) {
-      dataObj.aqi_table.co = Math.round(
-        (49 / 14.9) * (dataObj.air_quality.co - 15.5) + 151
-      )
-      dataObj.aqi_msg.co = "Carbon monoxide level is very unhealthy"
-    } else if (dataObj.air_quality.co <= 40.4) {
-      dataObj.aqi_table.co = Math.round(
-        (99 / 9.9) * (dataObj.air_quality.co - 30.5) + 301
-      )
-      dataObj.aqi_msg.co = "Carbon monoxide level is hazardous"
-    } else if (dataObj.air_quality.co > 40.4) {
-      dataObj.aqi_table.co = Math.round(
-        (99 / 9.9) * (dataObj.air_quality.co - 40.5) + 401
-      )
-      dataObj.aqi_msg.co = "Carbon monoxide level is hazardous"
-    }
-
-    // Calculate SO2 (Sulfur dioxide) level
-    if (dataObj.air_quality.so2 < 35) {
-      dataObj.aqi_table.so2 = Math.round(
-        (50 / 35) * (dataObj.air_quality.so2 - 0) + 0
-      )
-      dataObj.aqi_msg.so2 = "Sulfur dioxide level is good"
-    } else if (dataObj.air_quality.so2 < 75) {
-      dataObj.aqi_table.so2 = Math.round(
-        (49 / 39) * (dataObj.air_quality.so2 - 36) + 51
-      )
-      dataObj.aqi_msg.so2 = "Sulfur dioxide level is moderate"
-    } else if (dataObj.air_quality.so2 < 185) {
-      dataObj.aqi_table.so2 = Math.round(
-        (49 / 109) * (dataObj.air_quality.so2 - 76) + 101
-      )
-      dataObj.aqi_msg.so2 =
-        "Sulfur dioxide level is unhealthy for sensitive groups"
-    } else if (dataObj.air_quality.so2 < 304) {
-      dataObj.aqi_table.so2 = Math.round(
-        (49 / 118) * (dataObj.air_quality.so2 - 186) + 151
-      )
-      dataObj.aqi_msg.so2 = "Sulfur dioxide level is unhealthy"
-    } else if (dataObj.air_quality.so2 < 604) {
-      dataObj.aqi_table.so2 = Math.round(
-        (49 / 299) * (dataObj.air_quality.so2 - 305) + 151
-      )
-      dataObj.aqi_msg.so2 = "Sulfur dioxide level is very unhealthy"
-    } else if (dataObj.air_quality.so2 <= 804) {
-      dataObj.aqi_table.so2 = Math.round(
-        (99 / 199) * (dataObj.air_quality.so2 - 605) + 301
-      )
-      dataObj.aqi_msg.so2 = "Sulfur dioxide level is hazardous"
-    } else if (dataObj.air_quality.so2 > 804) {
-      dataObj.aqi_table.so2 = Math.round(
-        (99 / 199) * (dataObj.air_quality.so2 - 805) + 401
-      )
-      dataObj.aqi_msg.co = "Sulfur dioxide level is hazardous"
-    }
-
-    // Calculate NO2 (Nitrogen dioxide) level
-    if (dataObj.air_quality.no2 < 53) {
-      dataObj.aqi_table.no2 = Math.round(
-        (50 / 53) * (dataObj.air_quality.no2 - 0) + 0
-      )
-      dataObj.aqi_msg.no2 = "Nitrogen dioxide level is good"
-    } else if (dataObj.air_quality.no2 < 100) {
-      dataObj.aqi_table.no2 = Math.round(
-        (49 / 46) * (dataObj.air_quality.no2 - 36) + 51
-      )
-      dataObj.aqi_msg.no2 = "Nitrogen dioxide level is moderate"
-    } else if (dataObj.air_quality.no2 < 360) {
-      dataObj.aqi_table.no2 = Math.round(
-        (49 / 259) * (dataObj.air_quality.no2 - 76) + 101
-      )
-      dataObj.aqi_msg.no2 =
-        "Nitrogen dioxide level is unhealthy for sensitive groups"
-    } else if (dataObj.air_quality.no2 < 649) {
-      dataObj.aqi_table.no2 = Math.round(
-        (49 / 288) * (dataObj.air_quality.no2 - 186) + 151
-      )
-      dataObj.aqi_msg.no2 = "Nitrogen dioxide level is unhealthy"
-    } else if (dataObj.air_quality.no2 < 1249) {
-      dataObj.aqi_table.no2 = Math.round(
-        (49 / 599) * (dataObj.air_quality.no2 - 305) + 151
-      )
-      dataObj.aqi_msg.no2 = "Nitrogen dioxide level is very unhealthy"
-    } else if (dataObj.air_quality.no2 <= 1649) {
-      dataObj.aqi_table.no2 = Math.round(
-        (99 / 399) * (dataObj.air_quality.no2 - 605) + 301
-      )
-      dataObj.aqi_msg.no2 = "Nitrogen dioxide level is hazardous"
-    } else if (dataObj.air_quality.no2 > 1649) {
-      dataObj.aqi_table.no2 = Math.round(
-        (99 / 399) * (dataObj.air_quality.no2 - 805) + 401
-      )
-      dataObj.aqi_msg.co = "Nitrogen dioxide level is hazardous"
-    }
-
-    // Calculate NH3 (Ammonia) level
-    if (dataObj.air_quality.nh3 < 53) {
-      dataObj.aqi_table.nh3 = Math.round(
-        (50 / 53) * (dataObj.air_quality.nh3 - 0) + 0
-      )
-      dataObj.aqi_msg.nh3 = "Ammonia level is good"
-    } else if (dataObj.air_quality.nh3 < 100) {
-      dataObj.aqi_table.nh3 = Math.round(
-        (49 / 46) * (dataObj.air_quality.nh3 - 36) + 51
-      )
-      dataObj.aqi_msg.nh3 = "Ammonia level is moderate"
-    } else if (dataObj.air_quality.nh3 < 360) {
-      dataObj.aqi_table.nh3 = Math.round(
-        (49 / 259) * (dataObj.air_quality.nh3 - 76) + 101
-      )
-      dataObj.aqi_msg.nh3 = "Ammonia level is unhealthy for sensitive groups"
-    } else if (dataObj.air_quality.nh3 < 649) {
-      dataObj.aqi_table.nh3 = Math.round(
-        (49 / 288) * (dataObj.air_quality.nh3 - 186) + 151
-      )
-      dataObj.aqi_msg.nh3 = "Ammonia level is unhealthy"
-    } else if (dataObj.air_quality.nh3 < 1249) {
-      dataObj.aqi_table.nh3 = Math.round(
-        (49 / 599) * (dataObj.air_quality.nh3 - 305) + 151
-      )
-      dataObj.aqi_msg.nh3 = "Ammonia level is very unhealthy"
-    } else if (dataObj.air_quality.nh3 <= 1649) {
-      dataObj.aqi_table.nh3 = Math.round(
-        (99 / 399) * (dataObj.air_quality.nh3 - 605) + 301
-      )
-      dataObj.aqi_msg.nh3 = "Ammonia level is hazardous"
-    } else if (dataObj.air_quality.nh3 > 1649) {
-      dataObj.aqi_table.nh3 = Math.round(
-        (99 / 399) * (dataObj.air_quality.nh3 - 805) + 401
-      )
-      dataObj.aqi_msg.co = "Ammonia level is hazardous"
-    }
-
-    // End calculateAQI()
-  }
-
   function getPseudoHigh() {
-    // Estimate what the daily high should be if it is unavailable from the API
     // console.log("Getting pseudoHigh")
     var pseudoHigh = dataObj.currentTemp
     if (dataObj.date.currentTimePeriod === "dayafternoon") pseudoHigh += 4
@@ -1093,16 +710,14 @@ $(document).ready(function () {
       }
     }
 
-    // Refresh API data every x minutes
-    let refreshEveryXminutes = 30
-    if (m % refreshEveryXminutes === 0 && s === 0) {
-      console.log("About to initialize request")
+    // Refresh API data every 60 minutes
+    if (m === 0 && s === 0) {
+      // console.log("About to initialize request")
 
-      // Don't refresh between 1am and 5am to save on API requests
       if (h >= 1 && h <= 5) {
-        // Reload page every day at 5am
+        // Refresh page every day at 5am
         if (h === 5) {
-          location.reload()
+          location.reload(true)
         }
         setTimeout(updateTime, 1000)
       } else {
@@ -1136,29 +751,28 @@ $(document).ready(function () {
       $(currentTemp).html(`${dataObj.currentTemp}`)
     if (dataObj.currentTemp === null) $(degreeSymbol).html("")
     if (dataObj.todayLow !== null) lowTemp.innerText = `${dataObj.todayLow}°`
-    $(lowTemp).css("color", `rgb(${getTempRGB(dataObj.todayLow)})`)
+    $(lowTemp).css("color", `rgb(${getRGB(dataObj.todayLow)})`)
     if (dataObj.todayHigh !== null) highTemp.innerText = `${dataObj.todayHigh}°`
-    $(highTemp).css("color", `rgb(${getTempRGB(dataObj.todayHigh)})`)
+    $(highTemp).css("color", `rgb(${getRGB(dataObj.todayHigh)})`)
 
     // Gradient bar
     $(tempRangeBar).css(
       "background-image",
-      `linear-gradient(to right, rgb(${getTempRGB(
-        dataObj.todayLow
-      )}), rgb(${getTempRGB(dataObj.todayHigh)}))`
+      `linear-gradient(to right, rgb(${getRGB(dataObj.todayLow)}), rgb(${getRGB(
+        dataObj.todayHigh
+      )}))`
     )
   }
 
   function renderBackground() {
-    if (dataObj.shortForecast.length > 1 && getBgImg().length > 1) {
-      document.body.style.backgroundImage = `url("img/bg/${getBgImg()}.jpg")`
-    } else {
-      console.log("No background image available")
+    if (dataObj.shortForecast === "" || getBgImg().length < 1) {
       // Purple gradient
       $("body").css({
         background:
           "linear-gradient(180deg, rgba(38,46,182,1) 0%, rgba(40,37,145,1) 25%, rgba(62,20,115,1) 50%, rgba(66,12,101,1) 75%, rgba(102,13,62,1) 100%)",
       })
+    } else {
+      document.body.style.backgroundImage = `url("img/bg/${getBgImg()}.jpg")`
     }
   }
 
@@ -1179,7 +793,7 @@ $(document).ready(function () {
     if (dataObj.detailedForecast === "") $(detailedForecast).hide()
   }
 
-  function getTempRGB(temperature) {
+  function getRGB(temperature) {
     const tempInt = parseInt(temperature)
     switch (tempInt) {
       case -1:
@@ -1443,8 +1057,6 @@ $(document).ready(function () {
       return "fas fa-bolt"
     if (dataObj.shortForecast.toLowerCase().includes("smoke"))
       return "fas fa-smog"
-    if (dataObj.shortForecast.toLowerCase().includes("haze"))
-      return "fas fa-smog"
     if (dataObj.shortForecast.toLowerCase().includes("smog"))
       return "fas fa-smog"
 
@@ -1655,8 +1267,5 @@ $(document).ready(function () {
     $(time).css("color", warmDisplayColor)
     $(shortForecastDisplay).css("color", warmDisplayColor)
     $(weatherIcon).css("color", warmDisplayColor)
-
-    $(sunIconDown).attr("src", "./img/svg/sun-down-warm.svg")
-    $(sunIconUp).attr("src", "./img/svg/sun-up-warm.svg")
   }
 }) // end jQuery
