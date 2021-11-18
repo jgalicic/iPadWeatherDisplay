@@ -1058,6 +1058,7 @@ $(document).ready(function () {
   }
 
   function getWeatherIcon() {
+    return "fas fa-snowflake"
     console.log("Got weather icon")
     console.log("!", dataObj.shortForecast)
     // day or night
