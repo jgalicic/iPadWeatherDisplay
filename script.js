@@ -753,7 +753,8 @@ $(document).ready(function () {
 
   function renderSolarAndWeatherDataToScreen() {
     // Weather Icon
-    $(weatherIcon).removeClass().addClass(getWeatherIcon())
+    $(weatherIcon).removeClass()
+    $(weatherIcon).addClass(getWeatherIcon())
     if (dataObj.shortForecast !== null)
       $(shortForecastDisplay).text(`${dataObj.shortForecast}`)
     // Temperature
@@ -1176,7 +1177,7 @@ $(document).ready(function () {
         return "fas fa-cloud-showers-heavy"
     }
     // fallback
-    return "fas fa-snowflake"
+    return "fas fa-bolt"
   }
 
   function getBgImg() {
