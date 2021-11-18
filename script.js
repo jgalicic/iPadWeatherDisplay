@@ -1060,7 +1060,7 @@ $(document).ready(function () {
 
   function getWeatherIcon() {
     console.log("Got weather icon")
-    console.log("!", dataObj.shortForecast)
+    dataObj.detailedForecast = dataObj.shortForecast
     // day or night
     if (dataObj.shortForecast === "") return ""
     if (dataObj.shortForecast.toLowerCase().includes("snow"))
